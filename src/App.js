@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import AnnualLeaveCalculator from "./pages/AnnualLeaveCalculator";
 import RetirementCalculator from "./pages/RetirementCalculator";
+import Header from "./components/Header"; // ✅ 새로 추가된 컴포넌트
 
 function App() {
   return (
     <Router>
+      <Header /> {/* ✅ 여기에 항상 표시 */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/annual-leave" element={<AnnualLeaveCalculator />} />
