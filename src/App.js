@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import AnnualLeaveCalculator from "../pages/AnnualLeaveCalculator";
-import RetirementCalculator from "../pages/RetirementCalculator";
+import Home from "./pages/Home";
+import AnnualLeaveCalculator from "./pages/AnnualLeaveCalculator";
+import RetirementCalculator from "./pages/RetirementCalculator";
 import Header from "./components/Header";
 
 function App() {
