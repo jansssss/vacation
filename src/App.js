@@ -7,6 +7,9 @@ import Header from "./components/Header";
 import SalaryCalculator from "./pages/SalaryCalculator";
 import SalaryRankPage from "./pages/salary-rank/SalaryRankPage"; // ✅ 추가
 
+<Route path="/salary-rank" element={<SalaryRankPage />} />
+
+
 function App() {
   return (
     <Router>
