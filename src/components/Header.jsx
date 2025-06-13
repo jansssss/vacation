@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaCalendarAlt, FaCoins } from "react-icons/fa";
+import { FaWallet } from "react-icons/fa";
+
 
 const Header = () => {
   const location = useLocation();
