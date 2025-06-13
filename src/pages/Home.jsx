@@ -6,9 +6,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f4ff] via-[#eef7f6] to-[#eaf4eb] text-gray-800 flex flex-col justify-center items-center px-6 font-sans">
       {/* 상단 로고 */}
-      <header className="absolute top-6 left-8 text-[20px] font-bold text-gray-700 tracking-tight">
-        <span className="text-blue-600">e</span>-Work
-      </header>
+     
 
       {/* 타이틀 */}
       <div className="text-center mb-12">
