@@ -8,6 +8,8 @@ const Header = () => {
   const navItems = [
     { name: "연차 계산기", path: "/annual-leave", icon: <FaCalendarAlt /> },
     { name: "퇴직금 계산기", path: "/retirement", icon: <FaCoins /> },
+    { name: "실수령액 계산기", path: "/salary", icon: <FaWallet /> }
+
   ];
 
   return (
