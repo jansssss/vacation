@@ -1,6 +1,4 @@
-// src/pages/salary-rank/SalaryChart.jsx
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const SalaryChart = ({ result, onReset }) => {
   const { salary, percentile, data } = result;
@@ -24,7 +22,14 @@ const SalaryChart = ({ result, onReset }) => {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="연봉" fill="#60a5fa" />
+            <Bar dataKey="연봉">
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.name === '나' ? '#f97316' : '#60a5fa'} // 🟧 주황색으로 '나' 표시
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
