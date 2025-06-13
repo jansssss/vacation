@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import AnnualLeaveCalculator from "./pages/AnnualLeaveCalculator";
 import RetirementCalculator from "./pages/RetirementCalculator";
 import Header from "./components/Header";
+import SalaryCalculator from "./pages/SalaryCalculator";
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/annual-leave" element={<AnnualLeaveCalculator />} />
         <Route path="/retirement" element={<RetirementCalculator />} />
+        <Route path="/salary" element={<SalaryCalculator />} />
       </Routes>
     </Router>
   );
