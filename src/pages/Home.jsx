@@ -1,51 +1,57 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaCalendarAlt, FaRegMoneyBillAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaCoins } from "react-icons/fa";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f9f9f9] via-[#f3f4f6] to-[#eef1f5] text-gray-800 font-serif px-6 flex flex-col justify-center items-center">
-      {/* 로고 */}
-      <header className="absolute top-6 left-8 text-[20px] font-bold text-gray-700 tracking-wider">
-        <span className="text-indigo-600">e</span>-Work.kr
+    <div className="min-h-screen bg-gradient-to-br from-[#f0f4ff] via-[#eef7f6] to-[#eaf4eb] text-gray-800 flex flex-col justify-center items-center px-6 font-sans">
+      {/* 상단 로고 */}
+      <header className="absolute top-6 left-8 text-[20px] font-bold text-gray-700 tracking-tight">
+        <span className="text-blue-600">e</span>-Work
       </header>
 
-      {/* 제목 */}
-      <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">
-        계산기 홈
-      </h1>
-      <p className="text-gray-500 text-base md:text-lg mb-12 text-center">
-        미래지향적 근로자 지원 계산기 플랫폼
-      </p>
+      {/* 타이틀 */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3 tracking-tight">
+          근로자 계산기
+        </h1>
+        <p className="text-lg text-gray-500">
+          미래를 준비하는, 세련된 계산 도구
+        </p>
+      </div>
 
-      {/* 카드 박스 */}
-      <div className="flex flex-col md:flex-row gap-8 w-full max-w-4xl justify-center items-center">
+      {/* 카드 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         <Link
           to="/annual-leave"
-          className="w-72 h-44 bg-white/40 backdrop-blur-md border border-white/20 rounded-3xl shadow-xl p-6 flex flex-col justify-center items-center hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+          className="bg-white hover:bg-blue-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
         >
-          <FaCalendarAlt className="text-indigo-500 text-5xl mb-3 drop-shadow" />
-          <h2 className="text-xl font-semibold mb-1 text-gray-800">연차 계산기</h2>
-          <p className="text-gray-500 text-sm text-center">
-            입사일과 퇴직일 기준으로 연차 일수 계산
+          <FaCalendarAlt className="text-4xl text-blue-500 mx-auto mb-3" />
+          <h2 className="text-xl font-semibold text-gray-800 mb-1">
+            연차 계산기
+          </h2>
+          <p className="text-sm text-gray-500">
+            입사일과 퇴직일을 기준으로 연차 일수 계산
           </p>
         </Link>
 
         <Link
           to="/retirement"
-          className="w-72 h-44 bg-white/40 backdrop-blur-md border border-white/20 rounded-3xl shadow-xl p-6 flex flex-col justify-center items-center hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+          className="bg-white hover:bg-yellow-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
         >
-          <FaRegMoneyBillAlt className="text-amber-500 text-5xl mb-3 drop-shadow" />
-          <h2 className="text-xl font-semibold mb-1 text-gray-800">퇴직금 계산기</h2>
-          <p className="text-gray-500 text-sm text-center">
-            평균임금 · 근속기간으로 퇴직금 계산
+          <FaCoins className="text-4xl text-yellow-500 mx-auto mb-3" />
+          <h2 className="text-xl font-semibold text-gray-800 mb-1">
+            퇴직금 계산기
+          </h2>
+          <p className="text-sm text-gray-500">
+            평균임금과 근속기간을 기반으로 퇴직금 산정
           </p>
         </Link>
       </div>
 
-      {/* 푸터 */}
+      {/* 하단 안내 */}
       <footer className="mt-16 text-sm text-gray-400 text-center">
-        ⓒ 2025 e-work.kr | 이 계산은 참고용이며 실제와 다를 수 있습니다.
+        ⓒ 2025 e-work.kr | 참고용 계산 결과입니다.
       </footer>
     </div>
   );
