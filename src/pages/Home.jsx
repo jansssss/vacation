@@ -9,7 +9,12 @@ const Home = () => {
         logo
       </header>
 
-
+      <h1 className="text-4xl md:text-5xl font-bold text-center mb-3 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-700 animate-fade-in">
+        📊 계산기 홈
+      </h1>
+      <p className="text-gray-500 text-md mb-10 text-center animate-fade-in delay-200">
+        사용하실 계산기를 선택하세요.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
         <Link
