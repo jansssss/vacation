@@ -15,12 +15,12 @@ function BitcoinSimulator({ user }) {
     const fetchBitcoinPrice = async () => {
       try {
         const response = await axios.get(
-          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw'
+          "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw"
         );
         setBitcoinPrice(response.data.bitcoin.krw);
         setLoading(false);
       } catch (error) {
-        console.error('가격 조회 실패:', error);
+        console.error("가격 조회 실패:", error);
         setBitcoinPrice(95000000);
         setLoading(false);
       }
@@ -31,6 +31,45 @@ function BitcoinSimulator({ user }) {
     return () => clearInterval(interval);
   }, []);
 
+  // 거래 저장 함수
+  const insertTrade = async ({ type, amount, price, cost }) => {
+    const { error } = await supabase.from("trades").insert([
+      {
+        user_id: user.id,
+        type,
+        amount,
+        price,
+        cost,
+      },
+    ]);
+    if (error) {
+      console.error("📛 거래 저장 실패:", error.message);
+    } else {
+      fetchTrades(); // 저장 후 내역 새로고침
+    }
+  };
+
+  // 거래 내역 불러오기
+  const fetchTrades = async () => {
+    const { data, error } = await supabase
+      .from("trades")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("❌ 거래 불러오기 실패:", error.message);
+    } else {
+      setTrades(data);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchTrades();
+    }
+  }, [user]);
+
   const buyBitcoin = () => {
     if (investAmount <= 0 || investAmount > wallet) {
       alert("투자 금액을 올바르게 입력하세요.");
@@ -40,14 +79,12 @@ function BitcoinSimulator({ user }) {
     setWallet(wallet - investAmount);
     setBitcoinAmount(bitcoinAmount + btcAmount);
 
-    const newTrade = {
-      type: 'BUY',
+    insertTrade({
+      type: "BUY",
       amount: btcAmount,
       price: bitcoinPrice,
       cost: investAmount,
-      time: new Date().toLocaleString()
-    };
-    setTrades([newTrade, ...trades]);
+    });
   };
 
   const sellBitcoin = () => {
@@ -58,18 +95,17 @@ function BitcoinSimulator({ user }) {
     const sellValue = bitcoinAmount * bitcoinPrice;
     setWallet(wallet + sellValue);
 
-    const newTrade = {
-      type: 'SELL',
+    insertTrade({
+      type: "SELL",
       amount: bitcoinAmount,
       price: bitcoinPrice,
       cost: sellValue,
-      time: new Date().toLocaleString()
-    };
-    setTrades([newTrade, ...trades]);
+    });
+
     setBitcoinAmount(0);
   };
 
-  const totalAssets = wallet + (bitcoinAmount * bitcoinPrice);
+  const totalAssets = wallet + bitcoinAmount * bitcoinPrice;
   const profitLoss = totalAssets - 1000000;
   const profitRate = ((profitLoss / 1000000) * 100).toFixed(2);
 
@@ -94,13 +130,17 @@ function BitcoinSimulator({ user }) {
       <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl">
         <div className="text-center mb-8">
           <div className="text-3xl font-bold mb-1">비트코인 시뮬레이터</div>
-          <div className="text-sm text-gray-500">가상 투자로 비트코인 거래 전략 연습하기</div>
+          <div className="text-sm text-gray-500">
+            가상 투자로 비트코인 거래 전략 연습하기
+          </div>
         </div>
 
         {/* 현재 가격 */}
         <div className="bg-gray-50 p-4 rounded-xl mb-6">
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-700">현재 비트코인 가격</div>
+            <div className="text-lg font-semibold text-gray-700">
+              현재 비트코인 가격
+            </div>
             <div className="text-2xl font-bold text-orange-600">
               {loading ? "로딩중..." : `₩${bitcoinPrice.toLocaleString()}`}
             </div>
@@ -127,9 +167,17 @@ function BitcoinSimulator({ user }) {
               ₩{totalAssets.toLocaleString()}
             </div>
           </div>
-          <div className={`p-4 rounded-xl text-center ${profitLoss >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
+          <div
+            className={`p-4 rounded-xl text-center ${
+              profitLoss >= 0 ? "bg-green-50" : "bg-red-50"
+            }`}
+          >
             <div className="text-sm text-gray-600">수익률</div>
-            <div className={`text-lg font-bold ${profitLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <div
+              className={`text-lg font-bold ${
+                profitLoss >= 0 ? "text-green-600" : "text-red-600"
+              }`}
+            >
               {profitRate}%
             </div>
           </div>
@@ -137,7 +185,9 @@ function BitcoinSimulator({ user }) {
 
         {/* 거래 패널 */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">투자 금액</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            투자 금액
+          </label>
           <input
             type="number"
             value={investAmount}
@@ -166,19 +216,36 @@ function BitcoinSimulator({ user }) {
         {/* 거래 내역 */}
         {trades.length > 0 && (
           <div className="bg-gray-50 p-4 rounded-xl">
-            <div className="text-sm font-semibold text-gray-700 mb-3">최근 거래 내역</div>
+            <div className="text-sm font-semibold text-gray-700 mb-3">
+              최근 거래 내역
+            </div>
             <div className="max-h-40 overflow-y-auto">
               {trades.slice(0, 5).map((trade, index) => (
-                <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
+                <div
+                  key={trade.id || index}
+                  className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0"
+                >
                   <div className="flex items-center">
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${trade.type === 'BUY' ? 'bg-orange-100 text-orange-600' : 'bg-red-100 text-red-600'}`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-bold ${
+                        trade.type === "BUY"
+                          ? "bg-orange-100 text-orange-600"
+                          : "bg-red-100 text-red-600"
+                      }`}
+                    >
                       {trade.type}
                     </span>
-                    <span className="ml-2 text-sm text-gray-600">{trade.time}</span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      {new Date(trade.created_at).toLocaleString()}
+                    </span>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-semibold">₩{trade.cost.toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">{trade.amount.toFixed(8)} BTC</div>
+                    <div className="text-sm font-semibold">
+                      ₩{Number(trade.cost).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {Number(trade.amount).toFixed(8)} BTC
+                    </div>
                   </div>
                 </div>
               ))}
