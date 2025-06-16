@@ -5,10 +5,8 @@ import AnnualLeaveCalculator from "./pages/AnnualLeaveCalculator";
 import RetirementCalculator from "./pages/RetirementCalculator";
 import Header from "./components/Header";
 import SalaryCalculator from "./pages/SalaryCalculator";
-import SalaryRankPage from "./pages/salary-rank/SalaryRankPage"; // ✅ 추가
-
-<Route path="/salary-rank" element={<SalaryRankPage />} />
-
+import SalaryRankPage from "./pages/salary-rank/SalaryRankPage";
+import BitcoinSimulator from "./pages/BitcoinSimulator"; // ✅ 새로 추가
 
 function App() {
   return (
@@ -19,7 +17,8 @@ function App() {
         <Route path="/annual-leave" element={<AnnualLeaveCalculator />} />
         <Route path="/retirement" element={<RetirementCalculator />} />
         <Route path="/salary" element={<SalaryCalculator />} />
-        <Route path="/salary-rank" element={<SalaryRankPage />} /> {/* ✅ 추가 */}
+        <Route path="/salary-rank" element={<SalaryRankPage />} />
+        <Route path="/bitcoin-simulator" element={<BitcoinSimulator />} /> {/* ✅ 새로 추가 */}
       </Routes>
     </Router>
   );
