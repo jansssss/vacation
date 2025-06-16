@@ -15,7 +15,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-/* index.css 하단에 추가 */
+
+/* 👇 애니메이션 */
 @keyframes fade-in {
   0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -24,3 +25,7 @@ code {
   animation: fade-in 0.8s ease-out forwards;
 }
 
+/* ✅ 높이 100% 지정 (중앙 정렬을 위해 꼭 필요) */
+html, body, #root {
+  height: 100%;
+}
