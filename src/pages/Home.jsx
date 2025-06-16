@@ -8,7 +8,7 @@ const Home = () => {
       {/* 상단 로고 */}
      
       {/* 타이틀 */}
-      {/* 
+     
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3 tracking-tight">
          미래를 준비하는, 세련된 계산 도구           
@@ -17,7 +17,7 @@ const Home = () => {
           미래를 준비하는 실용 계산 도구, 지금 바로 사용하세요 
         </p>
       </div>
-      */}
+     
       {/* 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
         <Link
