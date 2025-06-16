@@ -1,10 +1,11 @@
+// BitcoinSimulator.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { supabase } from "../lib/supabaseClient";
 
 function BitcoinSimulator({ user }) {
   const [bitcoinPrice, setBitcoinPrice] = useState(0);
-  const [wallet, setWallet] = useState(1000000);
+  const [wallet, setWallet] = useState(0);
   const [bitcoinAmount, setBitcoinAmount] = useState(0);
   const [investAmount, setInvestAmount] = useState(100000);
   const [trades, setTrades] = useState([]);
@@ -29,6 +30,22 @@ function BitcoinSimulator({ user }) {
     const interval = setInterval(fetchBitcoinPrice, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const fetchUserAssets = async () => {
+    const { data, error } = await supabase
+      .from("member")
+      .select("cash, btc")
+      .eq("email", user.email)
+      .single();
+
+    if (error) {
+      console.error("자산 정보 불러오기 실패:", error.message);
+      return;
+    }
+
+    setWallet(data.cash);
+    setBitcoinAmount(data.btc);
+  };
 
   const insertTrade = async ({ type, amount, price, cost }) => {
     const { error } = await supabase.from("trades").insert([
@@ -56,29 +73,50 @@ function BitcoinSimulator({ user }) {
   };
 
   useEffect(() => {
-    if (user) fetchTrades();
+    if (user) {
+      fetchTrades();
+      fetchUserAssets();
+    }
   }, [user]);
 
-  const buyBitcoin = () => {
+  const buyBitcoin = async () => {
     if (investAmount <= 0 || investAmount > wallet) {
       alert("투자 금액을 올바르게 입력하세요.");
       return;
     }
     const btcAmount = investAmount / bitcoinPrice;
-    setWallet(wallet - investAmount);
-    setBitcoinAmount(bitcoinAmount + btcAmount);
-    insertTrade({ type: "BUY", amount: btcAmount, price: bitcoinPrice, cost: investAmount });
+
+    await insertTrade({ type: "BUY", amount: btcAmount, price: bitcoinPrice, cost: investAmount });
+
+    await supabase
+      .from("member")
+      .update({
+        cash: wallet - investAmount,
+        btc: bitcoinAmount + btcAmount,
+      })
+      .eq("email", user.email);
+
+    await fetchUserAssets();
   };
 
-  const sellBitcoin = () => {
+  const sellBitcoin = async () => {
     if (bitcoinAmount <= 0) {
       alert("보유한 비트코인이 없습니다.");
       return;
     }
     const sellValue = bitcoinAmount * bitcoinPrice;
-    setWallet(wallet + sellValue);
-    insertTrade({ type: "SELL", amount: bitcoinAmount, price: bitcoinPrice, cost: sellValue });
-    setBitcoinAmount(0);
+
+    await insertTrade({ type: "SELL", amount: bitcoinAmount, price: bitcoinPrice, cost: sellValue });
+
+    await supabase
+      .from("member")
+      .update({
+        cash: wallet + sellValue,
+        btc: 0,
+      })
+      .eq("email", user.email);
+
+    await fetchUserAssets();
   };
 
   const totalAssets = wallet + bitcoinAmount * bitcoinPrice;
@@ -88,8 +126,6 @@ function BitcoinSimulator({ user }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
       <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl">
-
-        {/* 👤 사용자 정보와 로그아웃 버튼 */}
         <div className="flex justify-between items-center mb-6 text-sm text-gray-700">
           <div>👤 {user?.email}</div>
           <button
@@ -103,13 +139,11 @@ function BitcoinSimulator({ user }) {
           </button>
         </div>
 
-        {/* 타이틀 */}
         <div className="text-center mb-8">
           <div className="text-3xl font-bold mb-1">비트코인 시뮬레이터</div>
           <div className="text-sm text-gray-500">가상 투자로 비트코인 거래 전략 연습하기</div>
         </div>
 
-        {/* 현재 가격 */}
         <div className="bg-gray-50 p-4 rounded-xl mb-6">
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-700">현재 비트코인 가격</div>
@@ -119,7 +153,6 @@ function BitcoinSimulator({ user }) {
           </div>
         </div>
 
-        {/* 자산 현황 */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-blue-50 p-4 rounded-xl text-center">
             <div className="text-sm text-gray-600">보유 현금</div>
@@ -147,7 +180,6 @@ function BitcoinSimulator({ user }) {
           </div>
         </div>
 
-        {/* 거래 입력 */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">투자 금액</label>
           <input
@@ -174,7 +206,6 @@ function BitcoinSimulator({ user }) {
           </div>
         </div>
 
-        {/* 거래 내역 */}
         {trades.length > 0 && (
           <div className="bg-gray-50 p-4 rounded-xl">
             <div className="text-sm font-semibold text-gray-700 mb-3">최근 거래 내역</div>
