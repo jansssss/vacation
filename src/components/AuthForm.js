@@ -31,7 +31,7 @@ export default function AuthForm({ onLogin }) {
         onLogin(data.user);
       }
     } else {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -41,8 +41,27 @@ export default function AuthForm({ onLogin }) {
           }
         }
       });
-      if (error) setMessage("❌ 회원가입 실패: " + error.message);
-      else setMessage("📧 회원가입 성공! 이메일을 확인해주세요.");
+
+      if (error) {
+        setMessage("❌ 회원가입 실패: " + error.message);
+      } else {
+        // 👇 member 테이블에 추가
+        const { user } = data;
+        const { error: insertError } = await supabase.from("member").insert([
+          {
+            id: user.id,
+            name,
+            phone,
+            email
+          }
+        ]);
+
+        if (insertError) {
+          setMessage("✅ 회원가입은 성공했지만 member 등록 실패: " + insertError.message);
+        } else {
+          setMessage("📧 회원가입 성공! 이메일을 확인해주세요.");
+        }
+      }
     }
   };
 
