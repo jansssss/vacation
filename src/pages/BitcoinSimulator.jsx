@@ -1,4 +1,4 @@
-// BitcoinSimulator.jsx - 종합 반영된 최종 버전
+// BitcoinSimulator.jsx - 최종 수정본 전체소스
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { supabase } from "../lib/supabaseClient";
@@ -10,6 +10,7 @@ function BitcoinSimulator({ user }) {
   const [investAmount, setInvestAmount] = useState(100000);
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialCash, setInitialCash] = useState(1000000);
 
   // 비트코인 현재가 가져오기
   useEffect(() => {
@@ -31,6 +32,24 @@ function BitcoinSimulator({ user }) {
     return () => clearInterval(interval);
   }, []);
 
+  // 최초 로그인 시 사용자 자산 생성
+  const initializeUserAssets = async () => {
+    const { data, error } = await supabase
+      .from("member")
+      .select("cash, btc")
+      .eq("email", user.email)
+      .single();
+
+    if (error || !data) {
+      const { error: insertError } = await supabase.from("member").insert({
+        email: user.email,
+        cash: 1000000,
+        btc: 0,
+      });
+      if (insertError) console.error("초기 자산 생성 실패:", insertError.message);
+    }
+  };
+
   // 사용자 자산 불러오기
   const fetchUserAssets = async () => {
     const { data, error } = await supabase
@@ -39,15 +58,15 @@ function BitcoinSimulator({ user }) {
       .eq("email", user.email)
       .single();
 
-    if (error) {
+    if (data) {
+      setWallet(data.cash);
+      setBitcoinAmount(data.btc);
+      setInitialCash((prev) => (prev === 1000000 ? data.cash : prev));
+    } else {
       console.error("자산 정보 불러오기 실패:", error.message);
-      return;
     }
-    setWallet(data.cash);
-    setBitcoinAmount(data.btc);
   };
 
-  // 거래 내역 저장
   const insertTrade = async ({ type, amount, price, cost }) => {
     const { error } = await supabase.from("trades").insert([
       {
@@ -62,7 +81,6 @@ function BitcoinSimulator({ user }) {
     else fetchTrades();
   };
 
-  // 거래 내역 불러오기
   const fetchTrades = async () => {
     const { data, error } = await supabase
       .from("trades")
@@ -76,12 +94,13 @@ function BitcoinSimulator({ user }) {
 
   useEffect(() => {
     if (user) {
-      fetchTrades();
-      fetchUserAssets();
+      initializeUserAssets().then(() => {
+        fetchUserAssets();
+        fetchTrades();
+      });
     }
   }, [user]);
 
-  // 매수
   const buyBitcoin = async () => {
     if (investAmount <= 0) {
       alert("투자 금액을 올바르게 입력하세요.");
@@ -111,7 +130,7 @@ function BitcoinSimulator({ user }) {
 
     await insertTrade({ type: "BUY", amount: btcAmount, price: bitcoinPrice, cost: investAmount });
 
-    await supabase
+    const { error: updateError } = await supabase
       .from("member")
       .update({
         cash: currentCash - investAmount,
@@ -119,10 +138,14 @@ function BitcoinSimulator({ user }) {
       })
       .eq("email", user.email);
 
+    if (updateError) {
+      console.error("❌ 자산 업데이트 실패:", updateError.message);
+      alert("자산 업데이트에 실패했습니다.");
+    }
+
     await fetchUserAssets();
   };
 
-  // 매도
   const sellBitcoin = async () => {
     const { data: current, error } = await supabase
       .from("member")
@@ -147,7 +170,7 @@ function BitcoinSimulator({ user }) {
 
     await insertTrade({ type: "SELL", amount: currentBtc, price: bitcoinPrice, cost: sellValue });
 
-    await supabase
+    const { error: updateError } = await supabase
       .from("member")
       .update({
         cash: currentCash + sellValue,
@@ -155,12 +178,17 @@ function BitcoinSimulator({ user }) {
       })
       .eq("email", user.email);
 
+    if (updateError) {
+      console.error("❌ 자산 업데이트 실패:", updateError.message);
+      alert("자산 업데이트에 실패했습니다.");
+    }
+
     await fetchUserAssets();
   };
 
   const totalAssets = wallet + bitcoinAmount * bitcoinPrice;
-  const profitLoss = totalAssets - 1000000;
-  const profitRate = ((profitLoss / 1000000) * 100).toFixed(2);
+  const profitLoss = totalAssets - initialCash;
+  const profitRate = ((profitLoss / initialCash) * 100).toFixed(2);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
