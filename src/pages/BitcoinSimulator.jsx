@@ -1,4 +1,4 @@
-// BitcoinSimulator.jsx
+// BitcoinSimulator.jsx - 종합 반영된 최종 버전
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { supabase } from "../lib/supabaseClient";
@@ -11,7 +11,7 @@ function BitcoinSimulator({ user }) {
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 비트코인 가격 가져오기
+  // 비트코인 현재가 가져오기
   useEffect(() => {
     const fetchBitcoinPrice = async () => {
       try {
@@ -31,6 +31,7 @@ function BitcoinSimulator({ user }) {
     return () => clearInterval(interval);
   }, []);
 
+  // 사용자 자산 불러오기
   const fetchUserAssets = async () => {
     const { data, error } = await supabase
       .from("member")
@@ -42,11 +43,11 @@ function BitcoinSimulator({ user }) {
       console.error("자산 정보 불러오기 실패:", error.message);
       return;
     }
-
     setWallet(data.cash);
     setBitcoinAmount(data.btc);
   };
 
+  // 거래 내역 저장
   const insertTrade = async ({ type, amount, price, cost }) => {
     const { error } = await supabase.from("trades").insert([
       {
@@ -61,6 +62,7 @@ function BitcoinSimulator({ user }) {
     else fetchTrades();
   };
 
+  // 거래 내역 불러오기
   const fetchTrades = async () => {
     const { data, error } = await supabase
       .from("trades")
@@ -79,11 +81,32 @@ function BitcoinSimulator({ user }) {
     }
   }, [user]);
 
+  // 매수
   const buyBitcoin = async () => {
-    if (investAmount <= 0 || investAmount > wallet) {
+    if (investAmount <= 0) {
       alert("투자 금액을 올바르게 입력하세요.");
       return;
     }
+
+    const { data: current, error } = await supabase
+      .from("member")
+      .select("cash, btc")
+      .eq("email", user.email)
+      .single();
+
+    if (error || !current) {
+      alert("자산 정보를 불러올 수 없습니다.");
+      return;
+    }
+
+    const currentCash = current.cash;
+    const currentBtc = current.btc;
+
+    if (investAmount > currentCash) {
+      alert("보유 현금보다 많은 금액은 투자할 수 없습니다.");
+      return;
+    }
+
     const btcAmount = investAmount / bitcoinPrice;
 
     await insertTrade({ type: "BUY", amount: btcAmount, price: bitcoinPrice, cost: investAmount });
@@ -91,27 +114,43 @@ function BitcoinSimulator({ user }) {
     await supabase
       .from("member")
       .update({
-        cash: wallet - investAmount,
-        btc: bitcoinAmount + btcAmount,
+        cash: currentCash - investAmount,
+        btc: currentBtc + btcAmount,
       })
       .eq("email", user.email);
 
     await fetchUserAssets();
   };
 
+  // 매도
   const sellBitcoin = async () => {
-    if (bitcoinAmount <= 0) {
+    const { data: current, error } = await supabase
+      .from("member")
+      .select("cash, btc")
+      .eq("email", user.email)
+      .single();
+
+    if (error || !current) {
+      alert("자산 정보를 불러올 수 없습니다.");
+      return;
+    }
+
+    const currentCash = current.cash;
+    const currentBtc = current.btc;
+
+    if (currentBtc <= 0) {
       alert("보유한 비트코인이 없습니다.");
       return;
     }
-    const sellValue = bitcoinAmount * bitcoinPrice;
 
-    await insertTrade({ type: "SELL", amount: bitcoinAmount, price: bitcoinPrice, cost: sellValue });
+    const sellValue = currentBtc * bitcoinPrice;
+
+    await insertTrade({ type: "SELL", amount: currentBtc, price: bitcoinPrice, cost: sellValue });
 
     await supabase
       .from("member")
       .update({
-        cash: wallet + sellValue,
+        cash: currentCash + sellValue,
         btc: 0,
       })
       .eq("email", user.email);
