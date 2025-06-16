@@ -1,4 +1,4 @@
-// BitcoinSimulator.jsx - 최종 수정본 전체소스
+// BitcoinSimulator.jsx - 전량 매도 반영 최종 수정본
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { supabase } from "../lib/supabaseClient";
@@ -12,7 +12,6 @@ function BitcoinSimulator({ user }) {
   const [loading, setLoading] = useState(true);
   const [initialCash, setInitialCash] = useState(1000000);
 
-  // 비트코인 현재가 가져오기
   useEffect(() => {
     const fetchBitcoinPrice = async () => {
       try {
@@ -32,7 +31,6 @@ function BitcoinSimulator({ user }) {
     return () => clearInterval(interval);
   }, []);
 
-  // 최초 로그인 시 사용자 자산 생성
   const initializeUserAssets = async () => {
     const { data, error } = await supabase
       .from("member")
@@ -50,7 +48,6 @@ function BitcoinSimulator({ user }) {
     }
   };
 
-  // 사용자 자산 불러오기
   const fetchUserAssets = async () => {
     const { data, error } = await supabase
       .from("member")
@@ -141,6 +138,7 @@ function BitcoinSimulator({ user }) {
     if (updateError) {
       console.error("❌ 자산 업데이트 실패:", updateError.message);
       alert("자산 업데이트에 실패했습니다.");
+      return;
     }
 
     await fetchUserAssets();
@@ -181,6 +179,7 @@ function BitcoinSimulator({ user }) {
     if (updateError) {
       console.error("❌ 자산 업데이트 실패:", updateError.message);
       alert("자산 업데이트에 실패했습니다.");
+      return;
     }
 
     await fetchUserAssets();
