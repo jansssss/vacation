@@ -10,11 +10,11 @@ const Home = () => {
       {/* 타이틀 */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3 tracking-tight">
-          미래를 준비하는, 세련된 계산 도구
+        //  미래를 준비하는, 세련된 계산 도구
           
         </h1>
         <p className="text-lg text-gray-500">
-          미래를 준비하는 실용 계산 도구, 지금 바로 사용하세요
+       //   미래를 준비하는 실용 계산 도구, 지금 바로 사용하세요
         </p>
       </div>
 
