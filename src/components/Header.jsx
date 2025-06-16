@@ -6,10 +6,12 @@ const Header = () => {
   const location = useLocation();
 
   const navItems = [
-    { name: "연차 계산기", path: "/annual-leave", icon: <FaCalendarAlt /> },
-    { name: "퇴직금 계산기", path: "/retirement", icon: <FaCoins /> },
-    { name: "실수령액 계산기", path: "/salary", icon: <FaWallet /> },
-    { name: "내 연봉 순위", path: "/salary-rank", icon: <FaChartBar /> } // ✅ 새 항목
+  
+  //  { name: "연차 계산기", path: "/annual-leave", icon: <FaCalendarAlt /> },
+  //  { name: "퇴직금 계산기", path: "/retirement", icon: <FaCoins /> },
+   // { name: "실수령액 계산기", path: "/salary", icon: <FaWallet /> },
+  //  { name: "내 연봉 순위", path: "/salary-rank", icon: <FaChartBar /> } // ✅ 새 항목
+  
   ];
 
   return (
