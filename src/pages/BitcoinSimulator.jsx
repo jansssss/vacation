@@ -1,4 +1,3 @@
-// BitcoinSimulator.jsx - 전량 매도 반영 최종 수정본
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { supabase } from "../lib/supabaseClient";
@@ -10,7 +9,7 @@ function BitcoinSimulator({ user }) {
   const [investAmount, setInvestAmount] = useState(100000);
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [initialCash, setInitialCash] = useState(1000000);
+  const [initialCash, setInitialCash] = useState(0);
 
   useEffect(() => {
     const fetchBitcoinPrice = async () => {
@@ -34,15 +33,16 @@ function BitcoinSimulator({ user }) {
   const initializeUserAssets = async () => {
     const { data, error } = await supabase
       .from("member")
-      .select("cash, btc")
+      .select("cash, btc, initial_cash")
       .eq("email", user.email)
       .single();
 
-    if (error || !data) {
+    if (!data) {
       const { error: insertError } = await supabase.from("member").insert({
         email: user.email,
         cash: 1000000,
         btc: 0,
+        initial_cash: 1000000,
       });
       if (insertError) console.error("초기 자산 생성 실패:", insertError.message);
     }
@@ -51,14 +51,14 @@ function BitcoinSimulator({ user }) {
   const fetchUserAssets = async () => {
     const { data, error } = await supabase
       .from("member")
-      .select("cash, btc")
+      .select("cash, btc, initial_cash")
       .eq("email", user.email)
       .single();
 
     if (data) {
       setWallet(data.cash);
       setBitcoinAmount(data.btc);
-      setInitialCash((prev) => (prev === 1000000 ? data.cash : prev));
+      setInitialCash(data.initial_cash || 0);
     } else {
       console.error("자산 정보 불러오기 실패:", error.message);
     }
@@ -187,7 +187,12 @@ function BitcoinSimulator({ user }) {
 
   const totalAssets = wallet + bitcoinAmount * bitcoinPrice;
   const profitLoss = totalAssets - initialCash;
-  const profitRate = ((profitLoss / initialCash) * 100).toFixed(2);
+  let profitRateDisplay = "0%";
+
+  if (initialCash > 0) {
+    const rate = ((profitLoss / initialCash) * 100).toFixed(2);
+    profitRateDisplay = `${rate > 0 ? "+" : ""}${rate}%`;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
@@ -241,7 +246,7 @@ function BitcoinSimulator({ user }) {
           <div className={`p-4 rounded-xl text-center ${profitLoss >= 0 ? "bg-green-50" : "bg-red-50"}`}>
             <div className="text-sm text-gray-600">수익률</div>
             <div className={`text-lg font-bold ${profitLoss >= 0 ? "text-green-600" : "text-red-600"}`}>
-              {profitRate}%
+              {profitRateDisplay}
             </div>
           </div>
         </div>
