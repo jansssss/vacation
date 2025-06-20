@@ -275,7 +275,7 @@ function BitcoinSimulator({ user }) {
           </div>
         )}
 
-        {/* UI 생략 부분 없음, 실제 앱에서 계속 작성 가능 */}
+        {/* 나머지 UI 구성 유지 */}
       </div>
     </div>
   );
