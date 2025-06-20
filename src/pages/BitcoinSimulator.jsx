@@ -275,7 +275,87 @@ function BitcoinSimulator({ user }) {
           </div>
         )}
 
-        {/* 나머지 UI 구성 유지 */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-blue-50 p-4 rounded-xl text-center">
+            <div className="text-sm text-gray-600">보유 현금</div>
+            <div className="text-lg font-bold text-blue-600">₩{wallet.toLocaleString()}</div>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-xl text-center">
+            <div className="text-sm text-gray-600">보유 BTC</div>
+            <div className="text-lg font-bold text-orange-600">{bitcoinAmount.toFixed(8)} BTC</div>
+          </div>
+          <div className="bg-green-50 p-4 rounded-xl text-center">
+            <div className="text-sm text-gray-600">총 자산</div>
+            <div className="text-lg font-bold text-green-600">₩{totalAssets.toLocaleString()}</div>
+          </div>
+          <div className={`p-4 rounded-xl text-center ${profitLoss >= 0 ? "bg-green-50" : "bg-red-50"}`}>
+            <div className="text-sm text-gray-600">수익률</div>
+            <div className={`text-lg font-bold ${profitLoss >= 0 ? "text-green-600" : "text-red-600"}`}>{profitRateDisplay}</div>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">투자 금액</label>
+          <input
+            type="number"
+            value={investAmount}
+            onChange={(e) => setInvestAmount(Number(e.target.value))}
+            className="w-full px-4 py-2 border rounded-lg text-right focus:outline-none focus:ring-2 focus:ring-orange-400 mb-4"
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={buyBitcoin}
+              disabled={loading || wallet < investAmount}
+              className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+            >
+              매수
+            </button>
+            <button
+              onClick={sellBitcoin}
+              disabled={loading || bitcoinAmount <= 0}
+              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+            >
+              전량 매도
+            </button>
+          </div>
+        </div>
+
+        {trades.length > 0 && (
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <div className="text-sm font-semibold text-gray-700 mb-3">최근 거래 내역</div>
+            <div className="max-h-40 overflow-y-auto">
+              {trades.slice(0, 5).map((trade, index) => (
+                <div
+                  key={trade.id || index}
+                  className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0"
+                >
+                  <div className="flex items-center">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-bold ${
+                        trade.type === "BUY"
+                          ? "bg-orange-100 text-orange-600"
+                          : "bg-red-100 text-red-600"
+                      }`}
+                    >
+                      {trade.type}
+                    </span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      {new Date(trade.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold">
+                      ₩{Number(trade.cost).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {Number(trade.amount).toFixed(8)} BTC
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
