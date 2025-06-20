@@ -260,7 +260,7 @@ function BitcoinSimulator({ user }) {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-blue-50 p-4 rounded-xl text-center">
             <div className="text-sm text-gray-600">보유 현금</div>
-            <div className="text-lg font-bold text-blue-600">₩{wallet.toLocaleString()}</div>
+            <div className="text-lg font-bold text-blue-600">₩{Math.round(wallet).toLocaleString()}</div>
           </div>
           <div className="bg-orange-50 p-4 rounded-xl text-center">
             <div className="text-sm text-gray-600">보유 BTC</div>
@@ -268,7 +268,7 @@ function BitcoinSimulator({ user }) {
           </div>
           <div className="bg-green-50 p-4 rounded-xl text-center">
             <div className="text-sm text-gray-600">총 자산</div>
-            <div className="text-lg font-bold text-green-600">₩{totalAssets.toLocaleString()}</div>
+            <div className="text-lg font-bold text-green-600">₩{Math.round(totalAssets).toLocaleString()}</div>
           </div>
           <div className={`p-4 rounded-xl text-center ${profitLoss >= 0 ? "bg-green-50" : "bg-red-50"}`}>
             <div className="text-sm text-gray-600">수익률</div>
