@@ -21,7 +21,7 @@ function ChargeAdmin() {
   };
 
   const approveRequest = async (id, email, amount) => {
-    // member.cash 업데이트
+    // 사용자 자산 조회
     const { data: member, error: memberError } = await supabase
       .from("member")
       .select("cash")
@@ -35,6 +35,7 @@ function ChargeAdmin() {
 
     const newCash = (member.cash || 0) + amount;
 
+    // 자산 업데이트
     const { error: updateError } = await supabase
       .from("member")
       .update({ cash: newCash })
@@ -45,6 +46,7 @@ function ChargeAdmin() {
       return;
     }
 
+    // 요청 상태 변경
     const { error: statusError } = await supabase
       .from("charge_requests")
       .update({ status: "approved" })
@@ -52,10 +54,26 @@ function ChargeAdmin() {
 
     if (statusError) {
       alert("요청 상태 변경 실패");
-    } else {
-      alert("승인 완료");
-      fetchRequests();
+      return;
     }
+
+    // 관리자 정보 가져오기
+    const sessionRes = await supabase.auth.getSession();
+    const adminEmail = sessionRes.data.session?.user?.email || "unknown";
+
+    // 승인 로그 기록
+    const { error: logError } = await supabase.from("charge_logs").insert({
+      email,
+      amount,
+      approved_by: adminEmail,
+    });
+
+    if (logError) {
+      console.error("충전 로그 기록 실패:", logError.message);
+    }
+
+    alert("승인 완료 및 로그 기록 완료");
+    fetchRequests();
   };
 
   useEffect(() => {
