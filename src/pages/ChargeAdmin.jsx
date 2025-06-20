@@ -1,138 +1,208 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { supabase } from "../lib/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
-function ChargeAdmin() {
-  const [requests, setRequests] = useState([]);
+function BitcoinSimulator({ user }) {
+  const [bitcoinPrice, setBitcoinPrice] = useState(0);
+  const [wallet, setWallet] = useState(0);
+  const [bitcoinAmount, setBitcoinAmount] = useState(0);
+  const [investAmount, setInvestAmount] = useState(100000);
+  const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const fetchRequests = async () => {
-    const { data, error } = await supabase
-      .from("charge_requests")
-      .select("no, member_email, amount, status")
-      .eq("status", "pending")
-      .order("requested_at", { ascending: true });
-
-    if (error) {
-      console.error("충전 요청 조회 실패:", error.message);
-    } else {
-      setRequests(data);
-    }
-    setLoading(false);
-  };
-
-  const approveRequest = async (no, email, amount) => {
-    const { data: member, error: memberError } = await supabase
-      .from("member")
-      .select("cash")
-      .eq("email", email)
-      .single();
-
-    if (memberError) {
-      alert("회원 정보 조회 실패");
-      return;
-    }
-
-    const newCash = (member.cash || 0) + amount;
-
-    const { error: updateError } = await supabase
-      .from("member")
-      .update({ cash: newCash })
-      .eq("email", email);
-
-    if (updateError) {
-      alert("현금 업데이트 실패");
-      return;
-    }
-
-    const { error: statusError } = await supabase
-      .from("charge_requests")
-      .update({ status: "approved" })
-      .eq("no", no);
-
-    if (statusError) {
-      alert("요청 상태 변경 실패");
-      return;
-    }
-
-    const sessionRes = await supabase.auth.getSession();
-    const adminEmail = sessionRes.data.session?.user?.email || "unknown";
-
-    const { error: logError } = await supabase.from("charge_logs").insert({
-      email,
-      amount,
-      approved_by: adminEmail,
-    });
-
-    if (logError) {
-      console.error("충전 로그 기록 실패:", logError.message);
-    }
-
-    alert("승인 완료");
-    fetchRequests();
-  };
-
-  const rejectRequest = async (no) => {
-    const { error } = await supabase
-      .from("charge_requests")
-      .update({ status: "rejected" })
-      .eq("no", no);
-
-    if (error) {
-      alert("요청 거절 실패");
-    } else {
-      alert("요청이 거절되었습니다.");
-      fetchRequests();
-    }
-  };
+  const [initialCash, setInitialCash] = useState(0);
+  const [chargeAmount, setChargeAmount] = useState(0);
+  const [showChargePopup, setShowChargePopup] = useState(false);
+  const [userLevel, setUserLevel] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchRequests();
+    const fetchBitcoinPrice = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw"
+        );
+        setBitcoinPrice(response.data.bitcoin.krw);
+        setLoading(false);
+      } catch (error) {
+        console.error("가격 조회 실패:", error);
+        setBitcoinPrice(95000000);
+        setLoading(false);
+      }
+    };
+    fetchBitcoinPrice();
+    const interval = setInterval(fetchBitcoinPrice, 30000);
+    return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      initializeUserAssets().then(() => {
+        fetchUserAssets();
+        fetchTrades();
+      });
+    }
+  }, [user]);
+
+  const initializeUserAssets = async () => {
+    const { count, error } = await supabase
+      .from("member")
+      .select("*", { count: "exact", head: true })
+      .eq("email", user.email);
+
+    if (error) {
+      console.error("❌ 사용자 자산 확인 실패:", error.message);
+      return;
+    }
+
+    if (count === 0) {
+      const { error: insertError } = await supabase.from("member").insert({
+        email: user.email,
+        cash: 1000000,
+        btc: 0,
+        initial_cash: 1000000,
+        level: 1,
+      });
+      if (insertError) {
+        console.error("❌ 초기 자산 삽입 실패:", insertError.message);
+      } else {
+        console.log("✅ 최초 사용자 100만원 지급 완료");
+      }
+    }
+  };
+
+  const fetchUserAssets = async () => {
+    const { data, error } = await supabase
+      .from("member")
+      .select("cash, btc, initial_cash, level")
+      .eq("email", user.email)
+      .single();
+
+    if (data) {
+      setWallet(data.cash);
+      setBitcoinAmount(data.btc);
+      setInitialCash(data.initial_cash || 0);
+      setUserLevel(data.level || 1);
+    } else {
+      console.error("자산 정보 불러오기 실패:", error.message);
+    }
+  };
+
+  const fetchTrades = async () => {
+    const { data, error } = await supabase
+      .from("trades")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) console.error("❌ 거래 불러오기 실패:", error.message);
+    else setTrades(data);
+  };
+
+  const requestCharge = async () => {
+    if (chargeAmount <= 0) {
+      alert("충전 금액을 올바르게 입력하세요.");
+      return;
+    }
+
+    const { error } = await supabase.from("charge_requests").insert({
+      member_email: user.email,
+      amount: chargeAmount,
+      status: "pending",
+    });
+
+    if (error) {
+      console.error("충전 요청 실패:", error.message);
+      alert("충전 요청에 실패했습니다.");
+    } else {
+      alert("충전 요청이 접수되었습니다. 관리자 승인 후 반영됩니다.");
+      setChargeAmount(0);
+      setShowChargePopup(false);
+    }
+  };
+
+  const goToAdmin = () => {
+    if (userLevel >= 5) {
+      navigate("/charge-admin");
+    } else {
+      alert("접근 권한이 없습니다. 관리자만 접근할 수 있습니다.");
+    }
+  };
+
+  const totalAssets = wallet + bitcoinAmount * bitcoinPrice;
+  const profitLoss = totalAssets - initialCash;
+  let profitRateDisplay = "0%";
+
+  if (initialCash > 0) {
+    const rate = ((profitLoss / initialCash) * 100).toFixed(2);
+    profitRateDisplay = `${rate > 0 ? "+" : ""}${rate}%`;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-2xl font-bold mb-6">💼 충전 요청 승인</h1>
-      {loading ? (
-        <p>로딩 중...</p>
-      ) : requests.length === 0 ? (
-        <p>대기 중인 요청이 없습니다.</p>
-      ) : (
-        <div className="bg-white shadow rounded-lg p-6">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2">이메일</th>
-                <th className="p-2">요청 금액</th>
-                <th className="p-2">조치</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((req) => (
-                <tr key={req.no} className="border-t">
-                  <td className="p-2">{req.member_email}</td>
-                  <td className="p-2">₩{req.amount.toLocaleString()}</td>
-                  <td className="p-2 flex gap-2">
-                    <button
-                      onClick={() => approveRequest(req.no, req.member_email, req.amount)}
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                    >
-                      승인
-                    </button>
-                    <button
-                      onClick={() => rejectRequest(req.no)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                    >
-                      거절
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
+      <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl">
+        <div className="flex justify-between items-center mb-6 text-sm text-gray-700">
+          <div>👤 {user?.email}</div>
+          <div className="flex gap-2">
+            {userLevel >= 5 && (
+              <button
+                onClick={goToAdmin}
+                className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded"
+              >
+                관리자 전환
+              </button>
+            )}
+            <button
+              onClick={() => setShowChargePopup(true)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+            >
+              충전
+            </button>
+            <button
+              onClick={async () => {
+                await supabase.auth.signOut();
+                window.location.href = "/bitcoin-simulator";
+              }}
+              className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+            >
+              로그아웃
+            </button>
+          </div>
         </div>
-      )}
+
+        {showChargePopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-xl shadow-lg w-80">
+              <h2 className="text-lg font-semibold mb-4">충전 요청</h2>
+              <input
+                type="number"
+                value={chargeAmount}
+                onChange={(e) => setChargeAmount(Number(e.target.value))}
+                placeholder="충전할 금액"
+                className="w-full px-3 py-2 border rounded mb-4"
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setShowChargePopup(false)}
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={requestCharge}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  요청
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 나머지 UI 구성 유지 */}
+      </div>
     </div>
   );
 }
 
-export default ChargeAdmin;
+export default BitcoinSimulator;
