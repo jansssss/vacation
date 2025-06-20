@@ -10,6 +10,7 @@ function BitcoinSimulator({ user }) {
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [initialCash, setInitialCash] = useState(0);
+  const [chargeAmount, setChargeAmount] = useState(0);
 
   useEffect(() => {
     const fetchBitcoinPrice = async () => {
@@ -31,13 +32,17 @@ function BitcoinSimulator({ user }) {
   }, []);
 
   const initializeUserAssets = async () => {
-    const { data, error, status } = await supabase
+    const { count, error } = await supabase
       .from("member")
-      .select("cash, btc, initial_cash")
-      .eq("email", user.email)
-      .maybeSingle();
+      .select("*", { count: "exact", head: true })
+      .eq("email", user.email);
 
-    if (!data && status === 200) {
+    if (error) {
+      console.error("❌ 사용자 자산 확인 실패:", error.message);
+      return;
+    }
+
+    if (count === 0) {
       const { error: insertError } = await supabase.from("member").insert({
         email: user.email,
         cash: 1000000,
@@ -45,12 +50,10 @@ function BitcoinSimulator({ user }) {
         initial_cash: 1000000,
       });
       if (insertError) {
-        console.error("❌ 초기 자산 생성 실패:", insertError.message);
+        console.error("❌ 초기 자산 삽입 실패:", insertError.message);
       } else {
-        console.log("✅ 사용자 최창 로그인, 자산 등록 완료");
+        console.log("✅ 최초 사용자 100만원 지급 완료");
       }
-    } else {
-      console.log("ℹ️ 기존 사용자 자산 있음");
     }
   };
 
@@ -80,7 +83,7 @@ function BitcoinSimulator({ user }) {
         cost,
       },
     ]);
-    if (error) console.error("📋 거래 저장 실패:", error.message);
+    if (error) console.error("📛 거래 저장 실패:", error.message);
     else fetchTrades();
   };
 
@@ -106,6 +109,26 @@ function BitcoinSimulator({ user }) {
     }
   }, [user]);
 
+  const requestCharge = async () => {
+    if (chargeAmount <= 0) {
+      alert("충전 금액을 입력하세요.");
+      return;
+    }
+
+    const { error } = await supabase.from("charge_requests").insert({
+      email: user.email,
+      amount: chargeAmount,
+      status: "pending",
+    });
+
+    if (error) {
+      alert("충전 요청 실패: " + error.message);
+    } else {
+      alert("충전 요청이 접수되었습니다. 관리자 승인을 기다려주세요.");
+      setChargeAmount(0);
+    }
+  };
+
   const buyBitcoin = async () => {
     if (investAmount <= 0) {
       alert("투자 금액을 올바르게 입력하세요.");
@@ -119,7 +142,7 @@ function BitcoinSimulator({ user }) {
       .single();
 
     if (error || !current) {
-      alert("자산 정보를 불러오수 없습니다.");
+      alert("자산 정보를 불러올 수 없습니다.");
       return;
     }
 
@@ -160,7 +183,7 @@ function BitcoinSimulator({ user }) {
       .single();
 
     if (error || !current) {
-      alert("자산 정보를 불러오수 없습니다.");
+      alert("자산 정보를 불러올 수 없습니다.");
       return;
     }
 
@@ -195,17 +218,139 @@ function BitcoinSimulator({ user }) {
 
   const totalAssets = wallet + bitcoinAmount * bitcoinPrice;
   const profitLoss = totalAssets - initialCash;
-  let profitRateDisplay = "0%";
-
-  if (initialCash > 0) {
-    const rate = ((profitLoss / initialCash) * 100).toFixed(2);
-    profitRateDisplay = `${rate > 0 ? "+" : ""}${rate}%`;
-  }
+  const profitRateDisplay =
+    initialCash > 0 ? `${((profitLoss / initialCash) * 100).toFixed(2)}%` : "0%";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
       <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl">
-        ... (중략: 나머지 UI 부분은 동일하게 유지됨) ...
+        <div className="flex justify-between items-center mb-6 text-sm text-gray-700">
+          <div>👤 {user?.email}</div>
+          <div className="flex gap-2">
+            <input
+              type="number"
+              value={chargeAmount}
+              onChange={(e) => setChargeAmount(Number(e.target.value))}
+              placeholder="충전금액"
+              className="border rounded px-2 py-1 text-sm w-24"
+            />
+            <button
+              onClick={requestCharge}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+            >
+              충전
+            </button>
+            <button
+              onClick={async () => {
+                await supabase.auth.signOut();
+                window.location.href = "/bitcoin-simulator";
+              }}
+              className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+            >
+              로그아웃
+            </button>
+          </div>
+        </div>
+
+        <div className="text-center mb-8">
+          <div className="text-3xl font-bold mb-1">비트코인 시뮬레이터</div>
+          <div className="text-sm text-gray-500">가상 투자로 비트코인 거래 전략 연습하기</div>
+        </div>
+
+        <div className="bg-gray-50 p-4 rounded-xl mb-6">
+          <div className="text-center">
+            <div className="text-lg font-semibold text-gray-700">현재 비트코인 가격</div>
+            <div className="text-2xl font-bold text-orange-600">
+              {loading ? "로딩중..." : `₩${bitcoinPrice.toLocaleString()}`}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-blue-50 p-4 rounded-xl text-center">
+            <div className="text-sm text-gray-600">보유 현금</div>
+            <div className="text-lg font-bold text-blue-600">
+              ₩{wallet.toLocaleString()}
+            </div>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-xl text-center">
+            <div className="text-sm text-gray-600">보유 BTC</div>
+            <div className="text-lg font-bold text-orange-600">
+              {bitcoinAmount.toFixed(8)} BTC
+            </div>
+          </div>
+          <div className="bg-green-50 p-4 rounded-xl text-center">
+            <div className="text-sm text-gray-600">총 자산</div>
+            <div className="text-lg font-bold text-green-600">
+              ₩{totalAssets.toLocaleString()}
+            </div>
+          </div>
+          <div className={`p-4 rounded-xl text-center ${profitLoss >= 0 ? "bg-green-50" : "bg-red-50"}`}>
+            <div className="text-sm text-gray-600">수익률</div>
+            <div className={`text-lg font-bold ${profitLoss >= 0 ? "text-green-600" : "text-red-600"}`}>
+              {profitRateDisplay}
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">투자 금액</label>
+          <input
+            type="number"
+            value={investAmount}
+            onChange={(e) => setInvestAmount(Number(e.target.value))}
+            className="w-full px-4 py-2 border rounded-lg text-right focus:outline-none focus:ring-2 focus:ring-orange-400 mb-4"
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={buyBitcoin}
+              disabled={loading || wallet < investAmount}
+              className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+            >
+              매수
+            </button>
+            <button
+              onClick={sellBitcoin}
+              disabled={loading || bitcoinAmount <= 0}
+              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+            >
+              전량 매도
+            </button>
+          </div>
+        </div>
+
+        {trades.length > 0 && (
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <div className="text-sm font-semibold text-gray-700 mb-3">최근 거래 내역</div>
+            <div className="max-h-40 overflow-y-auto">
+              {trades.slice(0, 5).map((trade, index) => (
+                <div
+                  key={trade.id || index}
+                  className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0"
+                >
+                  <div className="flex items-center">
+                    <span className={`px-2 py-1 rounded text-xs font-bold ${
+                      trade.type === "BUY" ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"
+                    }`}>
+                      {trade.type}
+                    </span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      {new Date(trade.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold">
+                      ₩{Number(trade.cost).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {Number(trade.amount).toFixed(8)} BTC
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
