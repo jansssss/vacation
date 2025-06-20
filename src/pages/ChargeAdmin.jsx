@@ -21,7 +21,6 @@ function ChargeAdmin() {
   };
 
   const approveRequest = async (id, email, amount) => {
-    // 사용자 자산 조회
     const { data: member, error: memberError } = await supabase
       .from("member")
       .select("cash")
@@ -35,7 +34,6 @@ function ChargeAdmin() {
 
     const newCash = (member.cash || 0) + amount;
 
-    // 자산 업데이트
     const { error: updateError } = await supabase
       .from("member")
       .update({ cash: newCash })
@@ -46,7 +44,6 @@ function ChargeAdmin() {
       return;
     }
 
-    // 요청 상태 변경
     const { error: statusError } = await supabase
       .from("charge_requests")
       .update({ status: "approved" })
@@ -57,11 +54,9 @@ function ChargeAdmin() {
       return;
     }
 
-    // 관리자 정보 가져오기
     const sessionRes = await supabase.auth.getSession();
     const adminEmail = sessionRes.data.session?.user?.email || "unknown";
 
-    // 승인 로그 기록
     const { error: logError } = await supabase.from("charge_logs").insert({
       email,
       amount,
@@ -72,8 +67,22 @@ function ChargeAdmin() {
       console.error("충전 로그 기록 실패:", logError.message);
     }
 
-    alert("승인 완료 및 로그 기록 완료");
+    alert("승인 완료");
     fetchRequests();
+  };
+
+  const rejectRequest = async (id, email, amount) => {
+    const { error } = await supabase
+      .from("charge_requests")
+      .update({ status: "rejected" })
+      .eq("id", id);
+
+    if (error) {
+      alert("요청 거절 실패");
+    } else {
+      alert("요청이 거절되었습니다.");
+      fetchRequests();
+    }
   };
 
   useEffect(() => {
@@ -94,7 +103,7 @@ function ChargeAdmin() {
               <tr className="bg-gray-100 text-left">
                 <th className="p-2">이메일</th>
                 <th className="p-2">요청 금액</th>
-                <th className="p-2">승인</th>
+                <th className="p-2">조치</th>
               </tr>
             </thead>
             <tbody>
@@ -102,12 +111,18 @@ function ChargeAdmin() {
                 <tr key={req.id} className="border-t">
                   <td className="p-2">{req.email}</td>
                   <td className="p-2">₩{req.amount.toLocaleString()}</td>
-                  <td className="p-2">
+                  <td className="p-2 flex gap-2">
                     <button
                       onClick={() => approveRequest(req.id, req.email, req.amount)}
                       className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
                     >
                       승인
+                    </button>
+                    <button
+                      onClick={() => rejectRequest(req.id, req.email, req.amount)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                    >
+                      거절
                     </button>
                   </td>
                 </tr>
