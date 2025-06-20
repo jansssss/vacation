@@ -8,9 +8,9 @@ function ChargeAdmin() {
   const fetchRequests = async () => {
     const { data, error } = await supabase
       .from("charge_requests")
-      .select("id, email, amount, status")
+      .select("no, member_email, amount, status")
       .eq("status", "pending")
-      .order("created_at", { ascending: true });
+      .order("requested_at", { ascending: true });
 
     if (error) {
       console.error("충전 요청 조회 실패:", error.message);
@@ -20,7 +20,7 @@ function ChargeAdmin() {
     setLoading(false);
   };
 
-  const approveRequest = async (id, email, amount) => {
+  const approveRequest = async (no, email, amount) => {
     const { data: member, error: memberError } = await supabase
       .from("member")
       .select("cash")
@@ -47,7 +47,7 @@ function ChargeAdmin() {
     const { error: statusError } = await supabase
       .from("charge_requests")
       .update({ status: "approved" })
-      .eq("id", id);
+      .eq("no", no);
 
     if (statusError) {
       alert("요청 상태 변경 실패");
@@ -71,11 +71,11 @@ function ChargeAdmin() {
     fetchRequests();
   };
 
-  const rejectRequest = async (id, email, amount) => {
+  const rejectRequest = async (no) => {
     const { error } = await supabase
       .from("charge_requests")
       .update({ status: "rejected" })
-      .eq("id", id);
+      .eq("no", no);
 
     if (error) {
       alert("요청 거절 실패");
@@ -108,18 +108,18 @@ function ChargeAdmin() {
             </thead>
             <tbody>
               {requests.map((req) => (
-                <tr key={req.id} className="border-t">
-                  <td className="p-2">{req.email}</td>
+                <tr key={req.no} className="border-t">
+                  <td className="p-2">{req.member_email}</td>
                   <td className="p-2">₩{req.amount.toLocaleString()}</td>
                   <td className="p-2 flex gap-2">
                     <button
-                      onClick={() => approveRequest(req.id, req.email, req.amount)}
+                      onClick={() => approveRequest(req.no, req.member_email, req.amount)}
                       className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
                     >
                       승인
                     </button>
                     <button
-                      onClick={() => rejectRequest(req.id, req.email, req.amount)}
+                      onClick={() => rejectRequest(req.no)}
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                     >
                       거절
