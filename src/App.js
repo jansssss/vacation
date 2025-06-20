@@ -7,13 +7,15 @@ import Header from "./components/Header";
 import SalaryCalculator from "./pages/SalaryCalculator";
 import SalaryRankPage from "./pages/salary-rank/SalaryRankPage";
 import BitcoinSimulator from "./pages/BitcoinSimulator";
-import AuthForm from "./components/AuthForm"; // ✅ 추가
-import { supabase } from "./lib/supabaseClient"; // ✅ 추가
+import AuthForm from "./components/AuthForm";
+import { supabase } from "./lib/supabaseClient";
+
+// ✅ 관리자 승인 페이지 추가
+import ChargeAdmin from "./pages/ChargeAdmin";
 
 function App() {
   const [user, setUser] = useState(null);
 
-  // 로그인 상태 확인
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user || null);
@@ -21,7 +23,6 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
-
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -35,10 +36,14 @@ function App() {
         <Route path="/salary" element={<SalaryCalculator />} />
         <Route path="/salary-rank" element={<SalaryRankPage />} />
 
-        {/* ✅ 로그인 확인이 필요한 페이지 */}
+        {/* 로그인 필요 페이지 */}
         <Route
           path="/bitcoin-simulator"
           element={user ? <BitcoinSimulator user={user} /> : <AuthForm onLogin={setUser} />}
+        />
+        <Route
+          path="/charge-admin"
+          element={user ? <ChargeAdmin user={user} /> : <AuthForm onLogin={setUser} />}
         />
       </Routes>
     </Router>
