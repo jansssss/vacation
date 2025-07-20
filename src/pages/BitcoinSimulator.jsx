@@ -8,6 +8,7 @@ function BitcoinSimulator({ user }) {
   const [wallet, setWallet] = useState(0);
   const [bitcoinAmount, setBitcoinAmount] = useState(0);
   const [investAmount, setInvestAmount] = useState(100000);
+  const [sellAmount, setSellAmount] = useState(0); // 매도할 BTC 수량
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chargeAmount, setChargeAmount] = useState(0);
@@ -42,6 +43,11 @@ function BitcoinSimulator({ user }) {
       });
     }
   }, [user]);
+
+  // 보유 BTC가 변경될 때마다 매도 수량 초기화
+  useEffect(() => {
+    setSellAmount(0);
+  }, [bitcoinAmount]);
 
   const initializeUserAssets = async () => {
     const { count, error } = await supabase
@@ -179,7 +185,50 @@ function BitcoinSimulator({ user }) {
     }
   };
 
+  // 부분 매도 함수
   const sellBitcoin = async () => {
+    if (bitcoinAmount <= 0) {
+      alert("보유한 비트코인이 없습니다.");
+      return;
+    }
+
+    if (sellAmount <= 0 || sellAmount > bitcoinAmount) {
+      alert("매도 수량이 올바르지 않거나 보유 수량을 초과했습니다.");
+      return;
+    }
+
+    const sellValue = sellAmount * bitcoinPrice;
+
+    const { error: insertError } = await supabase.from("trades").insert({
+      user_id: user.id,
+      type: "SELL",
+      amount: sellAmount,
+      price: bitcoinPrice,
+      cost: sellValue,
+    });
+
+    if (insertError) {
+      alert("거래 실패: " + insertError.message);
+      return;
+    }
+
+    const { error: updateError } = await supabase
+      .from("member")
+      .update({
+        cash: wallet + sellValue,
+        btc: bitcoinAmount - sellAmount,
+      })
+      .eq("email", user.email);
+
+    if (!updateError) {
+      fetchUserAssets();
+      fetchTrades();
+      setSellAmount(0); // 매도 후 입력값 초기화
+    }
+  };
+
+  // 전량 매도 함수
+  const sellAllBitcoin = async () => {
     if (bitcoinAmount <= 0) {
       alert("보유한 비트코인이 없습니다.");
       return;
@@ -211,6 +260,7 @@ function BitcoinSimulator({ user }) {
     if (!updateError) {
       fetchUserAssets();
       fetchTrades();
+      setSellAmount(0);
     }
   };
 
@@ -294,26 +344,52 @@ function BitcoinSimulator({ user }) {
           </div>
         </div>
 
+        {/* 매수 섹션 */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">투자 금액</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">매수 금액</label>
           <input
             type="number"
             value={investAmount}
             onChange={(e) => setInvestAmount(Number(e.target.value))}
             className="w-full px-4 py-2 border rounded-lg text-right focus:outline-none focus:ring-2 focus:ring-orange-400 mb-4"
+            placeholder="매수할 금액 (원)"
           />
+          <button
+            onClick={buyBitcoin}
+            disabled={loading || wallet < investAmount}
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+          >
+            매수
+          </button>
+        </div>
+
+        {/* 매도 섹션 */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">매도 수량</label>
+          <input
+            type="number"
+            value={sellAmount}
+            onChange={(e) => setSellAmount(Number(e.target.value))}
+            max={bitcoinAmount}
+            step="0.00000001"
+            className="w-full px-4 py-2 border rounded-lg text-right focus:outline-none focus:ring-2 focus:ring-red-400 mb-2"
+            placeholder="매도할 BTC 수량"
+          />
+          <div className="text-sm text-gray-500 mb-4">
+            보유량: {bitcoinAmount.toFixed(8)} BTC | 예상 수익: ₩{(sellAmount * bitcoinPrice).toLocaleString()}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <button
-              onClick={buyBitcoin}
-              disabled={loading || wallet < investAmount}
-              className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+              onClick={sellBitcoin}
+              disabled={loading || bitcoinAmount <= 0 || sellAmount <= 0}
+              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
             >
-              매수
+              부분 매도
             </button>
             <button
-              onClick={sellBitcoin}
+              onClick={sellAllBitcoin}
               disabled={loading || bitcoinAmount <= 0}
-              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+              className="bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
             >
               전량 매도
             </button>
