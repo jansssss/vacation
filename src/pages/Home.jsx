@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaCalendarAlt, FaCoins, FaWallet, FaChartBar, FaBitcoin } from "react-icons/fa";
+import { FaCalendarAlt, FaCoins, FaWallet, FaChartBar, FaBitcoin, FaExchangeAlt } from "react-icons/fa";
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
     
     
       {/* 카드 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
         <Link
           to="/annual-leave"
           className="bg-white hover:bg-blue-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
@@ -24,7 +24,7 @@ const Home = () => {
             입사일과 퇴직일을 기준으로 연차 일수 계산
           </p>
         </Link>
-
+        
         <Link
           to="/retirement"
           className="bg-white hover:bg-yellow-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
@@ -37,7 +37,7 @@ const Home = () => {
             평균임금과 근속기간을 기반으로 퇴직금 산정
           </p>
         </Link>
-
+        
         <Link
           to="/bitcoin-simulator"
           className="bg-white hover:bg-orange-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
@@ -50,8 +50,22 @@ const Home = () => {
             가상 투자로 비트코인 거래 전략 연습하기
           </p>
         </Link>
+        
+        {/* ✅ 새로 추가된 XRP-XLM 비교 카드 */}
+        <Link
+          to="/xrp-xlm-compare"
+          className="bg-white hover:bg-purple-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
+        >
+          <FaExchangeAlt className="text-4xl text-purple-500 mx-auto mb-3" />
+          <h2 className="text-xl font-semibold text-gray-800 mb-1">
+            XRP-XLM 비교
+          </h2>
+          <p className="text-sm text-gray-500">
+            리플과 스텔라 실시간 가격차 분석
+          </p>
+        </Link>
       </div>
-
+      
       {/* 하단 안내 */}
       <footer className="mt-16 text-sm text-gray-400 text-center">
         ⓒ 2025 e-work.kr | 참고용 계산 결과입니다.
