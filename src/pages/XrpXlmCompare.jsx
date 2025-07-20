@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaBell, FaBellSlash, FaCog } from 'react-icons/fa';
 
 const XrpXlmCompare = () => {
   const [xrpData, setXrpData] = useState(null);
@@ -6,6 +7,16 @@ const XrpXlmCompare = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
+  
+  // 알림 관련 상태
+  const [alertSettings, setAlertSettings] = useState({
+    enabled: false,
+    minRatio: 2.0,
+    maxRatio: 5.0,
+    notificationPermission: 'default'
+  });
+  const [showSettings, setShowSettings] = useState(false);
+  const [alertHistory, setAlertHistory] = useState([]);
 
   const fetchPrices = async () => {
     try {
@@ -22,17 +33,25 @@ const XrpXlmCompare = () => {
       
       const data = await response.json();
       
-      setXrpData({
+      const newXrpData = {
         price: data.ripple.usd,
         change: data.ripple.usd_24h_change,
         marketCap: data.ripple.usd_market_cap
-      });
+      };
       
-      setXlmData({
+      const newXlmData = {
         price: data.stellar.usd,
         change: data.stellar.usd_24h_change,
         marketCap: data.stellar.usd_market_cap
-      });
+      };
+      
+      setXrpData(newXrpData);
+      setXlmData(newXlmData);
+      
+      // 알림 체크
+      if (newXrpData && newXlmData) {
+        checkAndTriggerAlert(newXrpData.price / newXlmData.price);
+      }
       
       setLastUpdate(new Date());
       setLoading(false);
@@ -41,6 +60,70 @@ const XrpXlmCompare = () => {
       console.error('가격 정보를 가져오는 중 오류가 발생했습니다:', error);
       setError('가격 정보를 가져올 수 없습니다. 잠시 후 다시 시도해주세요.');
       setLoading(false);
+    }
+  };
+
+  const requestNotificationPermission = async () => {
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission();
+      setAlertSettings(prev => ({
+        ...prev,
+        notificationPermission: permission
+      }));
+      return permission;
+    }
+    return 'denied';
+  };
+
+  const checkAndTriggerAlert = (currentRatio) => {
+    if (!alertSettings.enabled || alertSettings.notificationPermission !== 'granted') {
+      return;
+    }
+
+    const shouldAlert = currentRatio <= alertSettings.minRatio || currentRatio >= alertSettings.maxRatio;
+    
+    if (shouldAlert) {
+      // 중복 알림 방지 (마지막 알림에서 5분 이상 경과했을 때만)
+      const now = new Date();
+      const lastAlert = alertHistory[alertHistory.length - 1];
+      
+      if (!lastAlert || (now - new Date(lastAlert.time)) > 5 * 60 * 1000) {
+        const alertType = currentRatio <= alertSettings.minRatio ? 'LOW' : 'HIGH';
+        const message = alertType === 'LOW' 
+          ? `XRP/XLM 배율이 ${currentRatio.toFixed(2)}배로 낮아졌습니다!`
+          : `XRP/XLM 배율이 ${currentRatio.toFixed(2)}배로 높아졌습니다!`;
+
+        // 브라우저 알림
+        new Notification('XRP-XLM 가격 알림', {
+          body: message,
+          icon: '💱',
+          tag: 'xrp-xlm-alert'
+        });
+
+        // 알림 히스토리 추가
+        const newAlert = {
+          id: Date.now(),
+          type: alertType,
+          ratio: currentRatio,
+          message,
+          time: now.toISOString()
+        };
+        
+        setAlertHistory(prev => [...prev.slice(-9), newAlert]); // 최근 10개만 유지
+      }
+    }
+  };
+
+  const toggleAlert = async () => {
+    if (!alertSettings.enabled) {
+      const permission = await requestNotificationPermission();
+      if (permission === 'granted') {
+        setAlertSettings(prev => ({ ...prev, enabled: true }));
+      } else {
+        alert('알림 기능을 사용하려면 브라우저에서 알림 권한을 허용해주세요.');
+      }
+    } else {
+      setAlertSettings(prev => ({ ...prev, enabled: false }));
     }
   };
 
@@ -59,6 +142,16 @@ const XrpXlmCompare = () => {
     // 30초마다 자동 업데이트
     const interval = setInterval(fetchPrices, 30000);
     return () => clearInterval(interval);
+  }, []);
+
+  // 브라우저 알림 권한 확인
+  useEffect(() => {
+    if ('Notification' in window) {
+      setAlertSettings(prev => ({
+        ...prev,
+        notificationPermission: Notification.permission
+      }));
+    }
   }, []);
 
   if (loading && !xrpData && !xlmData) {
@@ -84,6 +177,106 @@ const XrpXlmCompare = () => {
           <p className="text-lg md:text-xl opacity-90">
             실시간 리플과 스텔라 가격차 분석
           </p>
+        </div>
+
+        {/* 알림 설정 바 */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 mb-6 shadow-xl">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={toggleAlert}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+                  alertSettings.enabled
+                    ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {alertSettings.enabled ? <FaBell /> : <FaBellSlash />}
+                <span>{alertSettings.enabled ? '알림 ON' : '알림 OFF'}</span>
+              </button>
+              
+              <button
+                onClick={() => setShowSettings(!showSettings)}
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-100 text-blue-800 hover:bg-blue-200 font-semibold transition-all"
+              >
+                <FaCog />
+                <span>설정</span>
+              </button>
+            </div>
+
+            {alertSettings.enabled && (
+              <div className="text-sm text-gray-600">
+                알림 범위: {alertSettings.minRatio}배 이하 또는 {alertSettings.maxRatio}배 이상
+              </div>
+            )}
+          </div>
+
+          {/* 알림 설정 패널 */}
+          {showSettings && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-3">알림 설정</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    최소 배율 (이하일 때 알림)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={alertSettings.minRatio}
+                    onChange={(e) => setAlertSettings(prev => ({
+                      ...prev,
+                      minRatio: parseFloat(e.target.value) || 0
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    최대 배율 (이상일 때 알림)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={alertSettings.maxRatio}
+                    onChange={(e) => setAlertSettings(prev => ({
+                      ...prev,
+                      maxRatio: parseFloat(e.target.value) || 0
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+              
+              {alertSettings.notificationPermission !== 'granted' && (
+                <div className="mt-3 p-3 bg-yellow-100 text-yellow-800 rounded-lg text-sm">
+                  💡 브라우저 알림을 받으려면 알림 권한을 허용해주세요.
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 알림 히스토리 */}
+          {alertHistory.length > 0 && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-3">최근 알림</h4>
+              <div className="space-y-2 max-h-32 overflow-y-auto">
+                {alertHistory.slice().reverse().map((alert) => (
+                  <div key={alert.id} className="flex items-center justify-between text-sm">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      alert.type === 'LOW' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'
+                    }`}>
+                      {alert.type === 'LOW' ? '낮음' : '높음'}
+                    </span>
+                    <span className="text-gray-700">{alert.ratio.toFixed(2)}배</span>
+                    <span className="text-gray-500">
+                      {new Date(alert.time).toLocaleTimeString('ko-KR')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {error && (
@@ -158,7 +351,11 @@ const XrpXlmCompare = () => {
           {/* 배율 표시 */}
           <div className="flex items-center justify-center mb-8">
             <span className="text-lg text-gray-600 mr-4">XRP가 XLM보다</span>
-            <span className="text-4xl font-bold text-purple-600 mx-4">
+            <span className={`text-4xl font-bold mx-4 ${
+              alertSettings.enabled && (ratio <= alertSettings.minRatio || ratio >= alertSettings.maxRatio)
+                ? 'text-red-600 animate-pulse'
+                : 'text-purple-600'
+            }`}>
               {ratio.toFixed(2)}
             </span>
             <span className="text-lg text-gray-600 ml-4">배 비쌈</span>
