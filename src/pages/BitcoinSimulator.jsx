@@ -200,15 +200,18 @@ function BitcoinSimulator({ user }) {
     }
 
     try {
-      const sellValue = sellAmount * bitcoinPrice;
-      console.log("매도 진행:", { sellAmount, sellValue });
+      const sellValue = Math.round(sellAmount * bitcoinPrice); // 반올림하여 정수로 변환
+      const newCash = Math.round(wallet + sellValue); // 현금도 정수로 변환
+      const newBtc = bitcoinAmount - sellAmount;
+      
+      console.log("매도 진행:", { sellAmount, sellValue, newCash, newBtc });
 
       const { error: insertError } = await supabase.from("trades").insert({
         user_id: user.id,
         type: "SELL",
-        amount: sellAmount,
-        price: bitcoinPrice,
-        cost: sellValue,
+        amount: parseFloat(sellAmount.toFixed(8)), // BTC는 소수점 8자리까지
+        price: Math.round(bitcoinPrice), // 가격도 정수로
+        cost: sellValue, // 이미 정수로 변환됨
       });
 
       if (insertError) {
@@ -220,8 +223,8 @@ function BitcoinSimulator({ user }) {
       const { error: updateError } = await supabase
         .from("member")
         .update({
-          cash: wallet + sellValue,
-          btc: bitcoinAmount - sellAmount,
+          cash: newCash,
+          btc: parseFloat(newBtc.toFixed(8)),
         })
         .eq("email", user.email);
 
@@ -251,15 +254,17 @@ function BitcoinSimulator({ user }) {
     }
 
     try {
-      const sellValue = bitcoinAmount * bitcoinPrice;
-      console.log("전량 매도 진행:", { bitcoinAmount, sellValue });
+      const sellValue = Math.round(bitcoinAmount * bitcoinPrice); // 반올림하여 정수로 변환
+      const newCash = Math.round(wallet + sellValue); // 현금도 정수로 변환
+      
+      console.log("전량 매도 진행:", { bitcoinAmount, sellValue, newCash });
 
       const { error: insertError } = await supabase.from("trades").insert({
         user_id: user.id,
         type: "SELL",
-        amount: bitcoinAmount,
-        price: bitcoinPrice,
-        cost: sellValue,
+        amount: parseFloat(bitcoinAmount.toFixed(8)), // BTC는 소수점 8자리까지
+        price: Math.round(bitcoinPrice), // 가격도 정수로
+        cost: sellValue, // 이미 정수로 변환됨
       });
 
       if (insertError) {
@@ -271,7 +276,7 @@ function BitcoinSimulator({ user }) {
       const { error: updateError } = await supabase
         .from("member")
         .update({
-          cash: wallet + sellValue,
+          cash: newCash,
           btc: 0,
         })
         .eq("email", user.email);
