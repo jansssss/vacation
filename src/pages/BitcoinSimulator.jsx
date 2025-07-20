@@ -187,6 +187,8 @@ function BitcoinSimulator({ user }) {
 
   // 부분 매도 함수
   const sellBitcoin = async () => {
+    console.log("부분 매도 시작:", { sellAmount, bitcoinAmount, bitcoinPrice });
+    
     if (bitcoinAmount <= 0) {
       alert("보유한 비트코인이 없습니다.");
       return;
@@ -197,70 +199,96 @@ function BitcoinSimulator({ user }) {
       return;
     }
 
-    const sellValue = sellAmount * bitcoinPrice;
+    try {
+      const sellValue = sellAmount * bitcoinPrice;
+      console.log("매도 진행:", { sellAmount, sellValue });
 
-    const { error: insertError } = await supabase.from("trades").insert({
-      user_id: user.id,
-      type: "SELL",
-      amount: sellAmount,
-      price: bitcoinPrice,
-      cost: sellValue,
-    });
+      const { error: insertError } = await supabase.from("trades").insert({
+        user_id: user.id,
+        type: "SELL",
+        amount: sellAmount,
+        price: bitcoinPrice,
+        cost: sellValue,
+      });
 
-    if (insertError) {
-      alert("거래 실패: " + insertError.message);
-      return;
-    }
+      if (insertError) {
+        console.error("거래 삽입 실패:", insertError);
+        alert("거래 실패: " + insertError.message);
+        return;
+      }
 
-    const { error: updateError } = await supabase
-      .from("member")
-      .update({
-        cash: wallet + sellValue,
-        btc: bitcoinAmount - sellAmount,
-      })
-      .eq("email", user.email);
+      const { error: updateError } = await supabase
+        .from("member")
+        .update({
+          cash: wallet + sellValue,
+          btc: bitcoinAmount - sellAmount,
+        })
+        .eq("email", user.email);
 
-    if (!updateError) {
+      if (updateError) {
+        console.error("자산 업데이트 실패:", updateError);
+        alert("자산 업데이트 실패: " + updateError.message);
+        return;
+      }
+
+      console.log("매도 성공");
       fetchUserAssets();
       fetchTrades();
       setSellAmount(0); // 매도 후 입력값 초기화
+    } catch (error) {
+      console.error("매도 중 오류:", error);
+      alert("매도 중 오류가 발생했습니다.");
     }
   };
 
   // 전량 매도 함수
   const sellAllBitcoin = async () => {
+    console.log("전량 매도 시작:", { bitcoinAmount, bitcoinPrice });
+    
     if (bitcoinAmount <= 0) {
       alert("보유한 비트코인이 없습니다.");
       return;
     }
 
-    const sellValue = bitcoinAmount * bitcoinPrice;
+    try {
+      const sellValue = bitcoinAmount * bitcoinPrice;
+      console.log("전량 매도 진행:", { bitcoinAmount, sellValue });
 
-    const { error: insertError } = await supabase.from("trades").insert({
-      user_id: user.id,
-      type: "SELL",
-      amount: bitcoinAmount,
-      price: bitcoinPrice,
-      cost: sellValue,
-    });
+      const { error: insertError } = await supabase.from("trades").insert({
+        user_id: user.id,
+        type: "SELL",
+        amount: bitcoinAmount,
+        price: bitcoinPrice,
+        cost: sellValue,
+      });
 
-    if (insertError) {
-      alert("거래 실패: " + insertError.message);
-      return;
-    }
+      if (insertError) {
+        console.error("거래 삽입 실패:", insertError);
+        alert("거래 실패: " + insertError.message);
+        return;
+      }
 
-    const { error: updateError } = await supabase
-      .from("member")
-      .update({
-        cash: wallet + sellValue,
-        btc: 0,
-      })
-      .eq("email", user.email);
+      const { error: updateError } = await supabase
+        .from("member")
+        .update({
+          cash: wallet + sellValue,
+          btc: 0,
+        })
+        .eq("email", user.email);
 
-    if (!updateError) {
+      if (updateError) {
+        console.error("자산 업데이트 실패:", updateError);
+        alert("자산 업데이트 실패: " + updateError.message);
+        return;
+      }
+
+      console.log("전량 매도 성공");
       fetchUserAssets();
       fetchTrades();
       setSellAmount(0);
+    } catch (error) {
+      console.error("전량 매도 중 오류:", error);
+      alert("전량 매도 중 오류가 발생했습니다.");
     }
   };
 
@@ -355,9 +383,13 @@ function BitcoinSimulator({ user }) {
             placeholder="매수할 금액 (원)"
           />
           <button
-            onClick={buyBitcoin}
+            onClick={(e) => {
+              e.preventDefault();
+              console.log("매수 버튼 클릭됨");
+              buyBitcoin();
+            }}
             disabled={loading || wallet < investAmount}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow transition-colors"
           >
             매수
           </button>
@@ -380,16 +412,24 @@ function BitcoinSimulator({ user }) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <button
-              onClick={sellBitcoin}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("부분 매도 버튼 클릭됨");
+                sellBitcoin();
+              }}
               disabled={loading || bitcoinAmount <= 0 || sellAmount <= 0}
-              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow transition-colors"
             >
               부분 매도
             </button>
             <button
-              onClick={sellAllBitcoin}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("전량 매도 버튼 클릭됨");
+                sellAllBitcoin();
+              }}
               disabled={loading || bitcoinAmount <= 0}
-              className="bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow"
+              className="bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl shadow transition-colors"
             >
               전량 매도
             </button>
