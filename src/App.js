@@ -7,11 +7,11 @@ import Header from "./components/Header";
 import SalaryCalculator from "./pages/SalaryCalculator";
 import SalaryRankPage from "./pages/salary-rank/SalaryRankPage";
 import BitcoinSimulator from "./pages/BitcoinSimulator";
-import XrpXlmCompare from "./pages/XrpXlmCompare"; // ✅ 새 컴포넌트 import
+import XrpXlmCompare from "./pages/XrpXlmCompare";
 import AuthForm from "./components/AuthForm";
-import { supabase } from "./lib/supabaseClient";
-// ✅ 관리자 승인 페이지 추가
 import ChargeAdmin from "./pages/ChargeAdmin";
+import Portfolio from "./pages/Portfolio"; // ✅ Portfolio import 추가
+import { supabase } from "./lib/supabaseClient";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,7 +37,7 @@ function App() {
         <Route path="/retirement" element={<RetirementCalculator />} />
         <Route path="/salary" element={<SalaryCalculator />} />
         <Route path="/salary-rank" element={<SalaryRankPage />} />
-        <Route path="/xrp-xlm-compare" element={<XrpXlmCompare />} /> {/* ✅ 새 라우트 추가 */}
+        <Route path="/xrp-xlm-compare" element={<XrpXlmCompare />} />
         
         {/* 로그인 필요 페이지 */}
         <Route
@@ -48,6 +48,10 @@ function App() {
           path="/charge-admin"
           element={user ? <ChargeAdmin user={user} /> : <AuthForm onLogin={setUser} />}
         />
+        <Route
+          path="/portfolio"
+          element={user ? <Portfolio user={user} /> : <AuthForm onLogin={setUser} />}
+        /> {/* ✅ Portfolio 라우트 추가 */}
       </Routes>
     </Router>
   );
