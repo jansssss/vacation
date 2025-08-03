@@ -1,67 +1,116 @@
-import React from "react";
+// Portfolio.jsx (BitcoinSimulator 스타일을 참고하여 일관성 있게 작성)
+
+import React, { useState } from "react";
 
 export default function Portfolio() {
+  const [assets, setAssets] = useState([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    quantity: 0,
+    buyPrice: 0,
+    type: "stock",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const addAsset = (e) => {
+    e.preventDefault();
+    if (!formData.name || formData.quantity <= 0 || formData.buyPrice <= 0) {
+      alert("입력값을 올바르게 입력해주세요.");
+      return;
+    }
+    setAssets((prev) => [...prev, formData]);
+    setFormData({ name: "", quantity: 0, buyPrice: 0, type: "stock" });
+  };
+
+  const totalAssetValue = assets.reduce(
+    (sum, a) => sum + a.quantity * a.buyPrice,
+    0
+  );
+
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50 p-4">
+      <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">
           📊 자산 포트폴리오 관리
         </h1>
 
-        <div className="bg-white shadow-md rounded-2xl p-6 space-y-6">
-          {/* 자산 등록 폼 */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-medium text-gray-700">➕ 자산 추가</h2>
-            <form className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <input
-                type="text"
-                placeholder="자산명 (예: BTC, SCHD)"
-                className="border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <input
-                type="number"
-                placeholder="보유 수량"
-                className="border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <input
-                type="number"
-                placeholder="매입 단가"
-                className="border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <select className="border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option>자산 유형 선택</option>
-                <option value="stock">주식/ETF</option>
-                <option value="bitcoin">비트코인</option>
-              </select>
-              <button
-                type="submit"
-                className="col-span-full mt-2 bg-indigo-600 text-white py-2 rounded-xl shadow hover:bg-indigo-700 transition"
-              >
-                등록하기
-              </button>
-            </form>
-          </div>
+        <form onSubmit={addAsset} className="grid grid-cols-1 gap-4 mb-8">
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="자산명 (예: BTC, SCHD)"
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleChange}
+            placeholder="보유 수량"
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <input
+            type="number"
+            name="buyPrice"
+            value={formData.buyPrice}
+            onChange={handleChange}
+            placeholder="매입 단가"
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            <option value="stock">주식/ETF</option>
+            <option value="bitcoin">비트코인</option>
+          </select>
+          <button
+            type="submit"
+            className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-lg font-semibold shadow"
+          >
+            자산 등록
+          </button>
+        </form>
 
-          {/* 자산 리스트 */}
-          <div>
-            <h2 className="text-xl font-medium text-gray-700 mb-3">📄 보유 자산</h2>
-            <div className="space-y-3">
-              {/* 자산 카드 반복 영역 */}
-              <div className="bg-gray-100 p-4 rounded-xl shadow-sm flex justify-between items-center">
-                <div>
-                  <p className="text-lg font-semibold text-gray-800">BTC</p>
-                  <p className="text-sm text-gray-500">보유량: 0.1, 매입가: 30,000</p>
+        {assets.length > 0 && (
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <h2 className="text-sm font-semibold text-gray-700 mb-3">
+              📋 보유 자산 목록
+            </h2>
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {assets.map((asset, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-200"
+                >
+                  <div>
+                    <div className="font-semibold text-gray-800">{asset.name}</div>
+                    <div className="text-sm text-gray-500">
+                      {asset.quantity} x ₩{asset.buyPrice.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="text-right text-sm text-gray-600">
+                    ₩{(asset.quantity * asset.buyPrice).toLocaleString()}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-green-600 font-bold">+3.2%</p>
-                  <p className="text-sm text-gray-400">수익률</p>
-                </div>
-              </div>
-              {/* ...추가 자산 카드 */}
+              ))}
+            </div>
+
+            <div className="mt-4 text-right font-semibold text-indigo-600">
+              총 자산 평가금액: ₩{totalAssetValue.toLocaleString()}
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
 }
+export default Portfolio;
