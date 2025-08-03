@@ -1,8 +1,11 @@
-// Portfolio.jsx (BitcoinSimulator 스타일을 참고하여 일관성 있게 작성)
+// Portfolio.jsx — BitcoinSimulator 구조에 맞춰 작성
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { supabase } from "../lib/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
-export default function Portfolio() {
+function Portfolio() {
   const [assets, setAssets] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -32,7 +35,7 @@ export default function Portfolio() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-100 p-4">
       <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl">
         <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">
           📊 자산 포트폴리오 관리
@@ -113,4 +116,5 @@ export default function Portfolio() {
     </div>
   );
 }
+
 export default Portfolio;
