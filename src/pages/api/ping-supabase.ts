@@ -1,13 +1,12 @@
 // /src/pages/api/ping-supabase.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   try {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    if (!url || !key) throw new Error("Missing SUPABASE env vars");
+    const url = process.env.SUPABASE_URL!;
+    const key = process.env.SUPABASE_ANON_KEY!;
+    if (!url || !key) throw new Error("Missing SUPABASE_URL / SUPABASE_ANON_KEY");
 
-    // 전용 하트비트 테이블을 1건 조회 (실데이터 반환 없이 헤더만)
     const endpoint = `${url}/rest/v1/health_heartbeat?select=id&limit=1`;
     const r = await fetch(endpoint, { headers: { apikey: key } });
 
