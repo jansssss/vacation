@@ -29,8 +29,14 @@ function BitcoinSimulator({ user }) {
   const [timeMachineMode, setTimeMachineMode] = useState(false);
   const [timeMachineDate, setTimeMachineDate] = useState(null);
   const [historicalPrices, setHistoricalPrices] = useState([]);
+  const [timeMachineInvestAmount, setTimeMachineInvestAmount] = useState(1000000);
+  const [timeMachineStartPrice, setTimeMachineStartPrice] = useState(0);
+  const [timeMachineStartDate, setTimeMachineStartDate] = useState(null);
 
   useEffect(() => {
+    // 타임머신 모드일 때는 실시간 가격 업데이트 중지
+    if (timeMachineMode) return;
+
     const fetchBitcoinPrice = async () => {
       try {
         const response = await axios.get(
@@ -47,7 +53,7 @@ function BitcoinSimulator({ user }) {
     fetchBitcoinPrice();
     const interval = setInterval(fetchBitcoinPrice, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [timeMachineMode]);
 
   useEffect(() => {
     if (user) {
@@ -489,12 +495,17 @@ function BitcoinSimulator({ user }) {
     }
   };
 
-  const startTimeMachine = async (startDate) => {
+  const startTimeMachine = async (startDate, investAmount) => {
     setTimeMachineMode(true);
-    setTimeMachineDate(new Date(startDate));
+    const startDateObj = new Date(startDate);
+    setTimeMachineDate(startDateObj);
+    setTimeMachineStartDate(startDateObj);
+
     const price = await fetchHistoricalPrice(startDate);
     if (price) {
       setBitcoinPrice(price);
+      setTimeMachineStartPrice(price);
+      setTimeMachineInvestAmount(investAmount);
     }
   };
 
@@ -502,6 +513,14 @@ function BitcoinSimulator({ user }) {
     if (!timeMachineDate) return;
     const newDate = new Date(timeMachineDate);
     newDate.setDate(newDate.getDate() + days);
+
+    // 오늘 날짜를 넘어가지 않도록 제한
+    const today = new Date();
+    if (newDate > today) {
+      alert('오늘 이후의 날짜로는 이동할 수 없습니다.');
+      return;
+    }
+
     setTimeMachineDate(newDate);
     const price = await fetchHistoricalPrice(newDate);
     if (price) {
@@ -512,6 +531,9 @@ function BitcoinSimulator({ user }) {
   const exitTimeMachine = () => {
     setTimeMachineMode(false);
     setTimeMachineDate(null);
+    setTimeMachineStartDate(null);
+    setTimeMachineStartPrice(0);
+    setTimeMachineInvestAmount(1000000);
     // 실시간 가격으로 복귀
     window.location.reload();
   };
@@ -864,6 +886,17 @@ function BitcoinSimulator({ user }) {
 
               {!timeMachineMode ? (
                 <div>
+                  <label className="block text-sm font-medium mb-2">투자 금액 입력</label>
+                  <input
+                    type="number"
+                    value={timeMachineInvestAmount}
+                    onChange={(e) => setTimeMachineInvestAmount(Number(e.target.value))}
+                    className="w-full px-4 py-2 border rounded-lg mb-4"
+                    placeholder="투자할 금액 (원)"
+                    min="10000"
+                    step="10000"
+                  />
+
                   <label className="block text-sm font-medium mb-2">시작 날짜 선택</label>
                   <input
                     type="date"
@@ -871,7 +904,11 @@ function BitcoinSimulator({ user }) {
                     min="2020-01-01"
                     onChange={(e) => {
                       if (e.target.value) {
-                        startTimeMachine(e.target.value);
+                        if (timeMachineInvestAmount < 10000) {
+                          alert('투자 금액은 최소 10,000원 이상이어야 합니다.');
+                          return;
+                        }
+                        startTimeMachine(e.target.value, timeMachineInvestAmount);
                       }
                     }}
                     className="w-full px-4 py-2 border rounded-lg mb-4"
@@ -882,14 +919,85 @@ function BitcoinSimulator({ user }) {
                 </div>
               ) : (
                 <div>
-                  <div className="mb-4 p-4 bg-white rounded-lg">
-                    <div className="text-sm text-gray-600">현재 시뮬레이션 날짜</div>
-                    <div className="text-2xl font-bold text-purple-600">
-                      {timeMachineDate?.toLocaleDateString('ko-KR')}
+                  {/* 투자 시뮬레이션 결과 */}
+                  <div className="mb-4 p-5 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl border-2 border-purple-300">
+                    <div className="flex justify-between items-center mb-3">
+                      <div>
+                        <div className="text-xs text-gray-600">시작일</div>
+                        <div className="font-bold text-purple-700">
+                          {timeMachineStartDate?.toLocaleDateString('ko-KR')}
+                        </div>
+                      </div>
+                      <div className="text-2xl">→</div>
+                      <div>
+                        <div className="text-xs text-gray-600">현재</div>
+                        <div className="font-bold text-purple-700">
+                          {timeMachineDate?.toLocaleDateString('ko-KR')}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-lg font-semibold text-gray-700 mt-2">
-                      BTC 가격: ₩{bitcoinPrice.toLocaleString()}
+
+                    <div className="border-t-2 border-purple-200 pt-3 mb-3">
+                      <div className="text-sm text-gray-600 mb-1">💰 투자 금액</div>
+                      <div className="text-xl font-bold text-gray-800">
+                        ₩{timeMachineInvestAmount.toLocaleString()}
+                      </div>
                     </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="bg-white bg-opacity-60 p-3 rounded-lg">
+                        <div className="text-xs text-gray-600">시작 가격</div>
+                        <div className="font-semibold text-gray-700">
+                          ₩{timeMachineStartPrice.toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="bg-white bg-opacity-60 p-3 rounded-lg">
+                        <div className="text-xs text-gray-600">현재 가격</div>
+                        <div className="font-semibold text-gray-700">
+                          ₩{bitcoinPrice.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+
+                    {(() => {
+                      const btcAmount = timeMachineInvestAmount / timeMachineStartPrice;
+                      const currentValue = btcAmount * bitcoinPrice;
+                      const profit = currentValue - timeMachineInvestAmount;
+                      const profitRate = ((profit / timeMachineInvestAmount) * 100).toFixed(2);
+                      const isProfit = profit >= 0;
+
+                      return (
+                        <>
+                          <div className="border-t-2 border-purple-200 pt-3">
+                            <div className="text-sm text-gray-600 mb-1">🎯 현재 가치</div>
+                            <div className="text-2xl font-bold text-purple-600">
+                              ₩{Math.round(currentValue).toLocaleString()}
+                            </div>
+                          </div>
+
+                          <div className={`mt-3 p-3 rounded-lg ${isProfit ? 'bg-green-100' : 'bg-red-100'}`}>
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <div className="text-xs text-gray-600">수익금</div>
+                                <div className={`text-lg font-bold ${isProfit ? 'text-green-600' : 'text-red-600'}`}>
+                                  {isProfit ? '+' : ''}₩{Math.round(profit).toLocaleString()}
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-xs text-gray-600">수익률</div>
+                                <div className={`text-lg font-bold ${isProfit ? 'text-green-600' : 'text-red-600'}`}>
+                                  {isProfit ? '+' : ''}{profitRate}%
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-2 text-xs text-gray-500 bg-white bg-opacity-50 p-2 rounded">
+                            📊 보유 BTC: {btcAmount.toFixed(8)} BTC
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
 
                   <div className="grid grid-cols-4 gap-2 mb-4">
@@ -926,8 +1034,11 @@ function BitcoinSimulator({ user }) {
                     타임머신 종료
                   </button>
 
-                  <div className="mt-4 text-xs text-yellow-600 bg-yellow-50 p-3 rounded-lg">
-                    ⚠️ 타임머신 모드에서는 실제 자산에 영향을 주지 않습니다
+                  <div className="mt-4 text-xs text-blue-600 bg-blue-50 p-3 rounded-lg">
+                    💡 시간 이동 버튼을 눌러 과거 투자의 가치 변화를 확인해보세요!
+                  </div>
+                  <div className="mt-2 text-xs text-yellow-600 bg-yellow-50 p-3 rounded-lg">
+                    ⚠️ 이것은 시뮬레이션입니다. 실제 자산에 영향을 주지 않습니다.
                   </div>
                 </div>
               )}
