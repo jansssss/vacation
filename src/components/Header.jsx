@@ -1,43 +1,40 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { FaCalendarAlt, FaCoins, FaWallet, FaChartBar } from "react-icons/fa"; // ✅ 모든 아이콘 한번에 정리
+import { Link, NavLink } from "react-router-dom";
+
+const navItems = [
+  { name: "계산기", path: "/calculators" },
+  { name: "가이드", path: "/guides" },
+];
 
 const Header = () => {
-  const location = useLocation();
-
-  const navItems = [
-  
-  //  { name: "연차 계산기", path: "/annual-leave", icon: <FaCalendarAlt /> },
-  //  { name: "퇴직금 계산기", path: "/retirement", icon: <FaCoins /> },
-   // { name: "실수령액 계산기", path: "/salary", icon: <FaWallet /> },
-  //  { name: "내 연봉 순위", path: "/salary-rank", icon: <FaChartBar /> } // ✅ 새 항목
-  
-  ];
-
   return (
-    <div className="w-full px-6 py-3 flex items-center justify-between bg-transparent absolute top-0 left-0 z-10">
-      <Link to="/" className="text-xl font-bold text-blue-600 hover:opacity-80 transition">
-        e-Work
-      </Link>
-
-      <nav className="flex gap-3">
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`flex items-center gap-1 px-4 py-1.5 rounded-full text-sm font-medium transition 
-              ${
-                location.pathname === item.path
-                  ? "bg-blue-100 text-blue-700"
-                  : "hover:bg-gray-100 text-gray-600"
-              }`}
-          >
-            {item.icon}
-            {item.name}
-          </Link>
-        ))}
-      </nav>
-    </div>
+    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur border-b border-slate-100">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4">
+        <Link to="/" className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white text-sm">
+            eW
+          </span>
+          e-work.kr
+        </Link>
+        <nav className="flex items-center gap-2">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `px-3 py-1.5 text-sm font-medium rounded-full transition ${
+                  isActive
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-600 hover:bg-slate-100"
+                }`
+              }
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+    </header>
   );
 };
 

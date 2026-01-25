@@ -1,0 +1,15 @@
+[
+  { "path": "/", "changefreq": "weekly", "priority": 1.0 },
+  { "path": "/calculators", "changefreq": "weekly", "priority": 0.9 },
+  { "path": "/calculators/annual-leave", "changefreq": "monthly", "priority": 0.8 },
+  { "path": "/calculators/severance-pay", "changefreq": "monthly", "priority": 0.8 },
+  { "path": "/guides", "changefreq": "weekly", "priority": 0.7 },
+  { "path": "/guides/annual-leave-basics", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/annual-leave-carryover", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/annual-leave-encashment", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/severance-pay-eligibility", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/severance-pay-average-wage", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/severance-pay-docs", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/payroll-slip-reading", "changefreq": "monthly", "priority": 0.6 },
+  { "path": "/guides/unpaid-leave-impact", "changefreq": "monthly", "priority": 0.6 }
+]

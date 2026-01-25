@@ -1,70 +1,89 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  FaCalendarAlt,
-  FaCoins,
-  FaWallet,
-  FaChartBar,
-  FaBitcoin,
-  FaExchangeAlt,
-} from "react-icons/fa";
+import Seo from "../components/Seo";
+import { calculatorsRegistry } from "../config/calculatorsRegistry";
+import { SITE_CONFIG } from "../config/siteConfig";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f0f4ff] via-[#eef7f6] to-[#eaf4eb] text-gray-800 flex flex-col justify-center items-center px-6 font-sans">
-      {/* 카드 영역 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
-        <Link
-          to="/annual-leave"
-          className="bg-white hover:bg-blue-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
-        >
-          <FaCalendarAlt className="text-4xl text-blue-500 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-1">연차 계산기</h2>
-          <p className="text-sm text-gray-500">입사일과 퇴직일을 기준으로 연차 일수 계산</p>
-        </Link>
+    <div className="space-y-12">
+      <Seo
+        title="노무/근로 계산기 허브"
+        description="연차, 퇴직금 등 핵심 계산기를 한 곳에 모아 실무 해설과 사례까지 제공하는 e-work.kr입니다."
+        path="/"
+      />
 
-        <Link
-          to="/retirement"
-          className="bg-white hover:bg-yellow-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
-        >
-          <FaCoins className="text-4xl text-yellow-500 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-1">퇴직금 계산기</h2>
-          <p className="text-sm text-gray-500">평균임금과 근속기간을 기반으로 퇴직금 산정</p>
-        </Link>
+      <section className="rounded-3xl bg-gradient-to-r from-emerald-50 via-white to-amber-50 p-10 shadow-sm border border-slate-100">
+        <div className="max-w-3xl space-y-6">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">노무/근로 유틸 플랫폼</p>
+          <h1 className="text-4xl font-semibold text-slate-900">
+            계산기 하나에 해설과 사례까지.
+            <span className="block text-slate-600 mt-2">현장 중심의 인사총무 콘텐츠 허브</span>
+          </h1>
+          <p className="text-slate-600 leading-relaxed">
+            {SITE_CONFIG.brandLine} e-work.kr은 연차·퇴직금처럼 자주 묻는 주제를 중심으로, 계산 결과와 함께
+            실무 예외·FAQ·공지문 템플릿까지 제공하여 팀 내 커뮤니케이션 비용을 줄입니다.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/calculators"
+              className="rounded-full bg-slate-900 px-6 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            >
+              계산기 전체 보기
+            </Link>
+            <Link
+              to="/guides"
+              className="rounded-full border border-slate-200 px-6 py-2 text-sm font-medium text-slate-700 hover:bg-white"
+            >
+              실무 가이드 보기
+            </Link>
+          </div>
+        </div>
+      </section>
 
-        <Link
-          to="/bitcoin-simulator"
-          className="bg-white hover:bg-orange-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
-        >
-          <FaBitcoin className="text-4xl text-orange-500 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-1">비트코인 시뮬레이터</h2>
-          <p className="text-sm text-gray-500">가상 투자로 비트코인 거래 전략 연습하기</p>
-        </Link>
+      <section className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-slate-900">핵심 계산기</h2>
+          <Link to="/calculators" className="text-sm text-emerald-700 hover:text-emerald-900">
+            더 보기 →
+          </Link>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {calculatorsRegistry.map((calculator) => (
+            <Link
+              key={calculator.slug}
+              to={calculator.path}
+              className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <p className="text-xs font-semibold uppercase text-emerald-600">{calculator.category}</p>
+              <h3 className="mt-2 text-xl font-semibold text-slate-900">{calculator.title}</h3>
+              <p className="mt-2 text-sm text-slate-600">{calculator.summary}</p>
+              <p className="mt-4 text-xs text-slate-400">업데이트 {calculator.updatedAt}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-        <Link
-          to="/xrp-xlm-compare"
-          className="bg-white hover:bg-purple-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
-        >
-          <FaExchangeAlt className="text-4xl text-purple-500 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-1">XRP-XLM 비교</h2>
-          <p className="text-sm text-gray-500">리플과 스텔라 실시간 가격차 분석</p>
-        </Link>
-
-        {/* ✅ 포트폴리오 카드 추가 */}
-        <Link
-          to="/portfolio"
-          className="bg-white hover:bg-green-50 border border-gray-200 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all text-center"
-        >
-          <FaChartBar className="text-4xl text-green-500 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-1">포트폴리오</h2>
-          <p className="text-sm text-gray-500">주식·코인 기반 헷지 포트폴리오 구성</p>
-        </Link>
-      </div>
-
-      {/* 하단 안내 */}
-      <footer className="mt-16 text-sm text-gray-400 text-center">
-        ⓒ 2025 e-work.kr | 참고용 계산 결과입니다.
-      </footer>
+      <section className="grid gap-6 md:grid-cols-3">
+        <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-slate-900">신뢰 기반 콘텐츠</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            공공기관 인사총무팀장 관점의 체크리스트와 공지문 예시를 매 계산기에 고정 제공합니다.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-slate-900">허브-스포크 구조</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            계산기 → 실무 가이드 → 사례·FAQ로 연결해 검색 유입을 분산합니다.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-slate-900">광고 UX 최적화</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            본문/FAQ/사이드 3개 슬롯만 유지하여 UX를 보호하면서 광고 수익 구조를 확보합니다.
+          </p>
+        </div>
+      </section>
     </div>
   );
 };
