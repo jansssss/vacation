@@ -2,9 +2,9 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
 const navItems = [
-  { name: "怨꾩궛湲?, path: "/calculators" },
-  { name: "媛?대뱶", path: "/guides" },
-  { name: "寃뚯떆??, path: "/board" },
+  { name: "?④쑴沅쎿묾?, path: "/calculators" },
+  { name: "揶쎛??諭?, path: "/guides" },
+  { name: "野껊슣???, path: "/board" },
 ];
 
 const Header = () => {

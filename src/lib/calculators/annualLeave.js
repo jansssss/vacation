@@ -26,11 +26,11 @@ export const calculateAnnualLeave = (start, end) => {
   const endDate = new Date(end);
 
   if (!start || !end || Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-    return { error: "??녾텢??⑤궢 疫꿸퀣???깆뱽 筌뤴뫀紐???낆젾??雅뚯눘苑??", total: 0, breakdown: [] };
+    return { error: "???얩뀬???ㅺ땁 ?リ옇????源녿굵 嶺뚮ㅄ維筌????놁졑???낅슣?섋땻??", total: 0, breakdown: [] };
   }
 
   if (endDate < startDate) {
-    return { error: "疫꿸퀣???깆뵠 ??녾텢??곕궖????쥓已??덈뼄.", total: 0, breakdown: [] };
+    return { error: "?リ옇????源녿턄 ???얩뀬??怨뺢텠????伊볟럴???덈펲.", total: 0, breakdown: [] };
   }
 
   const months = diffFullMonths(startDate, endDate);
@@ -45,7 +45,7 @@ export const calculateAnnualLeave = (start, end) => {
       Math.min(months, RULES_2026.annualLeave.firstYearMonthlyCap)
     );
     if (firstYearMonthly > 0) {
-      breakdown.push({ label: "1?袁⑷컧(?遺욧컧)", days: firstYearMonthly });
+      breakdown.push({ label: "1?熬곣뫕而???븐슙而?", days: firstYearMonthly });
       total += firstYearMonthly;
     }
   }
@@ -58,7 +58,7 @@ export const calculateAnnualLeave = (start, end) => {
         Math.floor((year - 1) / 2) * RULES_2026.annualLeave.extraPerTwoYears
       );
       const days = Math.min(RULES_2026.annualLeave.maxTotal, RULES_2026.annualLeave.baseAfterOneYear + extra);
-      breakdown.push({ label: `${year}?袁⑷컧`, days });
+      breakdown.push({ label: `${year}?熬곣뫕而?, days });
       total += days;
     }
   }

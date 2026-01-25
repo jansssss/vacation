@@ -81,7 +81,19 @@ const PrivacyPolicy = () => {
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">7. ?댁슜?먯쓽 沅뚮━</h2>
+          <h2 className="text-xl font-semibold text-slate-900">7. 愿묎퀬 諛?留욎땄??肄섑뀗痢?/h2>
+          <p>
+            e-work.kr? ?ν썑 Google AdSense ??愿묎퀬 ?쒕퉬?ㅻ? ?ъ슜?????덉뒿?덈떎. 愿묎퀬 ?쒓났?먮뒗
+            荑좏궎/?앸퀎?먮? ?댁슜??留욎땄??愿묎퀬瑜??쒓났?섍굅??愿묎퀬 ?깃낵瑜?痢≪젙?????덉뒿?덈떎.
+            ?댁슜?먮뒗 荑좏궎 ?ㅼ젙??蹂寃쏀븯??留욎땄??愿묎퀬瑜??쒗븳?????덉뒿?덈떎.
+          </p>
+          <p className="text-sm text-slate-500">
+            ?숈쓽媛 ?꾩슂??吏??EEA/?곴뎅/?ㅼ쐞?????먯꽌??愿묎퀬 荑좏궎 ?ъ슜 ?꾩뿉 ?숈쓽瑜?諛쏆뒿?덈떎.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold text-slate-900">8. ?댁슜?먯쓽 沅뚮━</h2>
           <p>
             ?댁슜?먮뒗 ?몄젣?좎? 媛쒖씤?뺣낫 ?대엺, ?뺤젙, ??젣, 泥섎━ ?뺤?瑜??붿껌?????덉뒿?덈떎.
             ?붿껌? ?꾨옒 ?곕씫泥섎줈 ?묒닔?????덉뒿?덈떎.
@@ -90,7 +102,7 @@ const PrivacyPolicy = () => {
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">8. ?덉쟾???뺣낫 議곗튂</h2>
+          <h2 className="text-xl font-semibold text-slate-900">9. ?덉쟾???뺣낫 議곗튂</h2>
           <p>
             ?댁쁺?먮뒗 媛쒖씤?뺣낫 蹂댄샇瑜??꾪빐 ?묎렐 ?듭젣, 理쒖냼 沅뚰븳 ?먯튃 ??湲곗닠?겶룰?由ъ쟻 蹂댄샇
             議곗튂瑜??쒗뻾?⑸땲??
@@ -98,7 +110,7 @@ const PrivacyPolicy = () => {
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">9. ?뺤콉 蹂寃?/h2>
+          <h2 className="text-xl font-semibold text-slate-900">10. ?뺤콉 蹂寃?/h2>
           <p>
             蹂?諛⑹묠??蹂寃쎈맆 寃쎌슦 ?ъ쟾??怨듭??섎ŉ, 以묒슂??蹂寃??ы빆? ?ъ씠?몃? ?듯빐
             ?덈궡?⑸땲??

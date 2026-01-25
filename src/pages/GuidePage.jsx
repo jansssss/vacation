@@ -11,17 +11,17 @@ const GuidePage = () => {
   if (!guide) {
     return (
       <div className="rounded-2xl border border-slate-100 bg-white p-8 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">揶쎛??諭띄몴?筌≪뼚??????곷뮸??덈뼄.</h1>
-        <p className="mt-2 text-slate-600">?遺욧퍕??揶쎛??諭뜹첎? ??얘탢????猷??뤿???щ빍??</p>
+        <h1 className="text-2xl font-semibold text-slate-900">?띠럾????獄?쓣紐?嶺뚢돦堉??????怨룸????덈펲.</h1>
+        <p className="mt-2 text-slate-600">??븐슙????띠럾????獄?쑚泥? ???섑깴????????琉????鍮??</p>
         <Link to="/guides" className="mt-4 inline-block text-emerald-700">
-          揶쎛??諭?筌뤴뫖以??곗쨮 ???툡揶쎛疫?        </Link>
+          ?띠럾????獄?嶺뚮ㅄ維뽨빳??怨쀬Ŧ ????→뤆?쎛??        </Link>
       </div>
     );
   }
 
   const breadcrumbs = [
     { label: "??, path: "/" },
-    { label: "揶쎛??諭?, path: "/guides" },
+    { label: "?띠럾????獄?, path: "/guides" },
     { label: guide.title, path: `/guides/${guide.slug}` },
   ];
 
@@ -31,10 +31,10 @@ const GuidePage = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">??뿅?揶쎛??諭?/p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">??肉??띠럾????獄?/p>
         <h1 className="mt-2 text-3xl font-semibold text-slate-900">{guide.title}</h1>
         <p className="mt-3 text-slate-600">{guide.summary}</p>
-        <p className="mt-4 text-xs text-slate-400">??낅쑓??꾨뱜 {guide.updatedAt}</p>
+        <p className="mt-4 text-xs text-slate-400">???낆몥??袁⑤콦 {guide.updatedAt}</p>
       </section>
 
       <div className="space-y-6">
