@@ -8,4 +8,7 @@ export const SITE_CONFIG = {
   defaultImage: "https://e-work.kr/og-image.png",
   updatedAt: "2026-01-25",
   rulesEffectiveDate: "2026-01-01",
+  operatorName: "이워크",
+  operatorDisplay: "이워크 / 이워크",
+  contactEmail: "goooods@naver.com",
 };

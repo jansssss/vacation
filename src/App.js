@@ -8,6 +8,11 @@ import AnnualLeaveCalculator from "./pages/AnnualLeaveCalculator";
 import RetirementCalculator from "./pages/RetirementCalculator";
 import GuidesIndex from "./pages/GuidesIndex";
 import GuidePage from "./pages/GuidePage";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
+import Disclaimer from "./pages/Disclaimer";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -22,6 +27,11 @@ function App() {
           <Route path="/calculators/severance-pay" element={<RetirementCalculator />} />
           <Route path="/guides" element={<GuidesIndex />} />
           <Route path="/guides/:slug" element={<GuidePage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
 
           <Route path="/annual-leave" element={<Navigate to="/calculators/annual-leave" replace />} />
           <Route path="/retirement" element={<Navigate to="/calculators/severance-pay" replace />} />

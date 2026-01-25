@@ -1,5 +1,6 @@
 import React from "react";
 import { SITE_CONFIG } from "../config/siteConfig";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -8,6 +9,16 @@ const Footer = () => {
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="font-medium text-slate-700">{SITE_CONFIG.brandLine}</div>
           <div>기준일: {SITE_CONFIG.rulesEffectiveDate} · 업데이트: {SITE_CONFIG.updatedAt}</div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-500">
+          <Link to="/about" className="hover:text-slate-700">소개</Link>
+          <Link to="/contact" className="hover:text-slate-700">문의</Link>
+          <Link to="/privacy" className="hover:text-slate-700">개인정보처리방침</Link>
+          <Link to="/terms" className="hover:text-slate-700">이용약관</Link>
+          <Link to="/disclaimer" className="hover:text-slate-700">면책</Link>
+        </div>
+        <div className="mt-3 text-xs text-slate-400">
+          운영자: {SITE_CONFIG.operatorDisplay} · 연락처: {SITE_CONFIG.contactEmail}
         </div>
         <p className="mt-4 text-xs text-slate-400">
           본 서비스는 일반 정보 제공 목적이며 개별 상황에 따라 결과가 달라질 수 있습니다. 법률 자문이
