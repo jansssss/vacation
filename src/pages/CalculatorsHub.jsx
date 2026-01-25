@@ -7,15 +7,15 @@ const CalculatorsHub = () => {
   return (
     <div className="space-y-8">
       <Seo
-        title="??ｌ뫒亦낆렲臾????딅땹"
-        description="??⑥れ빵, ??怨몄땋???????堉??筌뤾벳???ｌ뫒亦낆렲臾얏? ????ㅻ걙????筌먦끉逾???겶???肉???怨댄맟濚밸Ŧ?? ??蹂κ텢??紐껊퉵??"
+        title="계산기 허브"
+        description="연차, 퇴직금 등 핵심 노무 계산기를 한 곳에서 확인하고 실무 해설까지 제공합니다."
         path="/calculators"
       />
 
       <div>
-        <h1 className="text-3xl font-semibold text-slate-900">??ｌ뫒亦낆렲臾????딅땹</h1>
+        <h1 className="text-3xl font-semibold text-slate-900">계산기 허브</h1>
         <p className="mt-2 text-slate-600">
-          ???堉???ｌ뫒亦낆렲臾얏⑤벡異????怨댄맟, ???깅뇶, ???, FAQ, ??ㅻ쾴??????ロ깵?源놁뒭????蹂κ텢????肉???????蹂?뜟??繞벿븐뫒????덈펲.
+          핵심 계산기마다 해설, 예외, 사례, FAQ, 공지문 템플릿을 제공해 실무 대응 시간을 줄입니다.
         </p>
       </div>
 
@@ -30,7 +30,7 @@ const CalculatorsHub = () => {
               <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
                 {calculator.category}
               </span>
-              <span>???낆몥??袁⑤콦 {calculator.updatedAt}</span>
+              <span>업데이트 {calculator.updatedAt}</span>
             </div>
             <h2 className="mt-3 text-xl font-semibold text-slate-900">{calculator.title}</h2>
             <p className="mt-2 text-sm text-slate-600">{calculator.summary}</p>

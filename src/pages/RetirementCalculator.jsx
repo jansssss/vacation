@@ -94,6 +94,31 @@ const RetirementCalculator = () => {
     "평균임금 포함 항목은 급여대장과 사내 규정으로 확인 필요",
   ];
 
+  const keyPoints = [
+    "최근 3개월 평균임금을 기준으로 산정합니다.",
+    "근속기간(년/개월)을 입력해 환산 연수를 계산합니다.",
+    "1년 미만 근속자는 지급 요건을 별도 확인해야 합니다.",
+  ];
+
+  const inputGuide = [
+    "최근 3개월 평균임금(원)을 입력합니다.",
+    "근속 연수와 추가 개월을 입력합니다.",
+    "상여/연장수당 포함 여부를 급여대장에서 확인합니다.",
+  ];
+
+  const quickStats = [
+    { label: "기준일", value: RULES_2026.effectiveDate },
+    { label: "업데이트", value: RULES_2026.updatedAt },
+    { label: "산정 기준", value: `최근 ${RULES_2026.severancePay.averageWagePeriodMonths}개월` },
+  ];
+
+  const exampleCalc = {
+    title: "예시: 평균임금 3,000,000원 · 근속 3년",
+    input: "최근 3개월 평균임금 3,000,000원, 근속 3년 0개월",
+    output: "예상 퇴직금: 9,000,000원",
+    note: "상여/연장수당 포함 여부에 따라 달라질 수 있습니다.",
+  };
+
   const relatedLinks = [
     { title: "연차 계산기", path: "/calculators/annual-leave" },
     { title: "퇴직금 지급 대상 판단 기준", path: "/guides/severance-pay-eligibility" },
@@ -145,6 +170,10 @@ const RetirementCalculator = () => {
       description="평균임금과 근속기간을 입력하면 예상 퇴직금을 계산하고, 실무 예외와 FAQ까지 제공합니다."
       updatedAt={RULES_2026.updatedAt}
       summaryLines={summaryLines}
+      keyPoints={keyPoints}
+      inputGuide={inputGuide}
+      quickStats={quickStats}
+      exampleCalc={exampleCalc}
       steps={steps}
       exceptions={exceptions}
       cases={cases}

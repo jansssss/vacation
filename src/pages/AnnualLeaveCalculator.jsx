@@ -113,6 +113,31 @@ const AnnualLeaveCalculator = () => {
     "출근율 요건 및 휴직 처리 기준은 사업장 규정과 행정해석 확인 필요",
   ];
 
+  const keyPoints = [
+    "입사일·기준일 기준으로 연차 발생 일수를 계산합니다.",
+    "1년 미만 월차 + 1년 이상 연차를 합산합니다.",
+    "출근율 80% 미만 구간은 발생 제한 가능성이 있습니다.",
+  ];
+
+  const inputGuide = [
+    "입사일과 기준일(퇴직 예정일)을 입력합니다.",
+    "출근율 가정치를 입력해 예외 가능성을 확인합니다.",
+    "휴직/휴업 등 특이사항은 예외 항목을 참고합니다.",
+  ];
+
+  const quickStats = [
+    { label: "기준일", value: RULES_2026.effectiveDate },
+    { label: "업데이트", value: RULES_2026.updatedAt },
+    { label: "상한", value: `${RULES_2026.annualLeave.maxTotal}일` },
+  ];
+
+  const exampleCalc = {
+    title: "예시: 2025-03-01 입사, 2026-02-28 기준",
+    input: "입사일 2025-03-01, 기준일 2026-02-28, 출근율 100%",
+    output: "발생 연차: 11일 (1년 미만 월차 기준)",
+    note: "1년 도래 후에는 2년차 기본 15일이 추가됩니다.",
+  };
+
   const relatedLinks = [
     { title: "퇴직금 계산기", path: "/calculators/severance-pay" },
     { title: "연차 기본 규칙 한 장 요약", path: "/guides/annual-leave-basics" },
@@ -164,6 +189,10 @@ const AnnualLeaveCalculator = () => {
       description="입사일과 기준일 기준으로 발생 가능한 연차 일수를 계산하고, 실무 예외와 FAQ까지 함께 제공합니다."
       updatedAt={RULES_2026.updatedAt}
       summaryLines={summaryLines}
+      keyPoints={keyPoints}
+      inputGuide={inputGuide}
+      quickStats={quickStats}
+      exampleCalc={exampleCalc}
       steps={steps}
       exceptions={exceptions}
       cases={cases}
