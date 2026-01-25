@@ -5,97 +5,99 @@ import { SITE_CONFIG } from "../config/siteConfig";
 
 const Terms = () => {
   const breadcrumbs = [
-    { label: "??, path: "/" },
-    { label: "??곸뒠???", path: "/terms" },
+    { label: "홈", path: "/" },
+    { label: "이용약관", path: "/terms" },
   ];
 
   return (
     <div className="space-y-8">
       <Seo
-        title="??곸뒠???"
-        description="e-work.kr ??뺥돩????곸뒠???"
+        title="이용약관"
+        description="e-work.kr 서비스 이용약관"
         path="/terms"
       />
       <Breadcrumbs items={breadcrumbs} />
 
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm space-y-6 text-slate-600 leading-relaxed">
-        <h1 className="text-3xl font-semibold text-slate-900">??곸뒠???</h1>
+        <h1 className="text-3xl font-semibold text-slate-900">이용약관</h1>
         <p>
-          癰?????? {SITE_CONFIG.operatorName}(??꾨릭 ??뽰뒲?怨몄쁽??揶쎛 ??볥궗??롫뮉 e-work.kr
-          ??뺥돩??쇱벥 ??곸뒠 鈺곌퀗援?獄???됯컧, ??곸겫?癒? ??곸뒠?癒?벥 亦낅슢?곸쮯??롊??源놁뱽 域뱀뮇???몃빍??
+          본 약관은 {SITE_CONFIG.operatorName}(이하 “운영자”)가 제공하는 e-work.kr
+          서비스의 이용 조건 및 절차, 운영자와 이용자의 권리·의무 등을 규정합니다.
         </p>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">1. ??뺥돩??筌뤴뫗??/h2>
+          <h2 className="text-xl font-semibold text-slate-900">1. 서비스 목적</h2>
           <p>
-            e-work.kr?? ?紐꺪?域뱀눖以??온???④쑴沅쎿묾怨? ?類ｋ궖 ??볥궗?????퉸 ??곸뒠?癒?벥 ?紐꾩벥???類ｋ뮉
-            ?類ｋ궖????뺥돩??쇱뿯??덈뼄.
+            e-work.kr은 노무/근로 관련 계산기와 정보 제공을 통해 이용자의 편의를 돕는
+            정보성 서비스입니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">2. ??볥궗 ?類ｋ궖????볧?/h2>
+          <h2 className="text-xl font-semibold text-slate-900">2. 제공 정보의 한계</h2>
           <p>
-            ??볥궗??롫뮉 ?④쑴沅?野껉퀗??獄??꾩꼹?쀯㎘醫딅뮉 ??곗뺘????덇땀 筌뤴뫗???흭, 甕곕베履??癒????袁⑤뻸??덈뼄.
-            ??쇱젫 ?怨몄뒠?? ??毓??域뱀뮇??獄??온??疫꿸퀗? ??곴퐤???怨쀪퐨??몃빍??
+            제공되는 계산 결과 및 콘텐츠는 일반적 안내 목적이며, 법률 자문이 아닙니다.
+            실제 적용은 사업장 규정 및 관련 기관 해석을 우선합니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">3. ??곸뒠?癒?벥 ??롊?/h2>
+          <h2 className="text-xl font-semibold text-slate-900">3. 이용자의 의무</h2>
           <ul className="list-disc list-inside space-y-1">
-            <li>??뺥돩????곸뒠 ??甕곕베議?獄?癰??????餓Β??묐퉸????몃빍??</li>
-            <li>???紐꾩벥 亦낅슢?곭몴?燁삘뫂鍮??띻탢???븍뜄苡우쮯?醫뤿퉸???類ｋ궖??野껊슣???곴퐣??????몃빍??</li>
-            <li>??뺥돩????곸겫??獄쎻뫚鍮??롫뮉 ??깆맄????곴퐣??????몃빍??</li>
+            <li>서비스 이용 시 법령 및 본 약관을 준수해야 합니다.</li>
+            <li>타인의 권리를 침해하거나 불법·유해한 정보를 게시해서는 안 됩니다.</li>
+            <li>서비스 운영을 방해하는 행위를 해서는 안 됩니다.</li>
           </ul>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">4. ???臾롰뀙</h2>
+          <h2 className="text-xl font-semibold text-slate-900">4. 저작권</h2>
           <p>
-            癰?????紐꾨퓠 野껊슣????꾩꼹?쀯㎘醫롮벥 ???臾롰뀙?? ??곸겫?癒?퓠野???됱몵筌? ?얜???癰귣벊?ｌ쮯獄쏄퀬猷루몴?            疫뀀뜇鍮??덈뼄. ?紐꾩뒠 ???곗뮇荑???볥┛??亦낅슣???몃빍??
+            본 사이트에 게시된 콘텐츠의 저작권은 운영자에게 있으며, 무단 복제·배포를
+            금합니다. 인용 시 출처 표기를 권장합니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">5. ?紐? 筌띻낱寃?/h2>
+          <h2 className="text-xl font-semibold text-slate-900">5. 외부 링크</h2>
           <p>
-            ?紐? ????紐껋쨮 ?怨뚭퍙??롫뮉 筌띻낱寃뺝첎? ??釉??????됱몵筌? ????????紐꾩벥 ?꾩꼹?쀯㎘醫?
-            揶쏆뮇??類ｋ궖 筌ｌ꼶???????곴퐣????곸겫?癒? 筌?굞?ワ쭪?筌왖 ??녿뮸??덈뼄.
+            외부 사이트로 연결되는 링크가 포함될 수 있으며, 해당 사이트의 콘텐츠와
+            개인정보 처리에 대해서는 운영자가 책임지지 않습니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">6. ??뺥돩??癰궰野?獄?餓λ쵎??/h2>
+          <h2 className="text-xl font-semibold text-slate-900">6. 서비스 변경 및 중단</h2>
           <p>
-            ??곸겫?癒?뮉 ??뺥돩??揶쏆뮇苑???袁る퉸 ??? 疫꿸퀡???癰궰野껋?釉?쳞怨뺢돌 餓λ쵎???????됱몵筌?
-            餓λ쵐???癰궰野껋럩? ?????⑤벊???몃빍??
+            운영자는 서비스 개선을 위해 일부 기능을 변경하거나 중단할 수 있으며,
+            중요한 변경은 사전 공지합니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">7. 筌롫똻肄?獄?筌?굞????쀫립</h2>
+          <h2 className="text-xl font-semibold text-slate-900">7. 면책 및 책임 제한</h2>
           <p>
-            ??곸겫?癒?뮉 ??뺥돩????볥궗???온???릭??甕곕베議????됱뒠??롫뮉 甕곕뗄????곷퓠??筌?굞?????쀫립??몃빍??
-            ??곸뒠?癒? 癰???뺥돩??쇱벥 ?類ｋ궖????뽰뒠??뤿연 獄쏆뮇源??筌욊낯?믪쮯揶쏄쑴???癒곕퉸??????            ??곸겫?癒?뮉 筌?굞???筌왖筌왖 ??녿뮸??덈뼄.
+            운영자는 서비스 제공과 관련하여 법령상 허용되는 범위 내에서 책임을 제한합니다.
+            이용자가 본 서비스의 정보를 활용하여 발생한 직접·간접 손해에 대해
+            운영자는 책임을 지지 않습니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">8. ?브쑴????욧퍙</h2>
+          <h2 className="text-xl font-semibold text-slate-900">8. 분쟁 해결</h2>
           <p>
-            癰???????온???립 ?브쑴??? ???????甕곕베議??餓Β椰꾧퀡苡??곗쨮 ??렽?
-            ?온??甕곕벡??? 沃섏눘沅???꽊甕곕벡肉??怨뺤キ??덈뼄.
+            본 약관과 관련한 분쟁은 대한민국 법령을 준거법으로 하며,
+            관할 법원은 민사소송법에 따릅니다.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-slate-900">9. ?얜챷??/h2>
-          <p>??곸뒠??????????얜챷????袁⑥삋 ?怨뺤뵭筌ｌ꼶以?揶쎛?館鍮??덈뼄.</p>
-          <p className="font-medium">?怨뺤뵭筌? {SITE_CONFIG.contactEmail}</p>
+          <h2 className="text-xl font-semibold text-slate-900">9. 문의</h2>
+          <p>이용약관에 대한 문의는 아래 연락처로 가능합니다.</p>
+          <p className="font-medium">연락처: {SITE_CONFIG.contactEmail}</p>
         </div>
 
-        <p className="text-xs text-slate-400">??쀫뻬?? 2026-01-25</p>
+        <p className="text-xs text-slate-400">시행일: 2026-01-25</p>
       </section>
     </div>
   );
