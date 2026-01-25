@@ -13,6 +13,8 @@ import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
 import Disclaimer from "./pages/Disclaimer";
+import BoardList from "./pages/BoardList";
+import BoardDetail from "./pages/BoardDetail";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
           <Route path="/calculators/severance-pay" element={<RetirementCalculator />} />
           <Route path="/guides" element={<GuidesIndex />} />
           <Route path="/guides/:slug" element={<GuidePage />} />
+          <Route path="/board" element={<BoardList />} />
+          <Route path="/board/:slug" element={<BoardDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />

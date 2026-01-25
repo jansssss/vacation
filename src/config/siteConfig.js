@@ -1,14 +1,14 @@
 export const SITE_CONFIG = {
   siteName: "e-work.kr",
-  brandLine: "노무/근로 유틸 플랫폼",
+  brandLine: "?紐꺪?域뱀눖以??醫뤿뼢 ???삸??,
   baseUrl: "https://e-work.kr",
-  defaultTitle: "e-work.kr | 노무/근로 계산기 허브",
+  defaultTitle: "e-work.kr | ?紐꺪?域뱀눖以??④쑴沅쎿묾???덊닏",
   defaultDescription:
-    "연차, 퇴직금 등 노무/근로 계산기를 한 곳에서 확인하고, 실무 FAQ와 사례까지 함께 제공하는 e-work.kr 콘텐츠 허브입니다.",
+    "?怨쀪컧, ??곸춦疫????紐꺪?域뱀눖以??④쑴沅쎿묾怨? ???⑤끃肉???類ㅼ뵥??랁? ??뿅?FAQ?? ???繹먮슣? ??ｍ뜞 ??볥궗??롫뮉 e-work.kr ?꾩꼹?쀯㎘???덊닏??낅빍??",
   defaultImage: "https://e-work.kr/og-image.png",
   updatedAt: "2026-01-25",
   rulesEffectiveDate: "2026-01-01",
-  operatorName: "이워크",
-  operatorDisplay: "이워크 / 이워크",
+  operatorName: "??곸뜖??,
+  operatorDisplay: "??곸뜖??/ ??곸뜖??,
   contactEmail: "goooods@naver.com",
 };

@@ -5,7 +5,7 @@ export const calculateSeverancePay = ({ avgMonthlyWage, years, months }) => {
   const serviceYears = Number(years) + Number(months) / 12;
 
   if (!monthlyWage || monthlyWage <= 0 || serviceYears <= 0) {
-    return { error: "평균임금과 근속기간을 올바르게 입력해 주세요.", pay: 0, serviceYears: 0 };
+    return { error: "???뇧?袁㏉닊??域뱀눘?썸묾怨뚯퍢????而?몴?우쓺 ??낆젾??雅뚯눘苑??", pay: 0, serviceYears: 0 };
   }
 
   const pay = monthlyWage * serviceYears;

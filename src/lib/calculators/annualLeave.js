@@ -26,11 +26,11 @@ export const calculateAnnualLeave = (start, end) => {
   const endDate = new Date(end);
 
   if (!start || !end || Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-    return { error: "입사일과 기준일을 모두 입력해 주세요.", total: 0, breakdown: [] };
+    return { error: "??녾텢??⑤궢 疫꿸퀣???깆뱽 筌뤴뫀紐???낆젾??雅뚯눘苑??", total: 0, breakdown: [] };
   }
 
   if (endDate < startDate) {
-    return { error: "기준일이 입사일보다 빠릅니다.", total: 0, breakdown: [] };
+    return { error: "疫꿸퀣???깆뵠 ??녾텢??곕궖????쥓已??덈뼄.", total: 0, breakdown: [] };
   }
 
   const months = diffFullMonths(startDate, endDate);
@@ -45,7 +45,7 @@ export const calculateAnnualLeave = (start, end) => {
       Math.min(months, RULES_2026.annualLeave.firstYearMonthlyCap)
     );
     if (firstYearMonthly > 0) {
-      breakdown.push({ label: "1년차(월차)", days: firstYearMonthly });
+      breakdown.push({ label: "1?袁⑷컧(?遺욧컧)", days: firstYearMonthly });
       total += firstYearMonthly;
     }
   }
@@ -58,7 +58,7 @@ export const calculateAnnualLeave = (start, end) => {
         Math.floor((year - 1) / 2) * RULES_2026.annualLeave.extraPerTwoYears
       );
       const days = Math.min(RULES_2026.annualLeave.maxTotal, RULES_2026.annualLeave.baseAfterOneYear + extra);
-      breakdown.push({ label: `${year}년차`, days });
+      breakdown.push({ label: `${year}?袁⑷컧`, days });
       total += days;
     }
   }

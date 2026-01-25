@@ -5,37 +5,34 @@ import { SITE_CONFIG } from "../config/siteConfig";
 
 const About = () => {
   const breadcrumbs = [
-    { label: "홈", path: "/" },
-    { label: "소개", path: "/about" },
+    { label: "??, path: "/" },
+    { label: "???뻣", path: "/about" },
   ];
 
   return (
     <div className="space-y-8">
       <Seo
-        title="서비스 소개"
-        description="e-work.kr의 운영 목적과 콘텐츠 기준을 안내합니다."
+        title="??뺥돩?????뻣"
+        description="e-work.kr????곸겫 筌뤴뫗?삥??꾩꼹?쀯㎘?疫꿸퀣?????덇땀??몃빍??"
         path="/about"
       />
       <Breadcrumbs items={breadcrumbs} />
 
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm space-y-4">
-        <h1 className="text-3xl font-semibold text-slate-900">e-work.kr 소개</h1>
+        <h1 className="text-3xl font-semibold text-slate-900">e-work.kr ???뻣</h1>
         <p className="text-slate-600 leading-relaxed">
-          e-work.kr은 노무/근로 관련 실무에서 자주 발생하는 질문을 빠르게 해결하기 위해 만든
-          계산기와 가이드 허브입니다. 연차, 퇴직금처럼 빈도가 높은 주제를 중심으로
-          계산 결과뿐 아니라 예외, 사례, FAQ, 체크리스트까지 함께 제공해
-          실무 커뮤니케이션 비용을 줄이는 것을 목표로 합니다.
+          e-work.kr?? ?紐꺪?域뱀눖以??온????뿅?癒?퐣 ?癒?폒 獄쏆뮇源??롫뮉 筌욌뜄揆????쥓?ㅵ칰???욧퍙??띾┛ ?袁る퉸 筌띾슢諭?          ?④쑴沅쎿묾怨? 揶쎛??諭???덊닏??낅빍?? ?怨쀪컧, ??곸춦疫뀀뜆荑????뜄猷꾢첎? ?誘? 雅뚯눘?ｇ몴?餓λ쵐???곗쨮
+          ?④쑴沅?野껉퀗?듣굢??袁⑤빍????됱뇚, ???, FAQ, 筌ｋ똾寃뺟뵳???硫명돱筌왖 ??ｍ뜞 ??볥궗??          ??뿅??뚣끇??????곷???쑴???餓κ쑴???野껉퍔??筌뤴뫚紐닸에???몃빍??
         </p>
         <p className="text-slate-600 leading-relaxed">
-          모든 콘텐츠는 공공기관 인사총무 실무 관점을 기반으로 작성하되,
-          특정 기관이나 개인이 식별되지 않도록 익명화·합성 사례로 구성합니다.
-          내부 정보 및 개인정보는 다루지 않으며, 실제 적용 시에는 각 사업장의
-          규정과 행정 해석을 우선 확인할 것을 권장합니다.
+          筌뤴뫀諭??꾩꼹?쀯㎘醫딅뮉 ?⑤벀?ф묾怨? ?紐꾧텢?μ빖龜 ??뿅??온?癒?뱽 疫꿸퀡而??곗쨮 ?臾믨쉐??롫┷,
+          ?諭??疫꿸퀗???援?揶쏆뮇?????명??? ??낅즲嚥???ъ구?遺뗫；鍮?????嚥??닌딄쉐??몃빍??
+          ??? ?類ｋ궖 獄?揶쏆뮇??類ｋ궖????삼펷筌왖 ??놁몵筌? ??쇱젫 ?怨몄뒠 ??뽯퓠??揶???毓?關??          域뱀뮇?숁???깆젟 ??곴퐤???怨쀪퐨 ?類ㅼ뵥??野껉퍔??亦낅슣???몃빍??
         </p>
         <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm text-slate-600 space-y-2">
-          <div>운영자: {SITE_CONFIG.operatorDisplay}</div>
-          <div>연락처: {SITE_CONFIG.contactEmail}</div>
-          <div>기준일: {SITE_CONFIG.rulesEffectiveDate}</div>
+          <div>??곸겫?? {SITE_CONFIG.operatorDisplay}</div>
+          <div>?怨뺤뵭筌? {SITE_CONFIG.contactEmail}</div>
+          <div>疫꿸퀣??? {SITE_CONFIG.rulesEffectiveDate}</div>
         </div>
       </section>
     </div>

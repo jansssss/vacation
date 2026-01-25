@@ -45,26 +45,26 @@ const CalculatorTemplate = ({
         <div className="flex flex-col gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-              계산기 허브
+              ?④쑴沅쎿묾???덊닏
             </p>
             <h1 className="text-3xl font-semibold text-slate-900 mt-2">{title}</h1>
             <p className="text-slate-600 mt-3 leading-relaxed">{description}</p>
           </div>
           <div className="flex flex-wrap gap-3 text-xs text-slate-500">
-            <span className="rounded-full bg-slate-100 px-3 py-1">기준일 {updatedAt}</span>
-            <span className="rounded-full bg-slate-100 px-3 py-1">공공기관 인사총무 실무 관점</span>
-            <span className="rounded-full bg-slate-100 px-3 py-1">익명화/합성 사례</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">疫꿸퀣???{updatedAt}</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">?⑤벀?ф묾怨? ?紐꾧텢?μ빖龜 ??뿅??온??/span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">??ъ구????밴쉐 ???</span>
           </div>
         </div>
       </section>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr),minmax(0,1fr)]">
         <div className="space-y-8">
-          <SectionCard title="계산 입력">
+          <SectionCard title="?④쑴沅???낆젾">
             {children}
           </SectionCard>
 
-          <SectionCard title="결과 요약">
+          <SectionCard title="野껉퀗???遺용튋">
             <ul className="space-y-2 text-sm text-slate-700">
               {summaryLines.map((line, index) => (
                 <li key={index} className="flex gap-2">
@@ -75,7 +75,7 @@ const CalculatorTemplate = ({
             </ul>
           </SectionCard>
 
-          <SectionCard title="계산 과정">
+          <SectionCard title="?④쑴沅??⑥눘??>
             <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside">
               {steps.map((step, index) => (
                 <li key={index}>{step}</li>
@@ -83,15 +83,15 @@ const CalculatorTemplate = ({
             </ol>
           </SectionCard>
 
-          <SectionCard title="실무 예외 (조건 분기)">
+          <SectionCard title="??뿅???됱뇚 (鈺곌퀗援??브쑨由?">
             <ul className="space-y-2 text-sm text-slate-700">
               {exceptions.map((item, index) => (
-                <li key={index}>• {item}</li>
+                <li key={index}>??{item}</li>
               ))}
             </ul>
           </SectionCard>
 
-          <SectionCard title="실전 사례">
+          <SectionCard title="??쇱읈 ???">
             <div className="space-y-3 text-sm text-slate-700">
               {cases.map((item, index) => (
                 <div key={index} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
@@ -101,7 +101,7 @@ const CalculatorTemplate = ({
             </div>
           </SectionCard>
 
-          <SectionCard title="자주 묻는 질문 (FAQ)">
+          <SectionCard title="?癒?폒 ?얠궠??筌욌뜄揆 (FAQ)">
             <div className="space-y-4 text-sm text-slate-700">
               {faqs.map((faq, index) => (
                 <div key={index}>
@@ -112,36 +112,36 @@ const CalculatorTemplate = ({
             </div>
           </SectionCard>
 
-          <SectionCard title="근거 / 출처 / 업데이트">
+          <SectionCard title="域뱀눊援?/ ?곗뮇荑?/ ??낅쑓??꾨뱜">
             <ul className="space-y-2 text-sm text-slate-700">
               {sources.map((source, index) => (
-                <li key={index}>• {source}</li>
+                <li key={index}>??{source}</li>
               ))}
             </ul>
             <p className="mt-4 text-xs text-slate-400">
-              제공 정보는 일반적인 안내이며, 실제 적용은 사업장 내규와 행정 해석에 따라 달라질 수 있습니다.
+              ??볥궗 ?類ｋ궖????곗뺘?怨몄뵥 ??덇땀??흭, ??쇱젫 ?怨몄뒠?? ??毓????욱뇣?? ??깆젟 ??곴퐤???怨뺤뵬 ???わ쭪?????됰뮸??덈뼄.
             </p>
           </SectionCard>
         </div>
 
         <aside className="space-y-6">
-          <SectionCard title="인사팀 체크리스트">
+          <SectionCard title="?紐꾧텢?? 筌ｋ똾寃뺟뵳????>
             <ul className="space-y-2 text-sm text-slate-700">
               {trust.checklist.map((item, index) => (
-                <li key={index}>• {item}</li>
+                <li key={index}>??{item}</li>
               ))}
             </ul>
           </SectionCard>
 
-          <SectionCard title="분쟁/민원 포인트">
+          <SectionCard title="?브쑴??沃섏눘???????>
             <ul className="space-y-2 text-sm text-slate-700">
               {trust.disputePoints.map((item, index) => (
-                <li key={index}>• {item}</li>
+                <li key={index}>??{item}</li>
               ))}
             </ul>
           </SectionCard>
 
-          <SectionCard title="공지문 예시">
+          <SectionCard title="?⑤벊?????됰뻻">
             <div className="space-y-2 text-sm text-slate-700">
               {trust.notices.map((item, index) => (
                 <p key={index} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
@@ -151,7 +151,7 @@ const CalculatorTemplate = ({
             </div>
           </SectionCard>
 
-          <SectionCard title="관련 도구/글">
+          <SectionCard title="?온???袁㏓럡/疫꼲">
             <ul className="space-y-2 text-sm text-slate-700">
               {relatedLinks.map((link) => (
                 <li key={link.path}>

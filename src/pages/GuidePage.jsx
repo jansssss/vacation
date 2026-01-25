@@ -11,18 +11,17 @@ const GuidePage = () => {
   if (!guide) {
     return (
       <div className="rounded-2xl border border-slate-100 bg-white p-8 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">가이드를 찾을 수 없습니다.</h1>
-        <p className="mt-2 text-slate-600">요청한 가이드가 없거나 이동되었습니다.</p>
+        <h1 className="text-2xl font-semibold text-slate-900">揶쎛??諭띄몴?筌≪뼚??????곷뮸??덈뼄.</h1>
+        <p className="mt-2 text-slate-600">?遺욧퍕??揶쎛??諭뜹첎? ??얘탢????猷??뤿???щ빍??</p>
         <Link to="/guides" className="mt-4 inline-block text-emerald-700">
-          가이드 목록으로 돌아가기
-        </Link>
+          揶쎛??諭?筌뤴뫖以??곗쨮 ???툡揶쎛疫?        </Link>
       </div>
     );
   }
 
   const breadcrumbs = [
-    { label: "홈", path: "/" },
-    { label: "가이드", path: "/guides" },
+    { label: "??, path: "/" },
+    { label: "揶쎛??諭?, path: "/guides" },
     { label: guide.title, path: `/guides/${guide.slug}` },
   ];
 
@@ -32,10 +31,10 @@ const GuidePage = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">실무 가이드</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">??뿅?揶쎛??諭?/p>
         <h1 className="mt-2 text-3xl font-semibold text-slate-900">{guide.title}</h1>
         <p className="mt-3 text-slate-600">{guide.summary}</p>
-        <p className="mt-4 text-xs text-slate-400">업데이트 {guide.updatedAt}</p>
+        <p className="mt-4 text-xs text-slate-400">??낅쑓??꾨뱜 {guide.updatedAt}</p>
       </section>
 
       <div className="space-y-6">
@@ -44,7 +43,7 @@ const GuidePage = () => {
             <h2 className="text-lg font-semibold text-slate-900">{section.heading}</h2>
             <ul className="mt-3 space-y-2 text-sm text-slate-700">
               {section.bullets.map((bullet, index) => (
-                <li key={index}>• {bullet}</li>
+                <li key={index}>??{bullet}</li>
               ))}
             </ul>
           </section>

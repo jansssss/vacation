@@ -3,6 +3,6 @@ import App from "./App";
 
 test("renders home hero", () => {
   render(<App />);
-  const headline = screen.getByText(/노무\/근로 유틸 플랫폼/i);
+  const headline = screen.getByText(/?紐꺪?/域뱀눖以??醫뤿뼢 ???삸??i);
   expect(headline).toBeInTheDocument();
 });
