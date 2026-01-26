@@ -233,7 +233,13 @@ const CalculatorTemplate = ({
             <ul className="space-y-2 text-sm text-slate-700">
               {relatedLinks.map((link) => (
                 <li key={link.path}>
-                  <Link to={link.path} className="text-emerald-700 hover:text-emerald-900">
+                  <Link
+                    to={link.path}
+                    className={link.featured
+                      ? "font-bold text-blue-700 hover:text-blue-900"
+                      : "text-emerald-700 hover:text-emerald-900"
+                    }
+                  >
                     {link.title}
                   </Link>
                 </li>

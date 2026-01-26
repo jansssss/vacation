@@ -143,7 +143,8 @@ const AnnualLeaveCalculator = () => {
   };
 
   const relatedLinks = [
-    { title: "입사 2년차 연차가 왜 25개인가?", path: "/guides/why-second-year-25-days" },
+    { title: "입사 2년차 연차가 왜 25개인가?", path: "/guides/why-second-year-25-days", featured: true },
+    { title: "1년차 만근 시 연차 26일 발생 이슈", path: "/guides/first-year-26-days" },
     { title: "연차 기본 규칙 한 장 요약", path: "/guides/annual-leave-basics" },
     { title: "연차 이월 기준과 소멸 시점", path: "/guides/annual-leave-carryover" },
     { title: "연차수당 정산 시 흔한 오류", path: "/guides/annual-leave-encashment" },

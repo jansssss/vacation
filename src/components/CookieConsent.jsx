@@ -23,12 +23,12 @@ const CookieConsent = () => {
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-4 shadow-lg md:flex md:items-center md:justify-between md:gap-4">
       <div className="text-sm text-slate-600">
-        蹂??ъ씠?몃뒗 ?쒕퉬???덉쭏 媛쒖꽑 諛?愿묎퀬 ?댁쁺???꾪빐 荑좏궎/?앸퀎?먮? ?ъ슜?????덉뒿?덈떎.
-        ?먯꽭???댁슜?{" "}
+        본 사이트는 서비스 개선 및 광고 운영을 위해 쿠키/로컬저장소를 사용할 수 있습니다.
+        자세한 내용은{" "}
         <Link to="/privacy" className="font-medium text-emerald-700 hover:text-emerald-900">
-          媛쒖씤?뺣낫泥섎━諛⑹묠
+          개인정보처리방침
         </Link>
-        ?먯꽌 ?뺤씤?섏꽭??
+        에서 확인하세요.
       </div>
       <div className="mt-3 flex gap-2 md:mt-0">
         <button
@@ -36,14 +36,14 @@ const CookieConsent = () => {
           onClick={() => handleConsent(false)}
           className="rounded-full border border-slate-200 px-4 py-2 text-xs text-slate-600 hover:bg-slate-50"
         >
-          嫄곕?
+          거부
         </button>
         <button
           type="button"
           onClick={() => handleConsent(true)}
           className="rounded-full bg-slate-900 px-4 py-2 text-xs font-medium text-white hover:bg-slate-800"
         >
-          ?숈쓽
+          동의
         </button>
       </div>
     </div>
