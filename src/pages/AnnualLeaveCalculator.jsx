@@ -20,16 +20,12 @@ const AnnualLeaveCalculator = () => {
     ? [
         `총 발생 연차: ${formatNumber(result.total)}일`,
         `근속기간: ${result.years}년 ${remainderMonths}개월 (기준일 ${formatDate(endDate)})`,
-        result.months < 12
-          ? `1년 미만 구간 월차 ${formatNumber(result.breakdown[0]?.days || 0)}일 발생`
-          : "",
-        result.months >= 12
-          ? `1년 이상 구간은 기본 ${RULES_2026.annualLeave.baseAfterOneYear}일 + 가산 연차 적용`
-          : "",
+        `회계연도 기준: 1년차 ${formatNumber(result.breakdown[0]?.days || 0)}일${result.breakdown.length >= 2 ? `, 2년차 ${formatNumber(result.breakdown[1]?.days || 0)}일` : ""}`,
         attendanceRate < 80 ? "출근율 80% 미만 가정: 실제 발생 연차가 줄어들 수 있습니다." : "",
       ].filter(Boolean)
     : [
         "입사일과 기준일을 입력하면 예상 연차 발생 일수를 확인할 수 있습니다.",
+        "회계연도(1~12월) 기준으로 계산됩니다.",
         "출근율 80% 미만, 휴직 등은 별도 검토가 필요합니다.",
         "계산 결과는 실무 참고용이며 최종 판단은 내부 규정에 따릅니다.",
       ];
@@ -37,16 +33,19 @@ const AnnualLeaveCalculator = () => {
   const steps = result && !result.error
     ? [
         `입사일 ${formatDate(startDate)}부터 기준일 ${formatDate(endDate)}까지 ${result.years}년 ${remainderMonths}개월 경과`,
-        `1년 미만 구간 월차 합계 ${formatNumber(result.breakdown[0]?.days || 0)}일`,
-        result.months >= 12
-          ? `1년 이상 구간 기본 ${RULES_2026.annualLeave.baseAfterOneYear}일 + 2년마다 ${RULES_2026.annualLeave.extraPerTwoYears}일 가산(최대 ${RULES_2026.annualLeave.maxTotal}일)`
+        `1년차(입사년도) 월차: ${formatNumber(result.breakdown[0]?.days || 0)}일`,
+        result.breakdown.length >= 2
+          ? `2년차: 26 - ${result.breakdown[0]?.days || 0} = ${formatNumber(result.breakdown[1]?.days || 0)}일`
+          : "",
+        result.breakdown.length >= 3
+          ? `3년차 이상: 기본 15일 + 2년마다 1일 가산`
           : "",
         `총 발생 연차 ${formatNumber(result.total)}일`,
       ].filter(Boolean)
     : [
         "입사일과 기준일을 입력",
-        "근속기간을 월 단위로 계산",
-        "1년 미만 월차 + 1년 이상 연차를 합산",
+        "회계연도(1~12월) 기준으로 계산",
+        "1년차는 입사년도 월차, 2년차는 26-1년차, 3년차 이상은 15일+가산",
         "출근율/휴직 등 예외를 별도 점검",
       ];
 
@@ -59,19 +58,24 @@ const AnnualLeaveCalculator = () => {
   ];
 
   const cases = [
-    "사례 1) 2025-03-01 입사, 2026-02-28 퇴사 예정: 1년 미만 구간 월차 11일 발생, 2026-03-01 이후 2년차 기본 15일이 발생.",
-    "사례 2) 무급휴직 2개월 포함: 월차 2일이 제외될 수 있어 기준일 재계산 필요.",
-    "사례 3) 주 4일 근무: 연차 일수는 동일하나, 연차수당 환산 시 통상임금 기준을 다시 확인.",
+    "사례 1) 2025-03-01 입사, 2026-02-28 퇴사 예정: 2025년 월차 10일 발생, 2026년에는 26-10=16일이 발생.",
+    "사례 2) 2025-10-26 입사, 2027-11-28 퇴사: 2025년 2일(11~12월), 2026년 24일(26-2), 2027년 15일 발생.",
+    "사례 3) 무급휴직 2개월 포함: 월차 2일이 제외될 수 있어 기준일 재계산 필요.",
+    "사례 4) 주 4일 근무: 연차 일수는 동일하나, 연차수당 환산 시 통상임금 기준을 다시 확인.",
   ];
 
   const faqs = [
     {
       question: "연차 발생 기준일은 입사일인가요?",
-      answer: "통상 입사일을 기준으로 하나, 회사 규정에 따라 회계연도 기준을 적용할 수 있습니다.",
+      answer: "이 계산기는 회계연도(1~12월) 기준으로 계산합니다. 1년차는 입사년도 12월까지 월차, 2년차는 26-1년차 개수로 계산됩니다.",
     },
     {
       question: "1년 미만 기간에는 몇 일이 발생하나요?",
-      answer: "매월 1일씩 발생하되, 출근율 요건 충족 여부를 함께 확인해야 합니다.",
+      answer: "입사일이 1일이면 입사월부터, 1일이 아니면 다음 달부터 개근 월마다 1일씩 발생합니다. 최대 11일까지 발생 가능합니다.",
+    },
+    {
+      question: "2년차에 왜 26개가 발생하나요?",
+      answer: "1년차 월차 발생분을 감안하여 26 - 1년차 개수로 계산됩니다. 1월 입사(1년차 11개)면 2년차 15개, 10월 입사(1년차 2개)면 2년차 24개가 됩니다.",
     },
     {
       question: "출근율 80% 기준은 어떻게 계산하나요?",
@@ -134,8 +138,8 @@ const AnnualLeaveCalculator = () => {
   const exampleCalc = {
     title: "예시: 2025-03-01 입사, 2026-02-28 기준",
     input: "입사일 2025-03-01, 기준일 2026-02-28, 출근율 100%",
-    output: "발생 연차: 11일 (1년 미만 월차 기준)",
-    note: "1년 도래 후에는 2년차 기본 15일이 추가됩니다.",
+    output: "발생 연차: 10일 (2025년 3월~12월 월차)",
+    note: "2026년에는 26 - 10 = 16일이 추가로 발생합니다.",
   };
 
   const relatedLinks = [

@@ -39,34 +39,43 @@ export const calculateAnnualLeave = (start, end) => {
   const breakdown = [];
   let total = 0;
 
-  if (months > 0) {
-    const firstYearMonthly = Math.min(
-      RULES_2026.annualLeave.firstYearMonthlyCap,
-      Math.min(months, RULES_2026.annualLeave.firstYearMonthlyCap)
-    );
-    if (firstYearMonthly > 0) {
-      breakdown.push({ label: "1년차(월차)", days: firstYearMonthly });
-      total += firstYearMonthly;
-    }
+  // 회계연도 기준 계산
+  const startYear = startDate.getFullYear();
+  const endYear = endDate.getFullYear();
+  const startMonth = startDate.getMonth(); // 0-based (0 = January)
+  const startDay = startDate.getDate();
+
+  // 1년차 (입사년도): 입사월부터 12월까지 월차
+  // 입사일이 1일이 아니면 입사월은 개근이 아니므로 다음 달부터 계산
+  const firstMonthOffset = startDay === 1 ? 0 : 1;
+  const firstYearMonths = 12 - startMonth - firstMonthOffset; // 입사월부터 12월까지 개근 가능 개월 수
+  const firstYearDays = Math.min(Math.max(0, firstYearMonths), RULES_2026.annualLeave.firstYearMonthlyCap);
+
+  if (firstYearDays > 0) {
+    breakdown.push({ label: "1년차(월차)", days: firstYearDays });
+    total += firstYearDays;
   }
 
-  if (months >= 12) {
-    const leaveYears = years + 1;
-    for (let year = 2; year <= leaveYears; year += 1) {
+  // 2년차 이상
+  if (endYear > startYear) {
+    const totalYears = endYear - startYear + 1;
+
+    for (let yearIndex = 2; yearIndex <= totalYears; yearIndex++) {
       let days;
-      if (year === 2) {
-        // 2년차: 25개 - 1년차 발생 개수
-        const firstYearDays = breakdown[0]?.days || 0;
-        days = RULES_2026.annualLeave.maxTotal - firstYearDays;
+
+      if (yearIndex === 2) {
+        // 2년차: 26 - 1년차 발생 개수
+        days = 26 - firstYearDays;
       } else {
         // 3년차 이상: 15개 + (2년마다 1개씩 가산)
         const extra = Math.min(
           RULES_2026.annualLeave.extraCap,
-          Math.floor((year - 3) / 2) * RULES_2026.annualLeave.extraPerTwoYears
+          Math.floor((yearIndex - 3) / 2) * RULES_2026.annualLeave.extraPerTwoYears
         );
         days = RULES_2026.annualLeave.baseAfterOneYear + extra;
       }
-      breakdown.push({ label: `${year}년차`, days });
+
+      breakdown.push({ label: `${yearIndex}년차`, days });
       total += days;
     }
   }
