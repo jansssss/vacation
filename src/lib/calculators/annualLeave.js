@@ -56,8 +56,9 @@ export const calculateAnnualLeave = (start, end) => {
     total += firstYearDays;
   }
 
-  // 2년차 이상
-  if (endYear > startYear) {
+  // 2년차 이상: 1년 이상 근속한 경우에만 발생
+  // 연차는 전년도 근무에 따른 차년도 휴가이므로, 1년 미만 퇴사 시 2년차 연차는 발생하지 않음
+  if (endYear > startYear && years >= 1) {
     const totalYears = endYear - startYear + 1;
 
     for (let yearIndex = 2; yearIndex <= totalYears; yearIndex++) {

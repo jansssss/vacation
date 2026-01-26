@@ -6,11 +6,12 @@ describe("calculateAnnualLeave", () => {
     expect(result.error).toBeTruthy();
   });
 
-  test("calculates first year monthly leave (10 months for March 1 start)", () => {
+  test("calculates first year monthly leave only when quitting before 1 year (March 1 start, Feb 28 end)", () => {
     const result = calculateAnnualLeave("2025-03-01", "2026-02-28");
-    expect(result.total).toBe(10); // 3월~12월 = 10개월
+    expect(result.total).toBe(10); // 3월~12월 = 10개월, 1년 미만이므로 2년차 연차 미발생
     expect(result.breakdown).toHaveLength(1);
     expect(result.breakdown[0].days).toBe(10);
+    expect(result.years).toBe(0); // 1년 미만
   });
 
   test("calculates 2nd year: 26 - first year days (March 1 start)", () => {
