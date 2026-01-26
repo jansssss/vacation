@@ -53,14 +53,19 @@ export const calculateAnnualLeave = (start, end) => {
   if (months >= 12) {
     const leaveYears = years + 1;
     for (let year = 2; year <= leaveYears; year += 1) {
-      const extra = Math.min(
-        RULES_2026.annualLeave.extraCap,
-        Math.floor((year - 1) / 2) * RULES_2026.annualLeave.extraPerTwoYears
-      );
-      const days = Math.min(
-        RULES_2026.annualLeave.maxTotal,
-        RULES_2026.annualLeave.baseAfterOneYear + extra
-      );
+      let days;
+      if (year === 2) {
+        // 2년차: 25개 - 1년차 발생 개수
+        const firstYearDays = breakdown[0]?.days || 0;
+        days = RULES_2026.annualLeave.maxTotal - firstYearDays;
+      } else {
+        // 3년차 이상: 15개 + (2년마다 1개씩 가산)
+        const extra = Math.min(
+          RULES_2026.annualLeave.extraCap,
+          Math.floor((year - 3) / 2) * RULES_2026.annualLeave.extraPerTwoYears
+        );
+        days = RULES_2026.annualLeave.baseAfterOneYear + extra;
+      }
       breakdown.push({ label: `${year}년차`, days });
       total += days;
     }

@@ -139,11 +139,12 @@ const AnnualLeaveCalculator = () => {
   };
 
   const relatedLinks = [
-    { title: "퇴직금 계산기", path: "/calculators/severance-pay" },
+    { title: "입사 2년차 연차가 왜 25개인가?", path: "/guides/why-second-year-25-days" },
     { title: "연차 기본 규칙 한 장 요약", path: "/guides/annual-leave-basics" },
     { title: "연차 이월 기준과 소멸 시점", path: "/guides/annual-leave-carryover" },
     { title: "연차수당 정산 시 흔한 오류", path: "/guides/annual-leave-encashment" },
     { title: "무급휴직이 연차/퇴직금에 미치는 영향", path: "/guides/unpaid-leave-impact" },
+    { title: "퇴직금 계산기", path: "/calculators/severance-pay" },
     { title: "퇴직금 지급 대상 판단 기준", path: "/guides/severance-pay-eligibility" },
     { title: "평균임금 산정 시 포함/제외 항목", path: "/guides/severance-pay-average-wage" },
     { title: "급여명세서 읽는 법", path: "/guides/payroll-slip-reading" },

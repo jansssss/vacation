@@ -39,14 +39,26 @@ const GuidePage = () => {
       </section>
 
       <div className="space-y-6">
-        {guide.sections.map((section) => (
-          <section key={section.heading} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+        {guide.sections.map((section, sectionIndex) => (
+          <section key={sectionIndex} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900">{section.heading}</h2>
-            <ul className="mt-3 space-y-2 text-sm text-slate-700">
-              {section.bullets.map((bullet, index) => (
-                <li key={index}>• {bullet}</li>
-              ))}
-            </ul>
+            {section.content && (
+              <div className="mt-3 whitespace-pre-line text-sm text-slate-700">
+                {section.content}
+              </div>
+            )}
+            {section.bullets && section.bullets.length > 0 && (
+              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                {section.bullets.map((bullet, index) => (
+                  <li key={index}>• {bullet}</li>
+                ))}
+              </ul>
+            )}
+            {section.content2 && (
+              <div className="mt-3 whitespace-pre-line text-sm text-slate-700">
+                {section.content2}
+              </div>
+            )}
           </section>
         ))}
       </div>
