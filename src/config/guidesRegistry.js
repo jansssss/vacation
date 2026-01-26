@@ -174,44 +174,6 @@ export const guidesRegistry = [
     keywords: "연차 26일, 1년차 연차, 연차 발생 시점, 퇴사 연차, 근로기준법 제60조, 연차수당, 대법원 판례, 고용노동부 행정해석",
   },
   {
-    slug: "annual-leave-basics",
-    title: "연차 기본 규칙 한 장 요약",
-    summary: "1년 미만/이상 구간을 나눠 연차 발생 구조를 빠르게 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
-    sections: [
-      {
-        heading: "핵심 요약",
-        bullets: [
-          "입사 후 1년 미만 구간은 매월 1일 발생(출근율 요건 확인)",
-          "1년 이상은 기본 15일 + 2년마다 1일 가산(상한 적용)",
-          "정확한 산정은 근속기간과 기준일을 함께 확인",
-        ],
-      },
-      {
-        heading: "실무 체크 포인트",
-        bullets: [
-          "휴직/휴업 기간 포함 여부는 사내 규정과 판례 흐름을 함께 확인",
-          "연차 발생/사용 기준일을 인사 공지로 명확히 안내",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "annual-leave-carryover",
-    title: "연차 이월 기준과 소멸 시점",
-    summary: "이월 가능 범위와 소멸 통지 시점을 실무 관점에서 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
-    sections: [
-      {
-        heading: "이월 관리",
-        bullets: [
-          "이월 허용 여부는 취업규칙/단체협약에 따른 운영이 핵심",
-          "연차 촉진제도 운영 시 안내 기록을 남겨 분쟁 리스크를 관리",
-        ],
-      },
-    ],
-  },
-  {
     slug: "annual-leave-encashment",
     title: "연차수당 정산 시 흔한 오류",
     summary: "미사용 연차수당 계산 시 빠뜨리기 쉬운 요소를 정리합니다.",
