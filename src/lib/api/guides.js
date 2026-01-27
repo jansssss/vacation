@@ -1,8 +1,5 @@
 import { supabase } from '../supabase';
 
-/**
- * 모든 가이드 목록 조회
- */
 export const fetchGuides = async () => {
   const { data, error } = await supabase
     .from('guides')
@@ -13,21 +10,16 @@ export const fetchGuides = async () => {
   return data;
 };
 
-/**
- * slug로 가이드 조회 (섹션 포함)
- */
-export const fetchGuideBySlug = async (slug) => {
-  // 가이드 기본 정보 조회
+const fetchGuideWithSections = async (filter) => {
   const { data: guide, error: guideError } = await supabase
     .from('guides')
     .select('*')
-    .eq('slug', slug)
+    .match(filter)
     .single();
 
   if (guideError) throw guideError;
   if (!guide) return null;
 
-  // 가이드 섹션 조회
   const { data: sections, error: sectionsError } = await supabase
     .from('guide_sections')
     .select('*')
@@ -38,18 +30,34 @@ export const fetchGuideBySlug = async (slug) => {
 
   return {
     ...guide,
-    sections: sections.map(section => ({
-      heading: section.heading,
-      content: section.content,
-      bullets: section.bullets, // Already JSONB array
-      content2: section.content2,
+    sections: sections.map((section) => ({
+      heading: section.heading ?? '',
+      content: section.content ?? '',
+      bullets: Array.isArray(section.bullets) ? section.bullets : [],
+      content2: section.content2 ?? '',
     })),
   };
 };
 
-/**
- * 가이드 생성 (관리자 전용)
- */
+export const fetchGuideBySlug = async (slug) => fetchGuideWithSections({ slug });
+
+export const fetchGuideById = async (id) => fetchGuideWithSections({ id });
+
+const normalizeBullets = (bullets) => {
+  if (Array.isArray(bullets)) {
+    return bullets.map((item) => `${item}`.trim()).filter(Boolean);
+  }
+
+  if (typeof bullets === 'string') {
+    return bullets
+      .split('\n')
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+};
+
 export const createGuide = async (guideData, sections) => {
   const { data: guide, error: guideError } = await supabase
     .from('guides')
@@ -64,13 +72,12 @@ export const createGuide = async (guideData, sections) => {
 
   if (guideError) throw guideError;
 
-  // 섹션 추가
   if (sections && sections.length > 0) {
     const sectionsToInsert = sections.map((section, index) => ({
       guide_id: guide.id,
       heading: section.heading,
       content: section.content,
-      bullets: section.bullets,
+      bullets: normalizeBullets(section.bullets),
       content2: section.content2,
       order_index: index + 1,
     }));
@@ -85,11 +92,7 @@ export const createGuide = async (guideData, sections) => {
   return guide;
 };
 
-/**
- * 가이드 수정 (관리자 전용)
- */
 export const updateGuide = async (guideId, guideData, sections) => {
-  // 가이드 기본 정보 수정
   const { error: guideError } = await supabase
     .from('guides')
     .update({
@@ -102,7 +105,6 @@ export const updateGuide = async (guideId, guideData, sections) => {
 
   if (guideError) throw guideError;
 
-  // 기존 섹션 삭제
   const { error: deleteError } = await supabase
     .from('guide_sections')
     .delete()
@@ -110,13 +112,12 @@ export const updateGuide = async (guideId, guideData, sections) => {
 
   if (deleteError) throw deleteError;
 
-  // 새 섹션 추가
   if (sections && sections.length > 0) {
     const sectionsToInsert = sections.map((section, index) => ({
       guide_id: guideId,
       heading: section.heading,
       content: section.content,
-      bullets: section.bullets,
+      bullets: normalizeBullets(section.bullets),
       content2: section.content2,
       order_index: index + 1,
     }));
@@ -131,9 +132,6 @@ export const updateGuide = async (guideId, guideData, sections) => {
   return true;
 };
 
-/**
- * 가이드 삭제 (관리자 전용)
- */
 export const deleteGuide = async (guideId) => {
   const { error } = await supabase
     .from('guides')
@@ -143,3 +141,4 @@ export const deleteGuide = async (guideId) => {
   if (error) throw error;
   return true;
 };
+

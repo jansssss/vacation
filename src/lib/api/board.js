@@ -1,8 +1,5 @@
 import { supabase } from '../supabase';
 
-/**
- * 모든 게시글 목록 조회
- */
 export const fetchBoardPosts = async () => {
   const { data, error } = await supabase
     .from('board_posts')
@@ -13,9 +10,6 @@ export const fetchBoardPosts = async () => {
   return data;
 };
 
-/**
- * slug로 게시글 조회
- */
 export const fetchBoardPostBySlug = async (slug) => {
   const { data, error } = await supabase
     .from('board_posts')
@@ -27,9 +21,17 @@ export const fetchBoardPostBySlug = async (slug) => {
   return data;
 };
 
-/**
- * 게시글 생성 (관리자 전용)
- */
+export const fetchBoardPostById = async (id) => {
+  const { data, error } = await supabase
+    .from('board_posts')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 export const createBoardPost = async (postData) => {
   const { data, error } = await supabase
     .from('board_posts')
@@ -47,9 +49,6 @@ export const createBoardPost = async (postData) => {
   return data;
 };
 
-/**
- * 게시글 수정 (관리자 전용)
- */
 export const updateBoardPost = async (postId, postData) => {
   const { error } = await supabase
     .from('board_posts')
@@ -66,9 +65,6 @@ export const updateBoardPost = async (postId, postData) => {
   return true;
 };
 
-/**
- * 게시글 삭제 (관리자 전용)
- */
 export const deleteBoardPost = async (postId) => {
   const { error } = await supabase
     .from('board_posts')
@@ -78,3 +74,4 @@ export const deleteBoardPost = async (postId) => {
   if (error) throw error;
   return true;
 };
+

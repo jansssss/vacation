@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import Seo from '../../components/Seo';
+import { useAuth } from '../../contexts/AuthContext';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -11,17 +11,17 @@ const AdminLogin = () => {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError('');
     setLoading(true);
 
     try {
       await signIn(email, password);
       navigate('/admin/guides');
-    } catch (err) {
-      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
-      console.error(err);
+    } catch (signInError) {
+      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요.');
+      console.error(signInError);
     } finally {
       setLoading(false);
     }
@@ -53,10 +53,10 @@ const AdminLogin = () => {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(event) => setEmail(event.target.value)}
                 required
                 className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder="admin@korea.com"
+                placeholder="admin@example.com"
               />
             </div>
 
@@ -68,7 +68,7 @@ const AdminLogin = () => {
                 type="password"
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
                 required
                 className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 placeholder="비밀번호 입력"
@@ -91,7 +91,7 @@ const AdminLogin = () => {
           </form>
 
           <p className="mt-6 text-xs text-center text-slate-400">
-            관리자 계정만 접근 가능합니다
+            관리자 계정만 접근 가능합니다.
           </p>
         </div>
       </div>
@@ -100,3 +100,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

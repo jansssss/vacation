@@ -21,6 +21,8 @@ import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminGuides from "./pages/admin/AdminGuides";
 import AdminBoard from "./pages/admin/AdminBoard";
+import AdminGuideEditor from "./pages/admin/AdminGuideEditor";
+import AdminBoardEditor from "./pages/admin/AdminBoardEditor";
 
 function App() {
   return (
@@ -39,10 +41,42 @@ function App() {
             }
           />
           <Route
+            path="/admin/guides/new"
+            element={
+              <PrivateRoute>
+                <AdminGuideEditor />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/guides/edit/:id"
+            element={
+              <PrivateRoute>
+                <AdminGuideEditor />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/admin/board"
             element={
               <PrivateRoute>
                 <AdminBoard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/board/new"
+            element={
+              <PrivateRoute>
+                <AdminBoardEditor />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/board/edit/:id"
+            element={
+              <PrivateRoute>
+                <AdminBoardEditor />
               </PrivateRoute>
             }
           />

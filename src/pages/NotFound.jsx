@@ -5,13 +5,21 @@ import Seo from "../components/Seo";
 const NotFound = () => {
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-10 text-center shadow-sm">
-      <Seo title="??瑜곷턄嶺뚯솘???嶺뚢돦堉??????怨룸????덈펲" description="??븐슙?????瑜곷턄嶺뚯솘??띠럾? ?브퀡????? ???용????덈펲." path="/404" />
+      <Seo
+        title="페이지를 찾을 수 없습니다"
+        description="요청하신 페이지가 없거나 이동되었을 수 있습니다."
+        path="/404"
+      />
       <h1 className="text-3xl font-semibold text-slate-900">404</h1>
-      <p className="mt-2 text-slate-600">??븐슙???琉용뼁 ??瑜곷턄嶺뚯솘??띠럾? ?브퀡????? ???용????덈펲.</p>
+      <p className="mt-2 text-slate-600">
+        요청하신 페이지를 찾을 수 없습니다. 주소를 다시 확인해 주세요.
+      </p>
       <Link to="/" className="mt-4 inline-block text-emerald-700">
-        ???깅さ??????→뤆?쎛??      </Link>
+        홈으로 돌아가기
+      </Link>
     </div>
   );
 };
 
 export default NotFound;
+

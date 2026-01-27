@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { fetchGuides, deleteGuide } from '../../lib/api/guides';
+import { Link, useNavigate } from 'react-router-dom';
 import Seo from '../../components/Seo';
+import { useAuth } from '../../contexts/AuthContext';
+import { deleteGuide, fetchGuides } from '../../lib/api/guides';
 
 const AdminGuides = () => {
   const [guides, setGuides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const loadGuides = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchGuides();
+        setGuides(data);
+      } catch (loadError) {
+        setError('가이드 목록을 불러오는 중 오류가 발생했습니다.');
+        console.error(loadError);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadGuides();
   }, []);
-
-  const loadGuides = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchGuides();
-      setGuides(data);
-    } catch (err) {
-      setError('가이드 목록을 불러오는데 실패했습니다.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id, title) => {
     if (!window.confirm(`"${title}" 가이드를 삭제하시겠습니까?`)) {
@@ -34,26 +35,27 @@ const AdminGuides = () => {
 
     try {
       await deleteGuide(id);
-      setGuides(guides.filter(g => g.id !== id));
-      alert('가이드가 삭제되었습니다.');
-    } catch (err) {
-      alert('삭제에 실패했습니다.');
-      console.error(err);
+      setGuides((prev) => prev.filter((guide) => guide.id !== id));
+      window.alert('가이드를 삭제했습니다.');
+    } catch (deleteError) {
+      window.alert('삭제 중 오류가 발생했습니다.');
+      console.error(deleteError);
     }
   };
 
   const handleLogout = async () => {
     try {
       await signOut();
-    } catch (err) {
-      console.error(err);
+      navigate('/admin');
+    } catch (logoutError) {
+      console.error(logoutError);
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-600">로딩 중...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-slate-600">불러오는 중...</div>
       </div>
     );
   }
@@ -62,7 +64,6 @@ const AdminGuides = () => {
     <div className="min-h-screen bg-slate-50">
       <Seo title="가이드 관리" description="관리자 - 가이드 관리" path="/admin/guides" />
 
-      {/* Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
@@ -81,16 +82,12 @@ const AdminGuides = () => {
               </Link>
             </nav>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-sm text-slate-600 hover:text-slate-900"
-          >
+          <button onClick={handleLogout} className="text-sm text-slate-600 hover:text-slate-900">
             로그아웃
           </button>
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-slate-900">가이드 관리</h1>
@@ -116,7 +113,7 @@ const AdminGuides = () => {
                   제목
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Slug
+                  슬러그
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   업데이트
@@ -133,9 +130,7 @@ const AdminGuides = () => {
                     <div className="text-sm font-medium text-slate-900">{guide.title}</div>
                     <div className="text-xs text-slate-500 mt-1">{guide.summary}</div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">
-                    {guide.slug}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{guide.slug}</td>
                   <td className="px-6 py-4 text-sm text-slate-600">
                     {new Date(guide.updated_at).toLocaleDateString('ko-KR')}
                   </td>
@@ -143,6 +138,7 @@ const AdminGuides = () => {
                     <Link
                       to={`/guides/${guide.slug}`}
                       target="_blank"
+                      rel="noreferrer"
                       className="text-emerald-700 hover:text-emerald-900 mr-4"
                     >
                       보기
@@ -151,7 +147,7 @@ const AdminGuides = () => {
                       to={`/admin/guides/edit/${guide.id}`}
                       className="text-blue-700 hover:text-blue-900 mr-4"
                     >
-                      편집
+                      수정
                     </Link>
                     <button
                       onClick={() => handleDelete(guide.id, guide.title)}
@@ -177,3 +173,4 @@ const AdminGuides = () => {
 };
 
 export default AdminGuides;
+

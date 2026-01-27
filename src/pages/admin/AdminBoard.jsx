@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { fetchBoardPosts, deleteBoardPost } from '../../lib/api/board';
+import { Link, useNavigate } from 'react-router-dom';
 import Seo from '../../components/Seo';
+import { useAuth } from '../../contexts/AuthContext';
+import { deleteBoardPost, fetchBoardPosts } from '../../lib/api/board';
 
 const AdminBoard = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchBoardPosts();
+        setPosts(data);
+      } catch (loadError) {
+        setError('게시글 목록을 불러오는 중 오류가 발생했습니다.');
+        console.error(loadError);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadPosts();
   }, []);
-
-  const loadPosts = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchBoardPosts();
-      setPosts(data);
-    } catch (err) {
-      setError('게시글 목록을 불러오는데 실패했습니다.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id, title) => {
     if (!window.confirm(`"${title}" 게시글을 삭제하시겠습니까?`)) {
@@ -34,26 +35,27 @@ const AdminBoard = () => {
 
     try {
       await deleteBoardPost(id);
-      setPosts(posts.filter(p => p.id !== id));
-      alert('게시글이 삭제되었습니다.');
-    } catch (err) {
-      alert('삭제에 실패했습니다.');
-      console.error(err);
+      setPosts((prev) => prev.filter((post) => post.id !== id));
+      window.alert('게시글을 삭제했습니다.');
+    } catch (deleteError) {
+      window.alert('삭제 중 오류가 발생했습니다.');
+      console.error(deleteError);
     }
   };
 
   const handleLogout = async () => {
     try {
       await signOut();
-    } catch (err) {
-      console.error(err);
+      navigate('/admin');
+    } catch (logoutError) {
+      console.error(logoutError);
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-600">로딩 중...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-slate-600">불러오는 중...</div>
       </div>
     );
   }
@@ -62,7 +64,6 @@ const AdminBoard = () => {
     <div className="min-h-screen bg-slate-50">
       <Seo title="게시판 관리" description="관리자 - 게시판 관리" path="/admin/board" />
 
-      {/* Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
@@ -81,16 +82,12 @@ const AdminBoard = () => {
               </Link>
             </nav>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-sm text-slate-600 hover:text-slate-900"
-          >
+          <button onClick={handleLogout} className="text-sm text-slate-600 hover:text-slate-900">
             로그아웃
           </button>
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-slate-900">게시판 관리</h1>
@@ -133,9 +130,7 @@ const AdminBoard = () => {
                     <div className="text-sm font-medium text-slate-900">{post.title}</div>
                     <div className="text-xs text-slate-500 mt-1">{post.summary}</div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">
-                    {post.author}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{post.author}</td>
                   <td className="px-6 py-4 text-sm text-slate-600">
                     {new Date(post.created_at).toLocaleDateString('ko-KR')}
                   </td>
@@ -143,6 +138,7 @@ const AdminBoard = () => {
                     <Link
                       to={`/board/${post.slug}`}
                       target="_blank"
+                      rel="noreferrer"
                       className="text-emerald-700 hover:text-emerald-900 mr-4"
                     >
                       보기
@@ -151,7 +147,7 @@ const AdminBoard = () => {
                       to={`/admin/board/edit/${post.id}`}
                       className="text-blue-700 hover:text-blue-900 mr-4"
                     >
-                      편집
+                      수정
                     </Link>
                     <button
                       onClick={() => handleDelete(post.id, post.title)}
@@ -177,3 +173,4 @@ const AdminBoard = () => {
 };
 
 export default AdminBoard;
+
