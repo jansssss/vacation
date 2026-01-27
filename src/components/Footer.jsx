@@ -16,6 +16,7 @@ const Footer = () => {
           <Link to="/privacy" className="hover:text-slate-700">개인정보처리방침</Link>
           <Link to="/terms" className="hover:text-slate-700">이용약관</Link>
           <Link to="/disclaimer" className="hover:text-slate-700">면책</Link>
+          <Link to="/admin" className="hover:text-slate-700">관리자</Link>
         </div>
         <div className="mt-3 text-xs text-slate-400">
           운영자: {SITE_CONFIG.operatorDisplay} · 연락처: {SITE_CONFIG.contactEmail}

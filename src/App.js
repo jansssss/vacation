@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import { AuthProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 import Home from "./pages/Home";
 import CalculatorsHub from "./pages/CalculatorsHub";
 import AnnualLeaveCalculator from "./pages/AnnualLeaveCalculator";
@@ -16,33 +18,65 @@ import Disclaimer from "./pages/Disclaimer";
 import BoardList from "./pages/BoardList";
 import BoardDetail from "./pages/BoardDetail";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminGuides from "./pages/admin/AdminGuides";
+import AdminBoard from "./pages/admin/AdminBoard";
 
 function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <Layout>
+      <AuthProvider>
+        <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/calculators" element={<CalculatorsHub />} />
-          <Route path="/calculators/annual-leave" element={<AnnualLeaveCalculator />} />
-          <Route path="/calculators/severance-pay" element={<RetirementCalculator />} />
-          <Route path="/guides" element={<GuidesIndex />} />
-          <Route path="/guides/:slug" element={<GuidePage />} />
-          <Route path="/board" element={<BoardList />} />
-          <Route path="/board/:slug" element={<BoardDetail />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/disclaimer" element={<Disclaimer />} />
+          {/* Admin Routes (without Layout) */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route
+            path="/admin/guides"
+            element={
+              <PrivateRoute>
+                <AdminGuides />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/board"
+            element={
+              <PrivateRoute>
+                <AdminBoard />
+              </PrivateRoute>
+            }
+          />
 
-          <Route path="/annual-leave" element={<Navigate to="/calculators/annual-leave" replace />} />
-          <Route path="/retirement" element={<Navigate to="/calculators/severance-pay" replace />} />
+          {/* Public Routes (with Layout) */}
+          <Route
+            path="/*"
+            element={
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/calculators" element={<CalculatorsHub />} />
+                  <Route path="/calculators/annual-leave" element={<AnnualLeaveCalculator />} />
+                  <Route path="/calculators/severance-pay" element={<RetirementCalculator />} />
+                  <Route path="/guides" element={<GuidesIndex />} />
+                  <Route path="/guides/:slug" element={<GuidePage />} />
+                  <Route path="/board" element={<BoardList />} />
+                  <Route path="/board/:slug" element={<BoardDetail />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/disclaimer" element={<Disclaimer />} />
 
-          <Route path="*" element={<NotFound />} />
+                  <Route path="/annual-leave" element={<Navigate to="/calculators/annual-leave" replace />} />
+                  <Route path="/retirement" element={<Navigate to="/calculators/severance-pay" replace />} />
+
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            }
+          />
         </Routes>
-      </Layout>
+      </AuthProvider>
     </Router>
   );
 }

@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { boardPosts } from "../content/boardPosts";
+import { fetchBoardPosts } from "../lib/api/board";
 
 const BoardList = () => {
+  const [boardPosts, setBoardPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const breadcrumbs = [
     { label: "홈", path: "/" },
     { label: "게시판", path: "/board" },
   ];
+
+  useEffect(() => {
+    const loadBoardPosts = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchBoardPosts();
+        setBoardPosts(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBoardPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-white p-8 text-center">
+        <div className="text-slate-600">로딩 중...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -46,7 +73,7 @@ const BoardList = () => {
             <h2 className="text-lg font-semibold text-slate-900">{post.title}</h2>
             <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
               <span>작성자 {post.author || "익명"}</span>
-              <span>{post.createdAt}</span>
+              <span>{new Date(post.created_at).toLocaleDateString('ko-KR')}</span>
             </div>
             <p className="mt-3 text-sm text-slate-600">{post.summary}</p>
           </Link>

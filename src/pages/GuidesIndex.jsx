@@ -1,9 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
-import { guidesRegistry } from "../config/guidesRegistry";
+import { fetchGuides } from "../lib/api/guides";
 
 const GuidesIndex = () => {
+  const [guides, setGuides] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadGuides = async () => {
+      try {
+        const data = await fetchGuides();
+        setGuides(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGuides();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-slate-600">로딩 중...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <Seo
@@ -21,13 +47,15 @@ const GuidesIndex = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {guidesRegistry.map((guide) => (
+        {guides.map((guide) => (
           <Link
             key={guide.slug}
             to={`/guides/${guide.slug}`}
             className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
           >
-            <p className="text-xs text-slate-500">업데이트 {guide.updatedAt}</p>
+            <p className="text-xs text-slate-500">
+              업데이트 {new Date(guide.updated_at).toLocaleDateString('ko-KR')}
+            </p>
             <h2 className="mt-2 text-xl font-semibold text-slate-900">{guide.title}</h2>
             <p className="mt-2 text-sm text-slate-600">{guide.summary}</p>
           </Link>
