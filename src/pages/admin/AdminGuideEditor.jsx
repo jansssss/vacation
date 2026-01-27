@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Seo from '../../components/Seo';
+import RichTextEditor from '../../components/RichTextEditor';
 import { useAuth } from '../../contexts/AuthContext';
 import { createGuide, fetchGuideById, updateGuide } from '../../lib/api/guides';
 
@@ -21,6 +22,31 @@ const slugify = (value) =>
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
+
+const hasHtml = (value) => /<\/?[a-z][\s\S]*>/i.test(value ?? '');
+
+const escapeHtml = (value) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const textToHtml = (value) => {
+  if (!value) return '';
+  if (hasHtml(value)) return value;
+
+  const paragraphs = value
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br />')}</p>`);
+
+  return paragraphs.join('');
+};
+
+const ensureHtml = (value) => textToHtml(value ?? '');
 
 const AdminGuideEditor = () => {
   const { id } = useParams();
@@ -67,11 +93,11 @@ const AdminGuideEditor = () => {
           setSections(
             guide.sections.map((section) => ({
               heading: section.heading ?? '',
-              content: section.content ?? '',
+              content: ensureHtml(section.content),
               bulletsText: Array.isArray(section.bullets)
                 ? section.bullets.join('\n')
                 : '',
-              content2: section.content2 ?? '',
+              content2: ensureHtml(section.content2),
             })),
           );
         } else {
@@ -173,9 +199,9 @@ const AdminGuideEditor = () => {
 
         return {
           heading: section.heading.trim(),
-          content: section.content.trim(),
+          content: section.content?.trim() ?? '',
           bullets,
-          content2: section.content2.trim(),
+          content2: section.content2?.trim() ?? '',
         };
       })
       .filter(
@@ -382,11 +408,9 @@ const AdminGuideEditor = () => {
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     본문 1
                   </label>
-                  <textarea
+                  <RichTextEditor
                     value={section.content}
-                    onChange={(event) => handleSectionChange(index, 'content', event.target.value)}
-                    rows={5}
-                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    onChange={(nextValue) => handleSectionChange(index, 'content', nextValue)}
                     placeholder="단락 형태로 설명을 입력하세요."
                   />
                 </div>
@@ -408,11 +432,9 @@ const AdminGuideEditor = () => {
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     본문 2
                   </label>
-                  <textarea
+                  <RichTextEditor
                     value={section.content2}
-                    onChange={(event) => handleSectionChange(index, 'content2', event.target.value)}
-                    rows={4}
-                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    onChange={(nextValue) => handleSectionChange(index, 'content2', nextValue)}
                     placeholder="추가 설명이 있으면 입력하세요."
                   />
                 </div>
