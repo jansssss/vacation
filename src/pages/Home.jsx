@@ -78,9 +78,9 @@ const Home = () => {
           </p>
         </div>
         <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-slate-900">광고 UX 최적화</h3>
+          <h3 className="text-lg font-semibold text-slate-900">노사 갈등 예방 가이드</h3>
           <p className="mt-2 text-sm text-slate-600">
-            승인 전에는 광고를 비활성화하고, 승인 후에도 UX를 해치지 않는 배치를 유지합니다.
+            연차·퇴직금 정산 시 흔한 분쟁 사례와 예방 체크리스트를 함께 제공해 법적 리스크를 줄입니다.
           </p>
         </div>
       </section>
