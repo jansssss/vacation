@@ -142,3 +142,15 @@ export const deleteGuide = async (guideId) => {
   return true;
 };
 
+export const fetchGuidesBySlugs = async (slugs) => {
+  if (!slugs || slugs.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from('guides')
+    .select('slug, title, summary, updated_at')
+    .in('slug', slugs);
+
+  if (error) throw error;
+  return data || [];
+};
+

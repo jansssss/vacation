@@ -1,18 +1,60 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CalculatorTemplate from "../components/CalculatorTemplate";
 import { calculateAnnualLeave } from "../lib/calculators/annualLeave";
 import { formatNumber, formatDate } from "../lib/formatters";
 import { RULES_2026 } from "../config/rules/2026";
+import { fetchGuidesBySlugs } from "../lib/api/guides";
+
+const RELATED_GUIDE_SLUGS = [
+  "why-second-year-25-days",
+  "first-year-26-days",
+  "annual-leave-basics",
+  "annual-leave-carryover",
+  "annual-leave-encashment",
+  "unpaid-leave-impact",
+  "severance-pay-eligibility",
+  "severance-pay-average-wage",
+  "payroll-slip-reading",
+];
+
+const RELATED_CALCULATORS = [
+  { title: "퇴직금 계산기", path: "/calculators/severance-pay" },
+  { title: "계산기 허브로 이동", path: "/calculators" },
+];
 
 const AnnualLeaveCalculator = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [attendanceRate, setAttendanceRate] = useState(80);
+  const [relatedGuides, setRelatedGuides] = useState([]);
 
   const result = useMemo(() => {
     if (!startDate || !endDate) return null;
     return calculateAnnualLeave(startDate, endDate);
   }, [startDate, endDate]);
+
+  useEffect(() => {
+    const loadRelatedGuides = async () => {
+      try {
+        const guides = await fetchGuidesBySlugs(RELATED_GUIDE_SLUGS);
+        const slugOrder = Object.fromEntries(RELATED_GUIDE_SLUGS.map((slug, i) => [slug, i]));
+        guides.sort((a, b) => (slugOrder[a.slug] ?? 999) - (slugOrder[b.slug] ?? 999));
+        setRelatedGuides(guides);
+      } catch (err) {
+        console.error("Failed to load related guides:", err);
+      }
+    };
+    loadRelatedGuides();
+  }, []);
+
+  const relatedLinks = useMemo(() => {
+    const guideLinks = relatedGuides.map((guide, index) => ({
+      title: guide.title,
+      path: `/guides/${guide.slug}`,
+      featured: index === 0,
+    }));
+    return [...guideLinks, ...RELATED_CALCULATORS];
+  }, [relatedGuides]);
 
   const remainderMonths = result ? result.months % 12 : 0;
 
@@ -142,20 +184,6 @@ const AnnualLeaveCalculator = () => {
     output: "발생 연차: 10일 (2025년 3월~12월 월차)",
     note: "1년 미만 퇴사이므로 2년차 연차는 미발생. 2026-03-01 이후까지 근무 시 2년차 연차 16일(26-10)이 발생합니다.",
   };
-
-  const relatedLinks = [
-    { title: "입사 2년차 연차가 왜 25개인가?", path: "/guides/why-second-year-25-days", featured: true },
-    { title: "1년차 만근 시 연차 26일 발생 이슈", path: "/guides/first-year-26-days" },
-    { title: "연차 기본 규칙 한 장 요약", path: "/guides/annual-leave-basics" },
-    { title: "연차 이월 기준과 소멸 시점", path: "/guides/annual-leave-carryover" },
-    { title: "연차수당 정산 시 흔한 오류", path: "/guides/annual-leave-encashment" },
-    { title: "무급휴직이 연차/퇴직금에 미치는 영향", path: "/guides/unpaid-leave-impact" },
-    { title: "퇴직금 계산기", path: "/calculators/severance-pay" },
-    { title: "퇴직금 지급 대상 판단 기준", path: "/guides/severance-pay-eligibility" },
-    { title: "평균임금 산정 시 포함/제외 항목", path: "/guides/severance-pay-average-wage" },
-    { title: "급여명세서 읽는 법", path: "/guides/payroll-slip-reading" },
-    { title: "계산기 허브로 이동", path: "/calculators" },
-  ];
 
   const trust = {
     checklist: [
