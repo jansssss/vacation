@@ -7,6 +7,7 @@ import { fetchGuides } from "../lib/api/guides";
 const CalculatorsHub = () => {
   const [guideHighlights, setGuideHighlights] = useState([]);
   const [totalGuidesCount, setTotalGuidesCount] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   useEffect(() => {
     const loadGuides = async () => {
@@ -14,6 +15,13 @@ const CalculatorsHub = () => {
         const guides = await fetchGuides();
         setTotalGuidesCount(guides.length);
         setGuideHighlights(guides.slice(0, 4));
+
+        if (guides.length > 0) {
+          const mostRecent = guides.reduce((latest, guide) => {
+            return new Date(guide.updated_at) > new Date(latest.updated_at) ? guide : latest;
+          });
+          setLastUpdated(new Date(mostRecent.updated_at).toLocaleDateString('ko-KR'));
+        }
       } catch (err) {
         console.error("Failed to load guides:", err);
       }
@@ -57,7 +65,7 @@ const CalculatorsHub = () => {
         {[
           { label: "핵심 계산기", value: `${calculatorsRegistry.length}개 운영` },
           { label: "실무 가이드", value: `${totalGuidesCount}개 정리` },
-          { label: "업데이트", value: "2026-01-25" },
+          { label: "업데이트", value: lastUpdated || "-" },
         ].map((stat) => (
           <div key={stat.label} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
             <p className="text-xs uppercase tracking-wide text-slate-400">{stat.label}</p>
