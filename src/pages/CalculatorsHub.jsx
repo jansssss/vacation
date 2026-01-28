@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import { calculatorsRegistry } from "../config/calculatorsRegistry";
-import { guidesRegistry } from "../config/guidesRegistry";
+import { fetchGuides } from "../lib/api/guides";
 
 const CalculatorsHub = () => {
-  const guideHighlights = guidesRegistry.slice(0, 4);
+  const [guideHighlights, setGuideHighlights] = useState([]);
+  const [totalGuidesCount, setTotalGuidesCount] = useState(0);
+
+  useEffect(() => {
+    const loadGuides = async () => {
+      try {
+        const guides = await fetchGuides();
+        setTotalGuidesCount(guides.length);
+        setGuideHighlights(guides.slice(0, 4));
+      } catch (err) {
+        console.error("Failed to load guides:", err);
+      }
+    };
+    loadGuides();
+  }, []);
 
   return (
     <div className="space-y-12">
@@ -42,7 +56,7 @@ const CalculatorsHub = () => {
       <section className="grid gap-4 md:grid-cols-3">
         {[
           { label: "핵심 계산기", value: `${calculatorsRegistry.length}개 운영` },
-          { label: "실무 가이드", value: `${guidesRegistry.length}개 정리` },
+          { label: "실무 가이드", value: `${totalGuidesCount}개 정리` },
           { label: "업데이트", value: "2026-01-25" },
         ].map((stat) => (
           <div key={stat.label} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
@@ -116,7 +130,9 @@ const CalculatorsHub = () => {
               to={`/guides/${guide.slug}`}
               className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <p className="text-xs text-slate-400">업데이트 {guide.updatedAt}</p>
+              <p className="text-xs text-slate-400">
+                업데이트 {new Date(guide.updated_at).toLocaleDateString('ko-KR')}
+              </p>
               <h3 className="mt-2 text-lg font-semibold text-slate-900">{guide.title}</h3>
               <p className="mt-2 text-sm text-slate-600">{guide.summary}</p>
             </Link>
