@@ -33,6 +33,7 @@ const AdminLogin = () => {
         title="관리자 로그인"
         description="e-work.kr 관리자 로그인"
         path="/admin"
+        robots="noindex,nofollow"
       />
 
       <div className="w-full max-w-md">

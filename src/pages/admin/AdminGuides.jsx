@@ -62,7 +62,7 @@ const AdminGuides = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Seo title="가이드 관리" description="관리자 - 가이드 관리" path="/admin/guides" />
+      <Seo title="가이드 관리" description="관리자 - 가이드 관리" path="/admin/guides" robots="noindex,nofollow" />
 
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">

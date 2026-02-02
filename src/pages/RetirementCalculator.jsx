@@ -243,6 +243,135 @@ const RetirementCalculator = () => {
             </div>
           </div>
         )}
+
+        <section className="mt-12 space-y-8 rounded-2xl border border-slate-100 bg-white p-8 shadow-sm">
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">퇴직금 계산의 핵심 원리</h2>
+            <div className="prose prose-slate max-w-none">
+              <p className="text-slate-700 leading-relaxed">
+                퇴직금은 근로자퇴직급여 보장법에 따라 <strong>계속근로기간 1년에 대하여 30일분 이상의 평균임금</strong>을 지급하도록 규정되어 있습니다.
+                평균임금은 퇴직 전 3개월간 지급받은 임금 총액을 그 기간의 총 일수로 나눈 금액이며,
+                여기에 근속연수를 곱하여 퇴직금을 산정합니다.
+              </p>
+              <p className="text-slate-700 leading-relaxed mt-4">
+                <strong>계속근로기간 1년 미만인 경우</strong>에는 원칙적으로 퇴직금 지급 대상이 아니지만,
+                4주간을 평균하여 1주간의 소정근로시간이 15시간 이상이고 계속 근로한 경우에는 예외적으로 지급 대상이 될 수 있습니다.
+                또한 정기상여금, 연장근로수당 등이 평균임금 산정에 포함되는지 여부를 반드시 확인해야 합니다.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">실무에서 자주 나오는 사례</h2>
+            <div className="space-y-6">
+              <div className="rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 1. "11개월 근무 후 퇴사, 퇴직금 못 받나요?"</h3>
+                <p className="text-slate-700 leading-relaxed">
+                  원칙적으로 1년 미만 근로자는 퇴직금 지급 대상이 아닙니다. 하지만 <strong>주 15시간 이상 계속 근로한 경우</strong>에는 예외가 적용될 수 있습니다.
+                  또한 계약서에 "1년 미만이라도 퇴직금을 지급한다"는 내용이 있다면 그에 따라야 합니다.
+                  11개월 근무로 퇴직금을 못 받는 경우가 억울하게 느껴질 수 있지만, 이는 법적 기준이므로
+                  입사 시 계약 내용과 근로시간을 명확히 확인하는 것이 중요합니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 2. "상여금이 평균임금에 포함되나요?"</h3>
+                <p className="text-slate-700 leading-relaxed">
+                  <strong>정기상여금은 평균임금 산정에 포함</strong>됩니다. 예를 들어 매년 설날과 추석에 지급되는 상여금은
+                  퇴직 전 3개월 동안 받은 상여금을 3개월 일수로 나눠 평균임금에 산입해야 합니다.
+                  그러나 회사가 임의로 지급하는 일시적 상여금이나 성과급은 포함되지 않을 수 있으므로,
+                  급여명세서와 취업규칙을 함께 확인해야 합니다. 상여금 누락으로 인한 퇴직금 정산 분쟁이 매우 많습니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 3. "퇴직 직전 2개월 급여가 오른 경우"</h3>
+                <p className="text-slate-700 leading-relaxed">
+                  퇴직 전 3개월의 평균임금으로 계산하므로, <strong>퇴직 직전 급여 인상이 퇴직금에 반영</strong>됩니다.
+                  예를 들어 월급 300만 원에서 350만 원으로 인상된 경우, 최근 3개월 평균이 높아지므로 퇴직금도 증가합니다.
+                  반대로 무급휴직이나 급여 삭감이 있었다면 평균임금이 낮아져 퇴직금이 줄어들 수 있습니다.
+                  이러한 이유로 급여 변동 시기와 퇴사 시점을 함께 고려하는 것이 중요합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">자주 묻는 질문 FAQ</h2>
+            <div className="space-y-4">
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 퇴직금은 언제까지 지급해야 하나요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  퇴직금은 <strong>퇴직일로부터 14일 이내에 지급</strong>해야 합니다.
+                  다만, 근로자와 사용자 간 합의로 지급 기일을 연장할 수 있습니다.
+                  14일을 초과하여 지급하는 경우 지연이자(연 20%)가 발생할 수 있으므로 주의가 필요합니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 평균임금과 통상임금은 어떻게 다른가요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  평균임금은 퇴직 전 3개월간 받은 총 임금을 총 일수로 나눈 것이고,
+                  통상임금은 정기적·일률적·고정적으로 지급되는 임금입니다.
+                  퇴직금은 평균임금 기준으로 계산하며, 평균임금이 통상임금보다 낮을 경우 통상임금을 기준으로 계산합니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 무급휴직 기간은 퇴직금에 포함되나요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  일반 무급휴직 기간은 계속근로기간에서 제외되어 퇴직금 계산 시 포함되지 않습니다.
+                  단, 육아휴직은 근로한 것으로 간주되어 계속근로기간에 포함됩니다.
+                  휴직 종류에 따라 처리 방식이 다르므로 취업규칙과 노동부 행정해석을 확인해야 합니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 퇴직연금과 퇴직금은 어떻게 다른가요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  퇴직금은 회사가 퇴사 시 일시금으로 지급하는 방식이고,
+                  퇴직연금은 회사가 매년 일정 금액을 금융기관에 적립하여 근로자가 퇴직 후 연금 또는 일시금으로 받는 방식입니다.
+                  퇴직연금 가입 사업장은 퇴직연금 규약에 따라 지급 방식이 달라질 수 있습니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 계약직도 퇴직금을 받을 수 있나요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  계약직도 1년 이상 계속 근로했다면 퇴직금을 받을 수 있습니다.
+                  계약 기간이 1년 미만이더라도 계약이 반복 갱신되어 실제 근로 기간이 1년 이상이면 지급 대상입니다.
+                  다만, 주 15시간 미만 근로자는 제외될 수 있으므로 근로계약서를 확인해야 합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">공식 출처 및 참고 자료</h2>
+            <ul className="space-y-2 text-sm text-slate-700">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>근로자퇴직급여 보장법 제8조 (퇴직금 지급)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>근로기준법 제2조 (평균임금의 정의)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>고용노동부 퇴직금 가이드 (www.moel.go.kr)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>대법원 판례 (평균임금 산정 관련)</span>
+              </li>
+            </ul>
+            <p className="mt-4 text-sm text-slate-500 leading-relaxed">
+              이 계산기는 참고용이며, 최종 판단은 급여명세서, 근로계약서, 취업규칙, 노무사 상담 등을 통해 확인하시기 바랍니다.
+              특히 정기상여금, 연장수당, 휴직 기간 등 복잡한 경우에는 전문가의 검토가 필요합니다.
+            </p>
+          </div>
+        </section>
       </div>
     </CalculatorTemplate>
   );

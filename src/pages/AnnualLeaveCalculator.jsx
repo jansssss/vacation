@@ -297,6 +297,133 @@ const AnnualLeaveCalculator = () => {
             </div>
           </div>
         )}
+
+        <section className="mt-12 space-y-8 rounded-2xl border border-slate-100 bg-white p-8 shadow-sm">
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">연차 계산의 핵심 원리</h2>
+            <div className="prose prose-slate max-w-none">
+              <p className="text-slate-700 leading-relaxed">
+                연차 유급휴가는 근로기준법 제60조에 따라 발생하며, 근속기간과 출근율에 따라 일수가 결정됩니다.
+                <strong>1년 미만 근로자는 1개월 개근 시 1일씩 발생</strong>(최대 11일)하고,
+                <strong>1년 이상 근로자는 전년도 80% 이상 출근 시 15일</strong>이 발생합니다.
+                3년 이상 근속 시에는 2년마다 1일씩 가산되어 최대 25일까지 받을 수 있습니다.
+              </p>
+              <p className="text-slate-700 leading-relaxed mt-4">
+                이 계산기는 회계연도(1~12월) 기준으로 계산합니다. 입사년도에는 입사월부터 12월까지 월차가 발생하고,
+                2년차에는 26일에서 1년차 발생 개수를 뺀 만큼 발생합니다. 예를 들어 1년차에 10개를 받았다면 2년차에는 16개(26-10)가 발생합니다.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">실무에서 자주 나오는 사례</h2>
+            <div className="space-y-6">
+              <div className="rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 1. "2년차인데 왜 25개만 주나요?"</h3>
+                <p className="text-slate-700 leading-relaxed">
+                  회사에서 가장 많이 나오는 질문입니다. 2년차라서 특별히 많이 주는 것이 아니라,
+                  1년 미만 기간의 월차(최대 11일)와 1년 이상 연차(15일)가 겹쳐 보이는 구조 때문입니다.
+                  예를 들어 8월 입사자는 첫 해에 5개(8~12월)를 받고, 다음 해 8월에 15개가 발생하면서
+                  한 시점에 20개 넘게 보이는 착시가 발생합니다. 실제로는 기본 15일에 근속에 따라 점진적으로 증가합니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 2. "1년 딱 채우고 퇴사하면 26개인가요?"</h3>
+                <p className="text-slate-700 leading-relaxed">
+                  대법원 판례와 고용노동부 해석에 따르면, <strong>1년간의 근로를 마친 다음 날에도 근로관계가 유지되어야 15일 연차가 발생</strong>합니다.
+                  입사 1년 되는 날(365일) 퇴사하면 월차 11일만 발생하지만,
+                  1년 + 1일(366일) 근무 후 퇴사하면 월차 11일 + 연차 15일 = 26일이 발생합니다.
+                  퇴사일 하루 차이가 연차 15일, 즉 수백만 원의 수당 차이를 만들 수 있습니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 3. "회계연도 기준이면 연차가 여러 번 나뉘나요?"</h3>
+                <p className="text-slate-700 leading-relaxed">
+                  회계연도(1월~12월) 기준 회사는 연차가 여러 번 나뉘어 발생합니다.
+                  8월 입사자의 경우, 입사 첫 해에는 월차 5개가 발생하고, 다음 해 1월에는 근무 비율 계산 후 연차 일부를 선부여하며,
+                  입사 1년 되는 8월에 15일이 추가 발생합니다. 직원 입장에서는 '연차가 계속 늘어난다'고 느끼지만
+                  실제로는 계산 시점이 나뉜 것뿐입니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">자주 묻는 질문 FAQ</h2>
+            <div className="space-y-4">
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 입사일 기준과 회계연도 기준의 차이는?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  입사일 기준은 개인별 입사 기념일에 연차가 발생하고, 회계연도 기준은 매년 1월 1일에 일괄 발생합니다.
+                  이 계산기는 회계연도 기준으로, 입사 연도에는 월차로 시작해 다음 해부터 연차로 전환되는 구조입니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 월차와 연차는 어떻게 다른가요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  월차는 1년 미만 근로자에게 1개월 개근 시 1일씩 발생하는 휴가(최대 11일)이고,
+                  연차는 1년 이상 근로자에게 전년도 출근율 80% 이상 시 발생하는 휴가(기본 15일)입니다.
+                  법적으로는 구분되지만 사용 방법은 동일합니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 연차를 못 쓰면 이월되나요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  근로기준법은 연차 이월을 원칙적으로 보장하지 않습니다. 이월은 노사 합의(취업규칙, 단체협약 등)로 허용 가능하며,
+                  회사가 연차 촉진제도를 적법하게 시행하면 미사용 연차는 소멸되고 수당 지급 의무가 없습니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 퇴사 시 미사용 연차는 어떻게 되나요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  퇴사 시에는 미사용 연차에 대해 수당으로 정산하여 지급해야 합니다.
+                  정산 기준은 통상임금 또는 평균임금이며, 이월분도 정산 대상에 포함됩니다.
+                  연차 촉진제도 시행 여부와 무관하게 퇴사 시에는 수당 지급 의무가 있습니다.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900 mb-2">Q. 무급휴직 기간은 연차에 영향을 주나요?</h3>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                  일반 무급휴직은 근로가 아닌 휴직으로 간주되어 근속 기간에서 제외됩니다.
+                  단, 육아휴직은 근로한 것으로 간주되어 근속 기간에 포함되고 출근율 계산 시에도 유리하게 적용됩니다.
+                  휴직 복귀 시 연차 발생 기준일을 재확인해야 합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">공식 출처 및 참고 자료</h2>
+            <ul className="space-y-2 text-sm text-slate-700">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>근로기준법 제60조 (연차 유급휴가)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>근로기준법 시행령 제30조 (연차 촉진제도)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>고용노동부 공식 Q&A (www.moel.go.kr)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-600">•</span>
+                <span>대법원 판례 (연차 발생 시점 관련)</span>
+              </li>
+            </ul>
+            <p className="mt-4 text-sm text-slate-500 leading-relaxed">
+              이 계산기는 참고용이며, 최종 판단은 회사의 취업규칙, 단체협약, 노무사 상담 등을 통해 확인하시기 바랍니다.
+              특히 휴직, 휴업, 단시간 근로 등 특수한 경우에는 별도의 검토가 필요합니다.
+            </p>
+          </div>
+        </section>
       </div>
     </CalculatorTemplate>
   );

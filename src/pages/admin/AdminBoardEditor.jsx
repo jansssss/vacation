@@ -107,7 +107,7 @@ const AdminBoardEditor = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Seo title={seoTitle} description={`관리자 - ${titleText}`} path={isEdit ? `/admin/board/edit/${id}` : '/admin/board/new'} />
+      <Seo title={seoTitle} description={`관리자 - ${titleText}`} path={isEdit ? `/admin/board/edit/${id}` : '/admin/board/new'} robots="noindex,nofollow" />
 
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">

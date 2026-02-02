@@ -244,6 +244,7 @@ const AdminGuideEditor = () => {
         title={seoTitle}
         description={`관리자 - ${titleText}`}
         path={isEdit ? `/admin/guides/edit/${id}` : '/admin/guides/new'}
+        robots="noindex,nofollow"
       />
 
       <header className="bg-white border-b border-slate-200">
