@@ -319,12 +319,13 @@ const AnnualLeaveCalculator = () => {
             <h2 className="text-2xl font-semibold text-slate-900 mb-4">실무에서 자주 나오는 사례</h2>
             <div className="space-y-6">
               <div className="rounded-lg border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 1. "2년차인데 왜 25개만 주나요?"</h3>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">사례 1. "10년차도 18개인데, 2년차가 왜 26개를 주나요?"</h3>
                 <p className="text-slate-700 leading-relaxed">
-                  회사에서 가장 많이 나오는 질문입니다. 2년차라서 특별히 많이 주는 것이 아니라,
+                  회사에서 가장 많이 나오는 질문입니다. <strong>2년차라서 특별히 많이 주는 것이 아니라</strong>,
                   1년 미만 기간의 월차(최대 11일)와 1년 이상 연차(15일)가 겹쳐 보이는 구조 때문입니다.
                   예를 들어 8월 입사자는 첫 해에 5개(8~12월)를 받고, 다음 해 8월에 15개가 발생하면서
-                  한 시점에 20개 넘게 보이는 착시가 발생합니다. 실제로는 기본 15일에 근속에 따라 점진적으로 증가합니다.
+                  한 시점에 20개 넘게 보이는 착시가 발생합니다. 실제로는 기본 15일에 근속에 따라 점진적으로 증가하므로,
+                  <strong>장기근속자가 지속적으로 더 많습니다</strong>.
                 </p>
               </div>
 
