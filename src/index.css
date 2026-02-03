@@ -56,16 +56,36 @@ body,
   margin: 0.6rem 0;
 }
 
+.rich-text-content h1,
+.guide-richtext h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.6rem;
+  line-height: 1.3;
+}
+
 .rich-text-content h2,
 .guide-richtext h2 {
-  font-size: 1.15rem;
-  margin: 1.1rem 0 0.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 1.3rem 0 0.5rem;
+  line-height: 1.3;
 }
 
 .rich-text-content h3,
 .guide-richtext h3 {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.1rem 0 0.4rem;
+  line-height: 1.3;
+}
+
+.rich-text-content h4,
+.guide-richtext h4 {
+  font-size: 1.0rem;
+  font-weight: 600;
   margin: 0.9rem 0 0.3rem;
+  line-height: 1.3;
 }
 
 .rich-text-content ul,
@@ -99,4 +119,76 @@ body,
 .rich-text-content a {
   color: #047857;
   text-decoration: underline;
+}
+
+.rich-text-content strong,
+.guide-richtext strong {
+  font-weight: 700;
+}
+
+.rich-text-content em,
+.guide-richtext em {
+  font-style: italic;
+}
+
+.rich-text-content u,
+.guide-richtext u {
+  text-decoration: underline;
+}
+
+.rich-text-content s,
+.guide-richtext s {
+  text-decoration: line-through;
+}
+
+.rich-text-content code,
+.guide-richtext code {
+  background-color: #f1f5f9;
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.rich-text-content pre,
+.guide-richtext pre {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.rich-text-content pre code,
+.guide-richtext pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875rem;
+}
+
+.rich-text-content hr,
+.guide-richtext hr {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 1.5rem 0;
+}
+
+.rich-text-content img,
+.guide-richtext img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.rich-text-content [style*="text-align: center"],
+.guide-richtext [style*="text-align: center"] {
+  text-align: center;
+}
+
+.rich-text-content [style*="text-align: right"],
+.guide-richtext [style*="text-align: right"] {
+  text-align: right;
 }
