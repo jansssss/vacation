@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Seo from '../../components/Seo';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,8 +8,15 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { user, signIn, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+
+  // 이미 로그인된 경우 관리자 페이지로 리다이렉트
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate('/admin/guides', { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,6 +33,15 @@ const AdminLogin = () => {
       setLoading(false);
     }
   };
+
+  // 인증 상태 로딩 중
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-slate-600">로딩 중...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
