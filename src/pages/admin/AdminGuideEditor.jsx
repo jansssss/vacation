@@ -6,10 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { createGuide, fetchGuideById, updateGuide } from '../../lib/api/guides';
 
 const createEmptySection = () => ({
-  heading: '',
-  content: '',
-  bulletsText: '',
-  content2: '',
+  html_content: '',
 });
 
 const slugify = (value) =>
@@ -92,12 +89,7 @@ const AdminGuideEditor = () => {
         if (guide.sections && guide.sections.length > 0) {
           setSections(
             guide.sections.map((section) => ({
-              heading: section.heading ?? '',
-              content: ensureHtml(section.content),
-              bulletsText: Array.isArray(section.bullets)
-                ? section.bullets.join('\n')
-                : '',
-              content2: ensureHtml(section.content2),
+              html_content: ensureHtml(section.html_content),
             })),
           );
         } else {
@@ -191,26 +183,10 @@ const AdminGuideEditor = () => {
     setSaving(true);
 
     const sectionsPayload = sections
-      .map((section) => {
-        const bullets = section.bulletsText
-          .split('\n')
-          .map((item) => item.trim())
-          .filter(Boolean);
-
-        return {
-          heading: section.heading.trim(),
-          content: section.content?.trim() ?? '',
-          bullets,
-          content2: section.content2?.trim() ?? '',
-        };
-      })
-      .filter(
-        (section) =>
-          section.heading ||
-          section.content ||
-          section.content2 ||
-          (section.bullets && section.bullets.length > 0),
-      );
+      .map((section) => ({
+        html_content: section.html_content?.trim() ?? '',
+      }))
+      .filter((section) => section.html_content);
 
     try {
       if (isEdit) {
@@ -395,48 +371,12 @@ const AdminGuideEditor = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    소제목
-                  </label>
-                  <input
-                    value={section.heading}
-                    onChange={(event) => handleSectionChange(index, 'heading', event.target.value)}
-                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="핵심 규칙 요약"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    본문 1
+                    섹션 내용
                   </label>
                   <RichTextEditor
-                    value={section.content}
-                    onChange={(nextValue) => handleSectionChange(index, 'content', nextValue)}
-                    placeholder="단락 형태로 설명을 입력하세요."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    불릿 목록 (줄바꿈으로 구분)
-                  </label>
-                  <textarea
-                    value={section.bulletsText}
-                    onChange={(event) => handleSectionChange(index, 'bulletsText', event.target.value)}
-                    rows={4}
-                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder={'항목 1\n항목 2\n항목 3'}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    본문 2
-                  </label>
-                  <RichTextEditor
-                    value={section.content2}
-                    onChange={(nextValue) => handleSectionChange(index, 'content2', nextValue)}
-                    placeholder="추가 설명이 있으면 입력하세요."
+                    value={section.html_content}
+                    onChange={(nextValue) => handleSectionChange(index, 'html_content', nextValue)}
+                    placeholder="제목, 본문, 리스트 등을 자유롭게 작성하세요."
                   />
                 </div>
               </div>

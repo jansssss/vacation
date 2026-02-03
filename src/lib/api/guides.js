@@ -31,10 +31,7 @@ const fetchGuideWithSections = async (filter) => {
   return {
     ...guide,
     sections: sections.map((section) => ({
-      heading: section.heading ?? '',
-      content: section.content ?? '',
-      bullets: Array.isArray(section.bullets) ? section.bullets : [],
-      content2: section.content2 ?? '',
+      html_content: section.html_content ?? '',
     })),
   };
 };
@@ -42,21 +39,6 @@ const fetchGuideWithSections = async (filter) => {
 export const fetchGuideBySlug = async (slug) => fetchGuideWithSections({ slug });
 
 export const fetchGuideById = async (id) => fetchGuideWithSections({ id });
-
-const normalizeBullets = (bullets) => {
-  if (Array.isArray(bullets)) {
-    return bullets.map((item) => `${item}`.trim()).filter(Boolean);
-  }
-
-  if (typeof bullets === 'string') {
-    return bullets
-      .split('\n')
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-};
 
 export const createGuide = async (guideData, sections) => {
   const { data: guide, error: guideError } = await supabase
@@ -75,10 +57,7 @@ export const createGuide = async (guideData, sections) => {
   if (sections && sections.length > 0) {
     const sectionsToInsert = sections.map((section, index) => ({
       guide_id: guide.id,
-      heading: section.heading,
-      content: section.content,
-      bullets: normalizeBullets(section.bullets),
-      content2: section.content2,
+      html_content: section.html_content ?? '',
       order_index: index + 1,
     }));
 
@@ -115,10 +94,7 @@ export const updateGuide = async (guideId, guideData, sections) => {
   if (sections && sections.length > 0) {
     const sectionsToInsert = sections.map((section, index) => ({
       guide_id: guideId,
-      heading: section.heading,
-      content: section.content,
-      bullets: normalizeBullets(section.bullets),
-      content2: section.content2,
+      html_content: section.html_content ?? '',
       order_index: index + 1,
     }));
 

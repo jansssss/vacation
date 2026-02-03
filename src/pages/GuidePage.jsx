@@ -111,31 +111,10 @@ const GuidePage = () => {
             key={`section-${sectionIndex}`}
             className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm"
           >
-            {section.heading && (
-              <h2 className="text-lg font-semibold text-slate-900">{section.heading}</h2>
-            )}
-
-            {section.content && (
-              <div
-                className="mt-3 guide-richtext text-sm text-slate-700"
-                dangerouslySetInnerHTML={{ __html: ensureHtml(section.content) }}
-              />
-            )}
-
-            {section.bullets && section.bullets.length > 0 && (
-              <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                {section.bullets.map((bullet, index) => (
-                  <li key={`bullet-${sectionIndex}-${index}`}>• {bullet}</li>
-                ))}
-              </ul>
-            )}
-
-            {section.content2 && (
-              <div
-                className="mt-3 guide-richtext text-sm text-slate-700"
-                dangerouslySetInnerHTML={{ __html: ensureHtml(section.content2) }}
-              />
-            )}
+            <div
+              className="guide-richtext text-sm text-slate-700"
+              dangerouslySetInnerHTML={{ __html: ensureHtml(section.html_content) }}
+            />
           </section>
         ))}
       </div>
