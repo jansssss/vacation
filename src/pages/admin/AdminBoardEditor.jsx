@@ -1,12 +1,38 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Seo from '../../components/Seo';
+import RichTextEditor from '../../components/RichTextEditor';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   createBoardPost,
   fetchBoardPostById,
   updateBoardPost,
 } from '../../lib/api/board';
+
+const hasHtml = (value) => /<\/?[a-z][\s\S]*>/i.test(value ?? '');
+
+const escapeHtml = (value) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const textToHtml = (value) => {
+  if (!value) return '';
+  if (hasHtml(value)) return value;
+
+  const paragraphs = value
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br />')}</p>`);
+
+  return paragraphs.join('');
+};
+
+const ensureHtml = (value) => textToHtml(value ?? '');
 
 const AdminBoardEditor = () => {
   const { id } = useParams();
@@ -45,7 +71,7 @@ const AdminBoardEditor = () => {
           title: post.title ?? '',
           author: post.author ?? '',
           summary: post.summary ?? '',
-          content: post.content ?? '',
+          content: ensureHtml(post.content),
         });
       } catch (loadError) {
         setError('게시글 정보를 불러오는 중 오류가 발생했습니다.');
@@ -209,13 +235,10 @@ const AdminBoardEditor = () => {
               <label htmlFor="post-content" className="block text-sm font-medium text-slate-700 mb-2">
                 본문
               </label>
-              <textarea
-                id="post-content"
+              <RichTextEditor
                 value={formData.content}
-                onChange={(event) => handleChange('content', event.target.value)}
-                rows={12}
-                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 whitespace-pre-line"
-                placeholder="본문 내용을 입력하세요."
+                onChange={(nextValue) => handleChange('content', nextValue)}
+                placeholder="본문 내용을 입력하세요. 제목, 리스트, 굵게, 기울임 등을 자유롭게 사용하세요."
               />
             </div>
           </section>
