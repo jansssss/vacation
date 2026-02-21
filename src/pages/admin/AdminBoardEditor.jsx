@@ -148,7 +148,7 @@ const AdminBoardEditor = () => {
               <Link to="/admin/guides" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                 가이드
               </Link>
-              <Link to="/admin/board" className="text-sm font-medium text-emerald-700">
+              <Link to="/admin/board" className="text-sm font-medium text-blue-700">
                 게시판
               </Link>
             </nav>
@@ -185,7 +185,7 @@ const AdminBoardEditor = () => {
                   value={formData.slug}
                   onChange={(event) => handleChange('slug', event.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="labor-law-update-2026"
                 />
               </div>
@@ -197,7 +197,7 @@ const AdminBoardEditor = () => {
                   id="post-author"
                   value={formData.author}
                   onChange={(event) => handleChange('author', event.target.value)}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="관리자"
                 />
               </div>
@@ -212,7 +212,7 @@ const AdminBoardEditor = () => {
                 value={formData.title}
                 onChange={(event) => handleChange('title', event.target.value)}
                 required
-                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="2026년 근로기준법 주요 변경사항"
               />
             </div>
@@ -226,7 +226,7 @@ const AdminBoardEditor = () => {
                 value={formData.summary}
                 onChange={(event) => handleChange('summary', event.target.value)}
                 rows={3}
-                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="게시글의 핵심 내용을 간단히 정리하세요."
               />
             </div>

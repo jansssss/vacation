@@ -33,15 +33,15 @@ const About = () => {
           <h2 className="text-xl font-semibold text-slate-900">운영 목적</h2>
           <ul className="space-y-2 text-sm text-slate-700">
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>근로자와 인사 담당자를 위한 실무 도구</strong> - 연차·퇴직금 등 핵심 노무 계산을 빠르게 수행</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>분쟁 예방과 법 준수 지원</strong> - 근로기준법과 판례 기반의 정확한 정보 제공</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>실무 커뮤니케이션 비용 절감</strong> - 예외 사항과 FAQ를 통해 반복 질문 최소화</span>
             </li>
           </ul>
@@ -65,19 +65,19 @@ const About = () => {
           <h2 className="text-xl font-semibold text-slate-900">콘텐츠 제작 기준</h2>
           <ul className="space-y-2 text-sm text-slate-700">
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>근로기준법과 대법원 판례 기반</strong> - 모든 계산 로직은 현행 법령과 판례를 근거로 함</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>익명화·합성 사례</strong> - 특정 기관이나 개인이 식별되지 않도록 가공된 사례만 사용</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>내부 정보 비노출</strong> - 개인정보, 조직 내부 정보는 절대 포함하지 않음</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-600 mt-1">•</span>
+              <span className="text-blue-600 mt-1">•</span>
               <span><strong>업데이트 일자 명시</strong> - 모든 콘텐츠에 작성일 및 최종 업데이트 일자 표기</span>
             </li>
           </ul>

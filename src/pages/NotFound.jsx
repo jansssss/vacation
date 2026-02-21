@@ -14,7 +14,7 @@ const NotFound = () => {
       <p className="mt-2 text-slate-600">
         요청하신 페이지를 찾을 수 없습니다. 주소를 다시 확인해 주세요.
       </p>
-      <Link to="/" className="mt-4 inline-block text-emerald-700">
+      <Link to="/" className="mt-4 inline-block text-blue-700">
         홈으로 돌아가기
       </Link>
     </div>

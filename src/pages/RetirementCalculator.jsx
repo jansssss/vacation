@@ -228,10 +228,10 @@ const RetirementCalculator = () => {
         )}
 
         {!result.error && (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+          <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
             <div className="flex items-baseline justify-between">
-              <p className="text-sm text-emerald-700">예상 퇴직금</p>
-              <p className="text-2xl font-semibold text-emerald-800">
+              <p className="text-sm text-blue-700">예상 퇴직금</p>
+              <p className="text-2xl font-semibold text-blue-800">
                 {formatCurrency(result.pay)}
               </p>
             </div>
@@ -354,19 +354,19 @@ const RetirementCalculator = () => {
             <h2 className="text-2xl font-semibold text-slate-900 mb-4">공식 출처 및 참고 자료</h2>
             <ul className="space-y-2 text-sm text-slate-700">
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>근로자퇴직급여 보장법 제8조 (퇴직금 지급)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>근로기준법 제2조 (평균임금의 정의)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>고용노동부 퇴직금 가이드 (www.moel.go.kr)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>대법원 판례 (평균임금 산정 관련)</span>
               </li>
             </ul>
@@ -386,7 +386,7 @@ const RetirementCalculator = () => {
               <Link
                 key={b.slug}
                 to={b.path}
-                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors"
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-blue-400 hover:text-blue-700 transition-colors"
               >
                 근속 {b.label}
               </Link>

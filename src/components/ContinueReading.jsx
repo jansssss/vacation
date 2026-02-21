@@ -17,12 +17,12 @@ const ContinueReading = ({ title = "이어서 읽기", items = [] }) => {
           <Link
             key={item.path}
             to={item.path}
-            className="rounded-xl bg-white border border-slate-100 p-4 hover:border-emerald-300 hover:shadow-sm transition group flex flex-col"
+            className="rounded-xl bg-white border border-slate-100 p-4 hover:border-blue-300 hover:shadow-sm transition group flex flex-col"
           >
             {item.badge && (
-              <span className="text-xs font-semibold text-emerald-600 mb-1">{item.badge}</span>
+              <span className="text-xs font-semibold text-blue-600 mb-1">{item.badge}</span>
             )}
-            <p className="text-sm font-semibold text-slate-900 group-hover:text-emerald-700 leading-snug">
+            <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 leading-snug">
               {item.title}
             </p>
             {item.desc && (
@@ -30,7 +30,7 @@ const ContinueReading = ({ title = "이어서 읽기", items = [] }) => {
                 {item.desc}
               </p>
             )}
-            <span className="mt-2 text-xs text-emerald-600 font-medium">읽기 →</span>
+            <span className="mt-2 text-xs text-blue-600 font-medium">읽기 →</span>
           </Link>
         ))}
       </div>

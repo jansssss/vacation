@@ -37,9 +37,9 @@ const CalculatorsHub = () => {
         path="/calculators"
       />
 
-      <section className="rounded-3xl border border-slate-100 bg-gradient-to-r from-emerald-50 via-white to-blue-50 p-10 shadow-sm">
+      <section className="rounded-3xl border border-slate-100 bg-gradient-to-r from-blue-50 via-white to-blue-50 p-10 shadow-sm">
         <div className="max-w-3xl space-y-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">노무/근로 계산기 허브</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">노무/근로 계산기 허브</p>
           <h1 className="text-3xl md:text-4xl font-semibold text-slate-900">계산기 허브</h1>
           <p className="text-slate-600 leading-relaxed">
             핵심 계산기마다 해설, 예외, 사례, FAQ, 공지문 템플릿을 제공해 실무 대응 시간을 줄입니다.
@@ -87,7 +87,7 @@ const CalculatorsHub = () => {
               className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="flex items-center justify-between text-xs text-slate-500">
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-blue-700">
                   {calculator.category}
                 </span>
                 <span>업데이트 {calculator.updatedAt}</span>
@@ -127,7 +127,7 @@ const CalculatorsHub = () => {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-slate-900">실무 가이드 하이라이트</h2>
-          <Link to="/guides" className="text-sm text-emerald-700 hover:text-emerald-900">
+          <Link to="/guides" className="text-sm text-blue-700 hover:text-blue-900">
             전체 보기 →
           </Link>
         </div>
@@ -157,7 +157,7 @@ const CalculatorsHub = () => {
         </div>
         <Link
           to="/board"
-          className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800"
+          className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700"
         >
           게시판으로 이동
         </Link>

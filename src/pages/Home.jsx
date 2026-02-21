@@ -13,9 +13,9 @@ const Home = () => {
         path="/"
       />
 
-      <section className="rounded-3xl bg-gradient-to-r from-emerald-50 via-white to-amber-50 p-10 shadow-sm border border-slate-100">
+      <section className="rounded-3xl bg-gradient-to-br from-blue-100 via-white to-indigo-50 p-10 shadow-sm border border-blue-100">
         <div className="max-w-3xl space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">노무/근로 유틸 플랫폼</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">노무/근로 유틸 플랫폼</p>
           <h1 className="text-4xl font-semibold text-slate-900">
             계산기 하나에 해설과 사례까지.
             <span className="block text-slate-600 mt-2">현장 중심의 인사총무 콘텐츠 허브</span>
@@ -27,7 +27,7 @@ const Home = () => {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/calculators"
-              className="rounded-full bg-slate-900 px-6 py-2 text-sm font-medium text-white hover:bg-slate-800"
+              className="rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
               계산기 전체 보기
             </Link>
@@ -44,7 +44,7 @@ const Home = () => {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-slate-900">핵심 계산기</h2>
-          <Link to="/calculators" className="text-sm text-emerald-700 hover:text-emerald-900">
+          <Link to="/calculators" className="text-sm text-blue-700 hover:text-blue-900">
             더 보기 →
           </Link>
         </div>
@@ -55,7 +55,7 @@ const Home = () => {
               to={calculator.path}
               className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <p className="text-xs font-semibold uppercase text-emerald-600">{calculator.category}</p>
+              <p className="text-xs font-semibold uppercase text-blue-600">{calculator.category}</p>
               <h3 className="mt-2 text-xl font-semibold text-slate-900">{calculator.title}</h3>
               <p className="mt-2 text-sm text-slate-600">{calculator.summary}</p>
               <p className="mt-4 text-xs text-slate-400">업데이트 {calculator.updatedAt}</p>
@@ -69,7 +69,7 @@ const Home = () => {
         <h2 className="text-xl font-semibold text-slate-900">자주 찾는 조건</h2>
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
           <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-            <p className="text-xs font-semibold text-emerald-600 mb-2">연차 — 입사월별</p>
+            <p className="text-xs font-semibold text-blue-600 mb-2">연차 — 입사월별</p>
             <div className="flex flex-wrap gap-1.5">
               {[
                 { label: "3월 입사", path: "/annual-leave/join-month/03" },
@@ -78,14 +78,14 @@ const Home = () => {
                 { label: "1월 입사", path: "/annual-leave/join-month/01" },
               ].map((item) => (
                 <Link key={item.path} to={item.path}
-                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors">
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-blue-400 hover:text-blue-700 transition-colors">
                   {item.label}
                 </Link>
               ))}
             </div>
           </div>
           <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-            <p className="text-xs font-semibold text-emerald-600 mb-2">퇴직금 — 근속기간별</p>
+            <p className="text-xs font-semibold text-blue-600 mb-2">퇴직금 — 근속기간별</p>
             <div className="flex flex-wrap gap-1.5">
               {[
                 { label: "근속 3년", path: "/retirement/tenure/3y" },
@@ -94,14 +94,14 @@ const Home = () => {
                 { label: "근속 1년", path: "/retirement/tenure/1y" },
               ].map((item) => (
                 <Link key={item.path} to={item.path}
-                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors">
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-blue-400 hover:text-blue-700 transition-colors">
                   {item.label}
                 </Link>
               ))}
             </div>
           </div>
           <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-            <p className="text-xs font-semibold text-emerald-600 mb-2">실수령액 — 월급별</p>
+            <p className="text-xs font-semibold text-blue-600 mb-2">실수령액 — 월급별</p>
             <div className="flex flex-wrap gap-1.5">
               {[
                 { label: "월급 300만원", path: "/net-salary/300" },
@@ -110,7 +110,7 @@ const Home = () => {
                 { label: "월급 250만원", path: "/net-salary/250" },
               ].map((item) => (
                 <Link key={item.path} to={item.path}
-                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors">
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-blue-400 hover:text-blue-700 transition-colors">
                   {item.label}
                 </Link>
               ))}

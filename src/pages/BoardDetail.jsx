@@ -49,7 +49,7 @@ const BoardDetail = () => {
         <section className="rounded-2xl border border-slate-100 bg-white p-8 text-center">
           <h1 className="text-2xl font-semibold text-slate-900">게시글을 찾을 수 없습니다.</h1>
           <p className="mt-2 text-slate-600">요청한 게시글이 없거나 이동되었습니다.</p>
-          <Link to="/board" className="mt-4 inline-block text-emerald-700">
+          <Link to="/board" className="mt-4 inline-block text-blue-700">
             게시판 목록으로
           </Link>
         </section>
@@ -74,7 +74,7 @@ const BoardDetail = () => {
       </section>
 
       <div>
-        <Link to="/board" className="text-sm text-emerald-700 hover:text-emerald-900">
+        <Link to="/board" className="text-sm text-blue-700 hover:text-blue-900">
           ← 게시판 목록으로
         </Link>
       </div>

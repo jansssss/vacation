@@ -284,10 +284,10 @@ const AnnualLeaveCalculator = () => {
         )}
 
         {result && !result.error && (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+          <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
             <div className="flex items-baseline justify-between">
-              <p className="text-sm text-emerald-700">총 발생 연차</p>
-              <p className="text-2xl font-semibold text-emerald-800">
+              <p className="text-sm text-blue-700">총 발생 연차</p>
+              <p className="text-2xl font-semibold text-blue-800">
                 {formatNumber(result.total)}일
               </p>
             </div>
@@ -407,19 +407,19 @@ const AnnualLeaveCalculator = () => {
             <h2 className="text-2xl font-semibold text-slate-900 mb-4">공식 출처 및 참고 자료</h2>
             <ul className="space-y-2 text-sm text-slate-700">
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>근로기준법 제60조 (연차 유급휴가)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>근로기준법 시행령 제30조 (연차 촉진제도)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>고용노동부 공식 Q&A (www.moel.go.kr)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-emerald-600">•</span>
+                <span className="text-blue-600">•</span>
                 <span>대법원 판례 (연차 발생 시점 관련)</span>
               </li>
             </ul>
@@ -439,7 +439,7 @@ const AnnualLeaveCalculator = () => {
               <Link
                 key={b.mmStr}
                 to={b.path}
-                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors"
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-blue-400 hover:text-blue-700 transition-colors"
               >
                 {b.mmStr}월 입사
               </Link>

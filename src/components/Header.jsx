@@ -9,10 +9,10 @@ const navItems = [
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur border-b border-slate-100">
+    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur border-b border-blue-100">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white text-sm">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-bold">
             eW
           </span>
           e-work.kr
@@ -25,8 +25,8 @@ const Header = () => {
               className={({ isActive }) =>
                 `px-3 py-1.5 text-sm font-medium rounded-full transition ${
                   isActive
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-600 hover:bg-slate-100"
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-600 hover:bg-blue-50 hover:text-blue-700"
                 }`
               }
             >

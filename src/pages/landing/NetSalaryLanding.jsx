@@ -38,7 +38,7 @@ const NetSalaryLanding = () => {
 
       {/* Hero */}
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+        <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
           실수령액 계산 안내
         </p>
         <h1 className="text-3xl font-semibold text-slate-900 mt-2">{data.title}</h1>
@@ -54,7 +54,7 @@ const NetSalaryLanding = () => {
       <section className="grid gap-4 md:grid-cols-3">
         {data.summaryLines.map((line, i) => (
           <div key={i} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm flex items-start gap-3">
-            <div className="h-9 w-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+            <div className="h-9 w-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
               {i + 1}
             </div>
             <p className="text-sm text-slate-700 leading-relaxed">{line}</p>
@@ -63,7 +63,7 @@ const NetSalaryLanding = () => {
       </section>
 
       {/* CTA 버튼 (프리셋) */}
-      <section className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6 text-center space-y-3">
+      <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
         <p className="text-slate-700 text-sm font-medium">내 조건으로 정확하게 계산하고 싶다면?</p>
         <div className="flex flex-wrap gap-3 justify-center">
           {[0, 1, 2].map((deps) => {
@@ -72,7 +72,7 @@ const NetSalaryLanding = () => {
               <Link
                 key={deps}
                 to={`/calculators/net-salary?gross=${data.gross}&deps=${deps}`}
-                className="inline-block rounded-full bg-emerald-600 text-white px-5 py-2 text-sm font-semibold hover:bg-emerald-700 transition-colors"
+                className="inline-block rounded-full bg-blue-600 text-white px-5 py-2 text-sm font-semibold hover:bg-blue-700 transition-colors"
               >
                 {label}으로 계산하기
               </Link>
@@ -98,8 +98,8 @@ const NetSalaryLanding = () => {
                 <span>지방소득세</span><span className="text-right">{fmt(ex.breakdown.localTax)}원</span>
                 <span className="font-semibold text-slate-800 border-t border-slate-200 pt-1">총 공제</span>
                 <span className="text-right font-semibold text-slate-800 border-t border-slate-200 pt-1">{fmt(ex.totalDeduction)}원</span>
-                <span className="font-bold text-emerald-700 text-base">실수령액</span>
-                <span className="text-right font-bold text-emerald-700 text-base">{fmt(ex.net)}원</span>
+                <span className="font-bold text-blue-700 text-base">실수령액</span>
+                <span className="text-right font-bold text-blue-700 text-base">{fmt(ex.net)}원</span>
               </div>
             </div>
           ))}
@@ -131,7 +131,7 @@ const NetSalaryLanding = () => {
                 href={src.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-emerald-700 hover:underline"
+                className="text-blue-700 hover:underline"
               >
                 {src.label}
               </a>
@@ -162,14 +162,14 @@ const NetSalaryLanding = () => {
             <Link
               key={b.bucket}
               to={b.path}
-              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm text-emerald-700 hover:border-emerald-400 transition-colors"
+              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm text-blue-700 hover:border-blue-400 transition-colors"
             >
               월급 {b.label}
             </Link>
           ))}
         </div>
         <div className="mt-4 flex gap-3 flex-wrap text-sm">
-          <Link to="/calculators/net-salary" className="text-emerald-700 font-semibold hover:underline">
+          <Link to="/calculators/net-salary" className="text-blue-700 font-semibold hover:underline">
             → 실수령액 계산기로 이동
           </Link>
           <Link to="/calculators/annual-leave" className="text-slate-600 hover:underline">

@@ -38,7 +38,7 @@ const RetirementLanding = () => {
 
       {/* Hero */}
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">퇴직금 계산 안내</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">퇴직금 계산 안내</p>
         <h1 className="text-3xl font-semibold text-slate-900 mt-2">{data.title}</h1>
         <p className="text-slate-600 mt-3 leading-relaxed">{data.description}</p>
         <div className="flex flex-wrap gap-2 mt-4 text-xs text-slate-500">
@@ -52,7 +52,7 @@ const RetirementLanding = () => {
       <section className="grid gap-4 md:grid-cols-3">
         {data.summaryLines.map((line, i) => (
           <div key={i} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm flex items-start gap-3">
-            <div className="h-9 w-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+            <div className="h-9 w-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
               {i + 1}
             </div>
             <p className="text-sm text-slate-700 leading-relaxed">{line}</p>
@@ -61,14 +61,14 @@ const RetirementLanding = () => {
       </section>
 
       {/* CTA */}
-      <section className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6 text-center space-y-3">
+      <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
         <p className="text-slate-700 text-sm font-medium">내 평균임금으로 정확하게 계산하고 싶다면?</p>
         <div className="flex flex-wrap gap-3 justify-center">
           {data.examples.map((ex) => (
             <Link
               key={ex.salary}
               to={`/calculators/severance-pay?salary=${ex.salary}&years=${data.years}&months=${data.months}`}
-              className="inline-block rounded-full bg-emerald-600 text-white px-5 py-2 text-sm font-semibold hover:bg-emerald-700 transition-colors"
+              className="inline-block rounded-full bg-blue-600 text-white px-5 py-2 text-sm font-semibold hover:bg-blue-700 transition-colors"
             >
               월 {ex.salaryLabel}으로 계산하기
             </Link>
@@ -88,8 +88,8 @@ const RetirementLanding = () => {
                 <span className="text-right font-semibold">{fmt(ex.salary)}원</span>
                 <span>근속기간</span>
                 <span className="text-right font-semibold">{data.label} ({ex.serviceYears.toFixed(2)}년)</span>
-                <span className="font-bold text-emerald-700 text-base border-t border-slate-200 pt-1">예상 퇴직금</span>
-                <span className="text-right font-bold text-emerald-700 text-base border-t border-slate-200 pt-1">{fmt(ex.pay)}원</span>
+                <span className="font-bold text-blue-700 text-base border-t border-slate-200 pt-1">예상 퇴직금</span>
+                <span className="text-right font-bold text-blue-700 text-base border-t border-slate-200 pt-1">{fmt(ex.pay)}원</span>
               </div>
             </div>
           ))}
@@ -117,7 +117,7 @@ const RetirementLanding = () => {
           {data.sources.map((src, i) => (
             <li key={i}>
               •{" "}
-              <a href={src.url} target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">
+              <a href={src.url} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
                 {src.label}
               </a>
             </li>
@@ -145,14 +145,14 @@ const RetirementLanding = () => {
             <Link
               key={b.slug}
               to={b.path}
-              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm text-emerald-700 hover:border-emerald-400 transition-colors"
+              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm text-blue-700 hover:border-blue-400 transition-colors"
             >
               {b.label}
             </Link>
           ))}
         </div>
         <div className="mt-4 flex gap-4 flex-wrap text-sm">
-          <Link to="/calculators/severance-pay" className="text-emerald-700 font-semibold hover:underline">
+          <Link to="/calculators/severance-pay" className="text-blue-700 font-semibold hover:underline">
             → 퇴직금 계산기로 이동
           </Link>
           <Link to="/calculators/annual-leave" className="text-slate-600 hover:underline">연차 계산기</Link>

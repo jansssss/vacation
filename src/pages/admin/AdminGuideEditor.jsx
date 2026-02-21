@@ -233,7 +233,7 @@ const AdminGuideEditor = () => {
               관리자
             </Link>
             <nav className="flex gap-4">
-              <Link to="/admin/guides" className="text-sm font-medium text-emerald-700">
+              <Link to="/admin/guides" className="text-sm font-medium text-blue-700">
                 가이드
               </Link>
               <Link to="/admin/board" className="text-sm font-medium text-slate-600 hover:text-slate-900">
@@ -273,7 +273,7 @@ const AdminGuideEditor = () => {
                   value={guideData.title}
                   onChange={(event) => handleTitleChange(event.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="연차 기본 규칙 한 장 요약"
                 />
               </div>
@@ -286,7 +286,7 @@ const AdminGuideEditor = () => {
                   value={guideData.slug}
                   onChange={(event) => handleSlugChange(event.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="annual-leave-basics"
                 />
                 {!slugTouched && (
@@ -306,7 +306,7 @@ const AdminGuideEditor = () => {
                 value={guideData.summary}
                 onChange={(event) => handleGuideChange('summary', event.target.value)}
                 rows={3}
-                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="가이드의 핵심 내용을 1~2문장으로 정리하세요."
               />
             </div>
@@ -319,7 +319,7 @@ const AdminGuideEditor = () => {
                 id="guide-keywords"
                 value={guideData.keywords}
                 onChange={(event) => handleGuideChange('keywords', event.target.value)}
-                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="연차, 휴가, 근로기준법"
               />
             </div>
@@ -331,7 +331,7 @@ const AdminGuideEditor = () => {
               <button
                 type="button"
                 onClick={handleAddSection}
-                className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+                className="text-sm font-medium text-blue-700 hover:text-blue-900"
               >
                 섹션 추가
               </button>

@@ -25,7 +25,7 @@ const CookieConsent = () => {
       <div className="text-sm text-slate-600">
         본 사이트는 서비스 개선 및 광고 운영을 위해 쿠키/로컬저장소를 사용할 수 있습니다.
         자세한 내용은{" "}
-        <Link to="/privacy" className="font-medium text-emerald-700 hover:text-emerald-900">
+        <Link to="/privacy" className="font-medium text-blue-700 hover:text-blue-900">
           개인정보처리방침
         </Link>
         에서 확인하세요.

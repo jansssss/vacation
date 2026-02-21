@@ -65,7 +65,7 @@ const CalculatorTemplate = ({
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
         <div className="flex flex-col gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+            <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
               계산기 허브
             </p>
             <h1 className="text-3xl font-semibold text-slate-900 mt-2">{title}</h1>
@@ -85,7 +85,7 @@ const CalculatorTemplate = ({
             key={`${stat.label}-${index}`}
             className="rounded-2xl border border-slate-100 bg-white p-5 text-sm text-slate-700 shadow-sm flex items-start gap-3"
           >
-            <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-base font-semibold">
+            <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-base font-semibold">
               {index + 1}
             </div>
             <div>
@@ -103,7 +103,7 @@ const CalculatorTemplate = ({
               key={index}
               className="rounded-2xl border border-slate-100 bg-white p-5 text-sm text-slate-700 shadow-sm"
             >
-              <p className="text-xs uppercase tracking-wide text-emerald-600 mb-2">
+              <p className="text-xs uppercase tracking-wide text-blue-600 mb-2">
                 핵심 포인트 {index + 1}
               </p>
               <p>{point}</p>
@@ -116,12 +116,12 @@ const CalculatorTemplate = ({
         <div className="space-y-8">
           {exampleCalc && (
             <SectionCard title="예시 계산">
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-900 space-y-2">
+              <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900 space-y-2">
                 <p className="font-semibold">{exampleCalc.title}</p>
-                <p className="text-emerald-800">{exampleCalc.input}</p>
-                <p className="text-emerald-800">{exampleCalc.output}</p>
+                <p className="text-blue-800">{exampleCalc.input}</p>
+                <p className="text-blue-800">{exampleCalc.output}</p>
                 {exampleCalc.note && (
-                  <p className="text-xs text-emerald-700">{exampleCalc.note}</p>
+                  <p className="text-xs text-blue-700">{exampleCalc.note}</p>
                 )}
               </div>
             </SectionCard>
@@ -131,7 +131,7 @@ const CalculatorTemplate = ({
             <ul className="space-y-2 text-sm text-slate-700">
               {resolvedInputGuide.map((item, index) => (
                 <li key={index} className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -146,7 +146,7 @@ const CalculatorTemplate = ({
             <ul className="space-y-2 text-sm text-slate-700">
               {summaryLines.map((line, index) => (
                 <li key={index} className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
                   <span>{line}</span>
                 </li>
               ))}
@@ -237,7 +237,7 @@ const CalculatorTemplate = ({
                     to={link.path}
                     className={link.featured
                       ? "font-bold text-blue-700 hover:text-blue-900"
-                      : "text-emerald-700 hover:text-emerald-900"
+                      : "text-blue-700 hover:text-blue-900"
                     }
                   >
                     {link.title}

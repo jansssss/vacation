@@ -155,7 +155,7 @@ const NetSalaryCalculator = () => {
               step={100000}
               value={gross}
               onChange={(e) => setGross(Number(e.target.value))}
-              className="flex-1 accent-emerald-600"
+              className="flex-1 accent-blue-600"
             />
             <input
               type="number"
@@ -179,8 +179,8 @@ const NetSalaryCalculator = () => {
                 onClick={() => setDependents(d)}
                 className={`rounded-full px-4 py-1.5 text-sm border transition-colors ${
                   dependents === d
-                    ? "bg-emerald-600 text-white border-emerald-600"
-                    : "bg-white text-slate-700 border-slate-200 hover:border-emerald-400"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-slate-700 border-slate-200 hover:border-blue-400"
                 }`}
               >
                 {d === 0 ? "독신(0인)" : `${d}인`}
@@ -190,7 +190,7 @@ const NetSalaryCalculator = () => {
         </div>
 
         {result && (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4 space-y-2 text-sm">
+          <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 space-y-2 text-sm">
             <div className="flex justify-between text-slate-600">
               <span>국민연금</span>
               <span>{formatCurrency(result.nationalPension)}</span>
@@ -215,11 +215,11 @@ const NetSalaryCalculator = () => {
               <span>지방소득세</span>
               <span>{formatCurrency(result.localTax)}</span>
             </div>
-            <div className="border-t border-emerald-200 pt-2 flex justify-between font-semibold text-slate-800">
+            <div className="border-t border-blue-200 pt-2 flex justify-between font-semibold text-slate-800">
               <span>총 공제</span>
               <span>{formatCurrency(result.totalDeduction)}</span>
             </div>
-            <div className="flex justify-between text-lg font-bold text-emerald-700">
+            <div className="flex justify-between text-lg font-bold text-blue-700">
               <span>실수령액</span>
               <span>{formatCurrency(result.net)}</span>
             </div>
@@ -235,7 +235,7 @@ const NetSalaryCalculator = () => {
               <Link
                 key={b.bucket}
                 to={b.path}
-                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors"
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-blue-400 hover:text-blue-700 transition-colors"
               >
                 {b.label}
               </Link>

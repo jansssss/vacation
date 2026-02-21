@@ -77,7 +77,7 @@ const AdminBoard = () => {
               <Link to="/admin/guides" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                 가이드
               </Link>
-              <Link to="/admin/board" className="text-sm font-medium text-emerald-700">
+              <Link to="/admin/board" className="text-sm font-medium text-blue-700">
                 게시판
               </Link>
             </nav>
@@ -139,7 +139,7 @@ const AdminBoard = () => {
                       to={`/board/${post.slug}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-emerald-700 hover:text-emerald-900 mr-4"
+                      className="text-blue-700 hover:text-blue-900 mr-4"
                     >
                       보기
                     </Link>

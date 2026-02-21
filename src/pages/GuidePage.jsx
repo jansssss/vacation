@@ -80,7 +80,7 @@ const GuidePage = () => {
         <p className="mt-2 text-slate-600">
           요청한 가이드가 없거나 이동되었을 수 있습니다.
         </p>
-        <Link to="/guides" className="mt-4 inline-block text-emerald-700">
+        <Link to="/guides" className="mt-4 inline-block text-blue-700">
           가이드 목록으로 돌아가기
         </Link>
       </div>
@@ -107,7 +107,7 @@ const GuidePage = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+        <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
           실무 가이드
         </p>
         <h1 className="mt-2 text-3xl font-semibold text-slate-900">{guide.title}</h1>
@@ -131,11 +131,11 @@ const GuidePage = () => {
 
       {/* 계산기 바로 사용 CTA */}
       {topicInfo && (
-        <section className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6 text-center space-y-3">
+        <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
           <p className="text-slate-700 text-sm font-medium">내 조건으로 직접 계산해보세요</p>
           <Link
             to={topicInfo.calcPath}
-            className="inline-block rounded-full bg-emerald-600 text-white px-8 py-2.5 text-sm font-semibold hover:bg-emerald-700 transition-colors"
+            className="inline-block rounded-full bg-blue-600 text-white px-8 py-2.5 text-sm font-semibold hover:bg-blue-700 transition-colors"
           >
             {topicInfo.calcLabel}로 계산하기 →
           </Link>
