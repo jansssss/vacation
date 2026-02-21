@@ -4,7 +4,45 @@ import Seo from "../components/Seo";
 import Breadcrumbs from "../components/Breadcrumbs";
 import ContinueReading from "../components/ContinueReading";
 import { fetchGuideBySlug } from "../lib/api/guides";
+import { getGuideBySlug } from "../config/guidesRegistry";
 import { GUIDE_TOPIC_MAP, TOPIC_GUIDES } from "../config/contentLinks";
+
+const registrySectionToHtml = (section) => {
+  const parts = [];
+  if (section.heading) {
+    parts.push(`<h2 class="text-xl font-semibold text-slate-800 mb-3 mt-2">${section.heading}</h2>`);
+  }
+  if (section.content) {
+    const html = section.content
+      .split(/\n\n/)
+      .map((p) => `<p class="mb-3">${p.replace(/\n/g, "<br />")}</p>`)
+      .join("");
+    parts.push(html);
+  }
+  if (section.bullets?.length) {
+    parts.push(
+      `<ul class="list-disc list-inside space-y-1 mb-3">${section.bullets
+        .map((b) => `<li>${b}</li>`)
+        .join("")}</ul>`
+    );
+  }
+  if (section.content2) {
+    const html = section.content2
+      .split(/\n\n/)
+      .map((p) => `<p class="mb-3">${p.replace(/\n/g, "<br />")}</p>`)
+      .join("");
+    parts.push(html);
+  }
+  return parts.join("");
+};
+
+const normalizeRegistryGuide = (reg) => ({
+  slug: reg.slug,
+  title: reg.title,
+  summary: reg.summary,
+  updated_at: reg.updatedAt,
+  sections: reg.sections.map((s) => ({ html_content: registrySectionToHtml(s) })),
+});
 
 const hasHtml = (value) => /<\/?[a-z][\s\S]*>/i.test(value ?? "");
 
@@ -42,10 +80,21 @@ const GuidePage = () => {
       try {
         setLoading(true);
         const data = await fetchGuideBySlug(slug);
-        setGuide(data);
+        if (data) {
+          setGuide(data);
+        } else {
+          const reg = getGuideBySlug(slug);
+          if (reg) setGuide(normalizeRegistryGuide(reg));
+          else setError("가이드를 찾을 수 없습니다.");
+        }
       } catch (loadError) {
-        setError(loadError.message);
-        console.error(loadError);
+        const reg = getGuideBySlug(slug);
+        if (reg) {
+          setGuide(normalizeRegistryGuide(reg));
+        } else {
+          setError(loadError.message);
+          console.error(loadError);
+        }
       } finally {
         setLoading(false);
       }
