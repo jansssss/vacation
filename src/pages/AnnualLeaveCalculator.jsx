@@ -19,6 +19,7 @@ const RELATED_GUIDE_SLUGS = [
 
 const RELATED_CALCULATORS = [
   { title: "퇴직금 계산기", path: "/calculators/severance-pay" },
+  { title: "실수령액 계산기", path: "/calculators/net-salary" },
   { title: "계산기 허브로 이동", path: "/calculators" },
 ];
 

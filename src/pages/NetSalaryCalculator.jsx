@@ -4,8 +4,9 @@ import CalculatorTemplate from "../components/CalculatorTemplate";
 import { calculateNetSalary } from "../lib/calculators/netSalary";
 import { formatCurrency } from "../lib/formatters";
 import { NET_SALARY_BUCKETS } from "../data/netSalaryBuckets";
+import { SITE_CONFIG } from "../config/siteConfig";
 
-const UPDATED_AT = "2026-02-21";
+const UPDATED_AT = SITE_CONFIG.updatedAt;
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 

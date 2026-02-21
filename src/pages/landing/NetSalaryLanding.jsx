@@ -4,9 +4,10 @@ import Seo from "../../components/Seo";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { buildFaqSchema, buildBreadcrumbSchema } from "../../lib/structuredData";
 import { getBucketData, NET_SALARY_BUCKETS } from "../../data/netSalaryBuckets";
+import { SITE_CONFIG } from "../../config/siteConfig";
 
 const fmt = (n) => Math.round(n).toLocaleString("ko-KR");
-const UPDATED_AT = "2026-02-21";
+const UPDATED_AT = SITE_CONFIG.updatedAt;
 
 const NetSalaryLanding = () => {
   const { bucket } = useParams();

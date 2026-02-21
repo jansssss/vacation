@@ -17,6 +17,14 @@ export const calculatorsRegistry = [
     updatedAt: RULES_2026.updatedAt,
     category: "퇴직",
   },
+  {
+    slug: "net-salary",
+    title: "실수령액 계산기",
+    path: "/calculators/net-salary",
+    summary: "세전 월급에서 4대보험·소득세·지방소득세를 공제한 실수령액을 계산합니다.",
+    updatedAt: RULES_2026.updatedAt,
+    category: "급여",
+  },
 ];
 
 export const getCalculatorBySlug = (slug) =>

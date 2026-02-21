@@ -1,6 +1,8 @@
+import siteConfigJson from "../siteConfig.json";
+
 export const RULES_2026 = {
-  effectiveDate: "2026-01-01",
-  updatedAt: "2026-01-25",
+  effectiveDate: siteConfigJson.rulesEffectiveDate,
+  updatedAt: siteConfigJson.updatedAt,
   annualLeave: {
     firstYearMonthlyAccrual: 1,
     firstYearMonthlyCap: 11,

@@ -121,6 +121,7 @@ const RetirementCalculator = () => {
 
   const relatedLinks = [
     { title: "연차 계산기", path: "/calculators/annual-leave" },
+    { title: "실수령액 계산기", path: "/calculators/net-salary" },
     { title: "퇴직금 지급 대상 판단 기준", path: "/guides/severance-pay-eligibility" },
     { title: "평균임금 산정 시 포함/제외 항목", path: "/guides/severance-pay-average-wage" },
     { title: "퇴직금 정산 서류 체크리스트", path: "/guides/severance-pay-docs" },

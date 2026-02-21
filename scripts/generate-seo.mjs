@@ -13,7 +13,12 @@ const publicDir = path.join(root, "public");
 const siteConfig = JSON.parse(fs.readFileSync(siteConfigPath, "utf8"));
 const routes = JSON.parse(fs.readFileSync(routesPath, "utf8"));
 
-const lastmod = siteConfig.updatedAt;
+// 빌드 시 오늘 날짜로 자동 업데이트
+const today = new Date().toISOString().slice(0, 10);
+siteConfig.updatedAt = today;
+fs.writeFileSync(siteConfigPath, JSON.stringify(siteConfig, null, 2) + "\n", "utf8");
+
+const lastmod = today;
 
 const sitemapItems = routes
   .map((route) => {
