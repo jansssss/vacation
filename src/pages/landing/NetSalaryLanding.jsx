@@ -2,9 +2,11 @@ import React from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import Seo from "../../components/Seo";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import ContinueReading from "../../components/ContinueReading";
 import { buildFaqSchema, buildBreadcrumbSchema } from "../../lib/structuredData";
 import { getBucketData, NET_SALARY_BUCKETS } from "../../data/netSalaryBuckets";
 import { SITE_CONFIG } from "../../config/siteConfig";
+import { TOPIC_GUIDES } from "../../config/contentLinks";
 
 const fmt = (n) => Math.round(n).toLocaleString("ko-KR");
 const UPDATED_AT = SITE_CONFIG.updatedAt;
@@ -140,6 +142,17 @@ const NetSalaryLanding = () => {
           이 페이지는 일반적인 안내 목적이며, 정확한 공제액은 급여명세서 또는 국세청 홈택스를 확인하세요.
         </p>
       </section>
+
+      {/* 관련 가이드 */}
+      <ContinueReading
+        title="급여 관련 가이드 더 읽기"
+        items={TOPIC_GUIDES["net-salary"].map((g) => ({
+          badge: "가이드",
+          title: g.title,
+          desc: g.desc,
+          path: `/guides/${g.slug}`,
+        }))}
+      />
 
       {/* 관련 구간 링크 */}
       <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">

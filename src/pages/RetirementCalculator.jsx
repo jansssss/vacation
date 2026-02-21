@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import CalculatorTemplate from "../components/CalculatorTemplate";
 import { calculateSeverancePay } from "../lib/calculators/severancePay";
 import { formatCurrency, formatNumber } from "../lib/formatters";
 import { RULES_2026 } from "../config/rules/2026";
+import { RETIREMENT_BUCKETS } from "../data/retirementBuckets";
 
 const RetirementCalculator = () => {
   const [searchParams] = useSearchParams();
@@ -373,6 +374,23 @@ const RetirementCalculator = () => {
               이 계산기는 참고용이며, 최종 판단은 급여명세서, 근로계약서, 취업규칙, 노무사 상담 등을 통해 확인하시기 바랍니다.
               특히 정기상여금, 연장수당, 휴직 기간 등 복잡한 경우에는 전문가의 검토가 필요합니다.
             </p>
+          </div>
+        </section>
+
+        {/* 근속기간별 퇴직금 빠른 확인 */}
+        <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">근속기간별 퇴직금 빠른 확인</h2>
+          <p className="text-sm text-slate-500 mb-4">근속기간을 선택하면 해당 기간 기준 퇴직금 예시를 바로 확인합니다.</p>
+          <div className="flex flex-wrap gap-2">
+            {RETIREMENT_BUCKETS.map((b) => (
+              <Link
+                key={b.slug}
+                to={b.path}
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors"
+              >
+                근속 {b.label}
+              </Link>
+            ))}
           </div>
         </section>
       </div>

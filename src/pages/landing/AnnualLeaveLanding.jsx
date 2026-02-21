@@ -2,9 +2,11 @@ import React from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import Seo from "../../components/Seo";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import ContinueReading from "../../components/ContinueReading";
 import { buildFaqSchema, buildBreadcrumbSchema } from "../../lib/structuredData";
 import { getBucketByMonth, ANNUAL_LEAVE_BUCKETS } from "../../data/annualLeaveBuckets";
 import { SITE_CONFIG } from "../../config/siteConfig";
+import { TOPIC_GUIDES } from "../../config/contentLinks";
 
 const UPDATED_AT = SITE_CONFIG.updatedAt;
 
@@ -138,6 +140,17 @@ const AnnualLeaveLanding = () => {
         </ul>
         <p className="mt-3 text-xs text-slate-400">이 페이지는 일반적인 안내 목적이며, 정확한 연차는 내부 규정과 인사팀을 통해 확인하세요.</p>
       </section>
+
+      {/* 관련 가이드 */}
+      <ContinueReading
+        title="연차 관련 가이드 더 읽기"
+        items={TOPIC_GUIDES["annual-leave"].slice(0, 3).map((g) => ({
+          badge: "가이드",
+          title: g.title,
+          desc: g.desc,
+          path: `/guides/${g.slug}`,
+        }))}
+      />
 
       {/* 다른 입사월 링크 */}
       <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">

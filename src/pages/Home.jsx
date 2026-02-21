@@ -64,6 +64,61 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 자주 찾는 조건 */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-slate-900">자주 찾는 조건</h2>
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
+          <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold text-emerald-600 mb-2">연차 — 입사월별</p>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: "3월 입사", path: "/annual-leave/join-month/03" },
+                { label: "6월 입사", path: "/annual-leave/join-month/06" },
+                { label: "9월 입사", path: "/annual-leave/join-month/09" },
+                { label: "1월 입사", path: "/annual-leave/join-month/01" },
+              ].map((item) => (
+                <Link key={item.path} to={item.path}
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors">
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold text-emerald-600 mb-2">퇴직금 — 근속기간별</p>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: "근속 3년", path: "/retirement/tenure/3y" },
+                { label: "근속 5년", path: "/retirement/tenure/5y" },
+                { label: "근속 10년", path: "/retirement/tenure/10y" },
+                { label: "근속 1년", path: "/retirement/tenure/1y" },
+              ].map((item) => (
+                <Link key={item.path} to={item.path}
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors">
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold text-emerald-600 mb-2">실수령액 — 월급별</p>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: "월급 300만원", path: "/net-salary/300" },
+                { label: "월급 350만원", path: "/net-salary/350" },
+                { label: "월급 400만원", path: "/net-salary/400" },
+                { label: "월급 250만원", path: "/net-salary/250" },
+              ].map((item) => (
+                <Link key={item.path} to={item.path}
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors">
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="grid gap-6 md:grid-cols-3">
         <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
           <h3 className="text-lg font-semibold text-slate-900">신뢰 기반 콘텐츠</h3>

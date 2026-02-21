@@ -2,7 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import Breadcrumbs from "../components/Breadcrumbs";
+import ContinueReading from "../components/ContinueReading";
 import { fetchGuideBySlug } from "../lib/api/guides";
+import { GUIDE_TOPIC_MAP, TOPIC_GUIDES } from "../config/contentLinks";
 
 const hasHtml = (value) => /<\/?[a-z][\s\S]*>/i.test(value ?? "");
 
@@ -91,6 +93,14 @@ const GuidePage = () => {
     { label: guide.title, path: `/guides/${guide.slug}` },
   ];
 
+  const topicInfo = GUIDE_TOPIC_MAP[guide.slug];
+  const relatedGuides = topicInfo
+    ? (TOPIC_GUIDES[topicInfo.topic] || [])
+        .filter((g) => g.slug !== guide.slug)
+        .slice(0, 3)
+        .map((g) => ({ badge: "가이드", title: g.title, desc: g.desc, path: `/guides/${g.slug}` }))
+    : [];
+
   return (
     <div className="space-y-8">
       <Seo title={guide.title} description={guide.summary} path={`/guides/${guide.slug}`} />
@@ -118,6 +128,24 @@ const GuidePage = () => {
           </section>
         ))}
       </div>
+
+      {/* 계산기 바로 사용 CTA */}
+      {topicInfo && (
+        <section className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6 text-center space-y-3">
+          <p className="text-slate-700 text-sm font-medium">내 조건으로 직접 계산해보세요</p>
+          <Link
+            to={topicInfo.calcPath}
+            className="inline-block rounded-full bg-emerald-600 text-white px-8 py-2.5 text-sm font-semibold hover:bg-emerald-700 transition-colors"
+          >
+            {topicInfo.calcLabel}로 계산하기 →
+          </Link>
+        </section>
+      )}
+
+      {/* 관련 가이드 */}
+      {relatedGuides.length > 0 && (
+        <ContinueReading title="관련 가이드 더 읽기" items={relatedGuides} />
+      )}
     </div>
   );
 };

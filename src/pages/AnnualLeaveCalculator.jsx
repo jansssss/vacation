@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import CalculatorTemplate from "../components/CalculatorTemplate";
 import { calculateAnnualLeave } from "../lib/calculators/annualLeave";
 import { formatNumber, formatDate } from "../lib/formatters";
 import { RULES_2026 } from "../config/rules/2026";
 import { fetchGuidesBySlugs } from "../lib/api/guides";
+import { ANNUAL_LEAVE_BUCKETS } from "../data/annualLeaveBuckets";
 
 const RELATED_GUIDE_SLUGS = [
   "why-second-year-25-days",
@@ -426,6 +427,23 @@ const AnnualLeaveCalculator = () => {
               이 계산기는 참고용이며, 최종 판단은 회사의 취업규칙, 단체협약, 노무사 상담 등을 통해 확인하시기 바랍니다.
               특히 휴직, 휴업, 단시간 근로 등 특수한 경우에는 별도의 검토가 필요합니다.
             </p>
+          </div>
+        </section>
+
+        {/* 입사월별 연차 빠른 확인 */}
+        <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">입사월별 연차 빠른 확인</h2>
+          <p className="text-sm text-slate-500 mb-4">입사월을 선택하면 해당 월 기준 연차 발생 현황을 바로 확인합니다.</p>
+          <div className="flex flex-wrap gap-2">
+            {ANNUAL_LEAVE_BUCKETS.map((b) => (
+              <Link
+                key={b.mmStr}
+                to={b.path}
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition-colors"
+              >
+                {b.mmStr}월 입사
+              </Link>
+            ))}
           </div>
         </section>
       </div>
