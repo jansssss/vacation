@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import CalculatorTemplate from "../components/CalculatorTemplate";
 import { calculateAnnualLeave } from "../lib/calculators/annualLeave";
 import { formatNumber, formatDate } from "../lib/formatters";
@@ -24,8 +25,9 @@ const RELATED_CALCULATORS = [
 ];
 
 const AnnualLeaveCalculator = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [searchParams] = useSearchParams();
+  const [startDate, setStartDate] = useState(searchParams.get("joinDate") || "");
+  const [endDate, setEndDate] = useState(searchParams.get("endDate") || "");
   const [attendanceRate, setAttendanceRate] = useState(80);
   const [relatedGuides, setRelatedGuides] = useState([]);
 

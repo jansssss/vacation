@@ -25,6 +25,8 @@ import AdminGuideEditor from "./pages/admin/AdminGuideEditor";
 import AdminBoardEditor from "./pages/admin/AdminBoardEditor";
 import NetSalaryCalculator from "./pages/NetSalaryCalculator";
 import NetSalaryLanding from "./pages/landing/NetSalaryLanding";
+import AnnualLeaveLanding from "./pages/landing/AnnualLeaveLanding";
+import RetirementLanding from "./pages/landing/RetirementLanding";
 
 function App() {
   return (
@@ -95,6 +97,8 @@ function App() {
                   <Route path="/calculators/severance-pay" element={<RetirementCalculator />} />
                   <Route path="/calculators/net-salary" element={<NetSalaryCalculator />} />
                   <Route path="/net-salary/:bucket" element={<NetSalaryLanding />} />
+                  <Route path="/annual-leave/join-month/:month" element={<AnnualLeaveLanding />} />
+                  <Route path="/retirement/tenure/:tenure" element={<RetirementLanding />} />
                   <Route path="/guides" element={<GuidesIndex />} />
                   <Route path="/guides/:slug" element={<GuidePage />} />
                   <Route path="/board" element={<BoardList />} />

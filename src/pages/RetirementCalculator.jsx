@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import CalculatorTemplate from "../components/CalculatorTemplate";
 import { calculateSeverancePay } from "../lib/calculators/severancePay";
 import { formatCurrency, formatNumber } from "../lib/formatters";
 import { RULES_2026 } from "../config/rules/2026";
 
 const RetirementCalculator = () => {
-  const [avgMonthlyWage, setAvgMonthlyWage] = useState(3000000);
-  const [years, setYears] = useState(3);
-  const [months, setMonths] = useState(0);
+  const [searchParams] = useSearchParams();
+  const [avgMonthlyWage, setAvgMonthlyWage] = useState(Number(searchParams.get("salary")) || 3000000);
+  const [years, setYears] = useState(Number(searchParams.get("years")) || 3);
+  const [months, setMonths] = useState(Number(searchParams.get("months")) || 0);
 
   const result = useMemo(() => {
     return calculateSeverancePay({ avgMonthlyWage, years, months });
