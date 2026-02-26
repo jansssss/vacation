@@ -124,6 +124,7 @@ const RetirementCalculator = () => {
 
   const relatedLinks = [
     { title: "연차 계산기", path: "/calculators/annual-leave" },
+    { title: "퇴직연금 운용계산기", path: "/calculators/retirement-pension", featured: true },
     { title: "실수령액 계산기", path: "/calculators/net-salary" },
     { title: "퇴직금 지급 대상 판단 기준", path: "/guides/severance-pay-eligibility" },
     { title: "평균임금 산정 시 포함/제외 항목", path: "/guides/severance-pay-average-wage" },
@@ -247,6 +248,23 @@ const RetirementCalculator = () => {
             </div>
           </div>
         )}
+
+        <section className="rounded-xl border border-indigo-100 bg-indigo-50 p-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-indigo-900">퇴직금 다음 단계 계산</p>
+              <p className="text-sm text-indigo-800">
+                퇴직연금 운용계산기에서 은퇴 시점 적립금, 월 연금, 부족분 대안을 이어서 확인할 수 있습니다.
+              </p>
+            </div>
+            <Link
+              to="/calculators/retirement-pension"
+              className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            >
+              퇴직연금 운용계산기로 이동
+            </Link>
+          </div>
+        </section>
 
         <section className="mt-12 space-y-8 rounded-2xl border border-slate-100 bg-white p-8 shadow-sm">
           <div>

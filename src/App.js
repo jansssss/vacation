@@ -24,9 +24,11 @@ import AdminBoard from "./pages/admin/AdminBoard";
 import AdminGuideEditor from "./pages/admin/AdminGuideEditor";
 import AdminBoardEditor from "./pages/admin/AdminBoardEditor";
 import NetSalaryCalculator from "./pages/NetSalaryCalculator";
+import RetirementPensionCalculator from "./pages/RetirementPensionCalculator";
 import NetSalaryLanding from "./pages/landing/NetSalaryLanding";
 import AnnualLeaveLanding from "./pages/landing/AnnualLeaveLanding";
 import RetirementLanding from "./pages/landing/RetirementLanding";
+import RetirementPensionLanding from "./pages/landing/RetirementPensionLanding";
 
 function App() {
   return (
@@ -95,10 +97,12 @@ function App() {
                   <Route path="/calculators" element={<CalculatorsHub />} />
                   <Route path="/calculators/annual-leave" element={<AnnualLeaveCalculator />} />
                   <Route path="/calculators/severance-pay" element={<RetirementCalculator />} />
+                  <Route path="/calculators/retirement-pension" element={<RetirementPensionCalculator />} />
                   <Route path="/calculators/net-salary" element={<NetSalaryCalculator />} />
                   <Route path="/net-salary/:bucket" element={<NetSalaryLanding />} />
                   <Route path="/annual-leave/join-month/:month" element={<AnnualLeaveLanding />} />
                   <Route path="/retirement/tenure/:tenure" element={<RetirementLanding />} />
+                  <Route path="/retirement-pension/scenario/:scenario" element={<RetirementPensionLanding />} />
                   <Route path="/guides" element={<GuidesIndex />} />
                   <Route path="/guides/:slug" element={<GuidePage />} />
                   <Route path="/board" element={<BoardList />} />
