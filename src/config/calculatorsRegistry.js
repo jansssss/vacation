@@ -2,6 +2,15 @@ import { RULES_2026 } from "./rules/2026";
 
 export const calculatorsRegistry = [
   {
+    slug: "childcare-support",
+    title: "육아지원금 계산기",
+    path: "/calculators/childcare-support",
+    summary:
+      "육아휴직과 육아기 단축근무의 사업주 지원금, 근로자 예상 수령액, 회사 순부담을 함께 계산합니다.",
+    updatedAt: RULES_2026.updatedAt,
+    category: "육아지원",
+  },
+  {
     slug: "annual-leave",
     title: "연차 계산기",
     path: "/calculators/annual-leave",
@@ -37,4 +46,3 @@ export const calculatorsRegistry = [
 
 export const getCalculatorBySlug = (slug) =>
   calculatorsRegistry.find((calculator) => calculator.slug === slug);
-

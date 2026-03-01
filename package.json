@@ -46,6 +46,7 @@
       "/calculators/annual-leave",
       "/calculators/severance-pay",
       "/calculators/retirement-pension",
+      "/calculators/childcare-support",
       "/calculators/net-salary",
       "/net-salary/200",
       "/net-salary/250",
@@ -90,7 +91,11 @@
       "/guides/severance-pay-average-wage",
       "/guides/severance-pay-docs",
       "/guides/payroll-slip-reading",
-      "/guides/unpaid-leave-impact"
+      "/guides/unpaid-leave-impact",
+      "/guides/childcare-leave-support-2026",
+      "/guides/reduced-hours-support-2026",
+      "/guides/childcare-support-faq-2026",
+      "/guides/workload-sharing-support-2026"
     ],
     "puppeteerArgs": [
       "--no-sandbox",

@@ -1,19 +1,46 @@
-import { supabase } from '../supabase';
+import { supabase } from "../supabase";
+import { guidesRegistry } from "../../config/guidesRegistry";
+
+const normalizeRegistryGuide = (guide) => ({
+  slug: guide.slug,
+  title: guide.title,
+  summary: guide.summary,
+  updated_at: guide.updatedAt,
+  keywords: guide.keywords ?? "",
+});
+
+const mergeGuides = (dbGuides = []) => {
+  const merged = new Map();
+
+  dbGuides.forEach((guide) => {
+    merged.set(guide.slug, guide);
+  });
+
+  guidesRegistry.forEach((guide) => {
+    if (!merged.has(guide.slug)) {
+      merged.set(guide.slug, normalizeRegistryGuide(guide));
+    }
+  });
+
+  return Array.from(merged.values()).sort(
+    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+  );
+};
 
 export const fetchGuides = async () => {
   const { data, error } = await supabase
-    .from('guides')
-    .select('*')
-    .order('updated_at', { ascending: false });
+    .from("guides")
+    .select("*")
+    .order("updated_at", { ascending: false });
 
   if (error) throw error;
-  return data;
+  return mergeGuides(data || []);
 };
 
 const fetchGuideWithSections = async (filter) => {
   const { data: guide, error: guideError } = await supabase
-    .from('guides')
-    .select('*')
+    .from("guides")
+    .select("*")
     .match(filter)
     .single();
 
@@ -21,17 +48,17 @@ const fetchGuideWithSections = async (filter) => {
   if (!guide) return null;
 
   const { data: sections, error: sectionsError } = await supabase
-    .from('guide_sections')
-    .select('*')
-    .eq('guide_id', guide.id)
-    .order('order_index', { ascending: true });
+    .from("guide_sections")
+    .select("*")
+    .eq("guide_id", guide.id)
+    .order("order_index", { ascending: true });
 
   if (sectionsError) throw sectionsError;
 
   return {
     ...guide,
     sections: sections.map((section) => ({
-      html_content: section.html_content ?? '',
+      html_content: section.html_content ?? "",
     })),
   };
 };
@@ -42,7 +69,7 @@ export const fetchGuideById = async (id) => fetchGuideWithSections({ id });
 
 export const createGuide = async (guideData, sections) => {
   const { data: guide, error: guideError } = await supabase
-    .from('guides')
+    .from("guides")
     .insert({
       slug: guideData.slug,
       title: guideData.title,
@@ -57,12 +84,12 @@ export const createGuide = async (guideData, sections) => {
   if (sections && sections.length > 0) {
     const sectionsToInsert = sections.map((section, index) => ({
       guide_id: guide.id,
-      html_content: section.html_content ?? '',
+      html_content: section.html_content ?? "",
       order_index: index + 1,
     }));
 
     const { error: sectionsError } = await supabase
-      .from('guide_sections')
+      .from("guide_sections")
       .insert(sectionsToInsert);
 
     if (sectionsError) throw sectionsError;
@@ -73,33 +100,33 @@ export const createGuide = async (guideData, sections) => {
 
 export const updateGuide = async (guideId, guideData, sections) => {
   const { error: guideError } = await supabase
-    .from('guides')
+    .from("guides")
     .update({
       slug: guideData.slug,
       title: guideData.title,
       summary: guideData.summary,
       keywords: guideData.keywords,
     })
-    .eq('id', guideId);
+    .eq("id", guideId);
 
   if (guideError) throw guideError;
 
   const { error: deleteError } = await supabase
-    .from('guide_sections')
+    .from("guide_sections")
     .delete()
-    .eq('guide_id', guideId);
+    .eq("guide_id", guideId);
 
   if (deleteError) throw deleteError;
 
   if (sections && sections.length > 0) {
     const sectionsToInsert = sections.map((section, index) => ({
       guide_id: guideId,
-      html_content: section.html_content ?? '',
+      html_content: section.html_content ?? "",
       order_index: index + 1,
     }));
 
     const { error: sectionsError } = await supabase
-      .from('guide_sections')
+      .from("guide_sections")
       .insert(sectionsToInsert);
 
     if (sectionsError) throw sectionsError;
@@ -109,10 +136,7 @@ export const updateGuide = async (guideId, guideData, sections) => {
 };
 
 export const deleteGuide = async (guideId) => {
-  const { error } = await supabase
-    .from('guides')
-    .delete()
-    .eq('id', guideId);
+  const { error } = await supabase.from("guides").delete().eq("id", guideId);
 
   if (error) throw error;
   return true;
@@ -122,11 +146,10 @@ export const fetchGuidesBySlugs = async (slugs) => {
   if (!slugs || slugs.length === 0) return [];
 
   const { data, error } = await supabase
-    .from('guides')
-    .select('slug, title, summary, updated_at')
-    .in('slug', slugs);
+    .from("guides")
+    .select("slug, title, summary, updated_at")
+    .in("slug", slugs);
 
   if (error) throw error;
-  return data || [];
+  return mergeGuides(data || []).filter((guide) => slugs.includes(guide.slug));
 };
-
