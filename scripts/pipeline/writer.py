@@ -105,7 +105,7 @@ class GuideWriter:
             },
             payload={
                 "model": self.model,
-                "max_tokens": 6000,
+                "max_completion_tokens": 6000,
                 "temperature": 0.3,
                 "messages": [{"role": "user", "content": user_message}],
             },
