@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import { calculatorsRegistry } from "../config/calculatorsRegistry";
 import { SITE_CONFIG } from "../config/siteConfig";
+import { fetchGuides } from "../lib/api/guides";
 
 const featuredCalculators = [
   {
@@ -51,6 +52,14 @@ const popularGuides = [
 ];
 
 const Home = () => {
+  const [latestGuides, setLatestGuides] = useState([]);
+
+  useEffect(() => {
+    fetchGuides()
+      .then((guides) => setLatestGuides(guides.slice(0, 3)))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="space-y-14">
       <Seo
@@ -219,6 +228,34 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      {/* ── 최신 가이드 ── */}
+      {latestGuides.length > 0 && (
+        <section className="space-y-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-900">최신 가이드</h2>
+            <Link to="/guides" className="text-sm font-medium text-blue-700 hover:text-blue-900">
+              전체 보기 →
+            </Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {latestGuides.map((g) => (
+              <Link
+                key={g.slug}
+                to={`/guides/${g.slug}`}
+                className="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  NEW
+                </span>
+                <h3 className="mt-3 text-base font-bold text-slate-900 line-clamp-2">{g.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-slate-500 line-clamp-2">{g.summary}</p>
+                <p className="mt-4 text-xs font-semibold text-emerald-700">읽기 →</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

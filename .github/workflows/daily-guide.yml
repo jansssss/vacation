@@ -1,0 +1,75 @@
+name: Daily Auto Guide (e-work.kr)
+
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "생성할 가이드 수 (1~3)"
+        required: false
+        default: "1"
+        type: string
+      model:
+        description: "OpenAI 모델"
+        required: false
+        default: "gpt-5.4-mini"
+        type: choice
+        options:
+          - gpt-5.4-mini
+          - gpt-4o-mini
+      dry_run:
+        description: "Dry-run (Supabase 저장 안 함)"
+        required: false
+        default: false
+        type: boolean
+
+  schedule:
+    # 매일 KST 08:00 트리거 (UTC 23:00 전날) → 랜덤 딜레이로 실제 발행은 08:00~10:00 사이
+    - cron: "0 23 * * *"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Random delay (KST 08:00~10:00 사이 분단위 랜덤 실행)
+        if: github.event_name == 'schedule'
+        run: |
+          DELAY=$((RANDOM % 7200))
+          echo "대기 시간: ${DELAY}초 (약 $(( DELAY / 60 ))분)"
+          sleep $DELAY
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Write .env.local
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ inputs.model || secrets.OPENAI_MODEL || 'gpt-5.4-mini' }}
+          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GUIDES_PER_RUN: ${{ inputs.count || '1' }}
+        run: |
+          printf 'OPENAI_API_KEY=%s\n' "$OPENAI_API_KEY" >> .env.local
+          printf 'OPENAI_MODEL=%s\n' "$OPENAI_MODEL" >> .env.local
+          printf 'PERPLEXITY_API_KEY=%s\n' "$PERPLEXITY_API_KEY" >> .env.local
+          printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL" >> .env.local
+          printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY" >> .env.local
+          printf 'GUIDES_PER_RUN=%s\n' "$GUIDES_PER_RUN" >> .env.local
+
+      - name: Run pipeline
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            python -m scripts.main --dry-run
+          else
+            python -m scripts.main --count "${{ inputs.count || '1' }}"
+          fi
+
+      - name: Clean up secrets
+        if: always()
+        run: rm -f .env.local
