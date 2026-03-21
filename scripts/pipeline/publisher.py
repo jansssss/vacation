@@ -21,6 +21,17 @@ class SupabasePublisher:
             "Prefer": "return=representation",
         }
 
+    def fetch_published_topics(self, limit: int = 60) -> list[str]:
+        """최근 발행된 가이드 제목 목록 반환 (중복 주제 회피용)"""
+        url = f"{self.base_url}/rest/v1/guides?select=title&order=created_at.desc&limit={limit}"
+        req = request.Request(url, headers=self._headers)
+        try:
+            with request.urlopen(req, timeout=10) as resp:
+                rows = json.loads(resp.read().decode("utf-8"))
+                return [row["title"] for row in rows]
+        except Exception:
+            return []
+
     def _slug_is_unique(self, slug: str) -> bool:
         url = f"{self.base_url}/rest/v1/guides?slug=eq.{slug}&select=id&limit=1"
         req = request.Request(url, headers=self._headers)

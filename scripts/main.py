@@ -67,6 +67,13 @@ def main() -> None:
 
     print(f"[PIPELINE] 모델: {model} | 생성 수: {count}개", flush=True)
 
+    # ── 발행 이력 조회 ───────────────────────────────
+    published_topics: list[str] = []
+    if publisher:
+        print("[PIPELINE] 발행 이력 조회 중...", flush=True)
+        published_topics = publisher.fetch_published_topics()
+        print(f"[PIPELINE] 기발행 주제 {len(published_topics)}개 로드 완료", flush=True)
+
     # ── 실행 ────────────────────────────────────────
     for i in range(count):
         print(f"\n{'='*50}", flush=True)
@@ -75,7 +82,7 @@ def main() -> None:
         # STEP 1: Perplexity 리서치
         print("[STEP 1] Perplexity 리서치 중...", flush=True)
         try:
-            research = researcher.research_today()
+            research = researcher.research_today(published_topics=published_topics)
             print(f"[STEP 1] 완료 - 주제: {research['topic']}", flush=True)
         except Exception as exc:
             print(f"[STEP 1] 실패: {exc}", flush=True)
@@ -98,6 +105,7 @@ def main() -> None:
             print(f"[DRY-RUN] keywords: {guide.keywords}", flush=True)
             for j, section in enumerate(guide.sections, 1):
                 print(f"[DRY-RUN] 섹션 {j}: {section.heading}", flush=True)
+            published_topics.append(guide.title)
             continue
 
         # STEP 4: Supabase 발행
@@ -105,6 +113,7 @@ def main() -> None:
         try:
             result = publisher.publish(guide)
             print(f"[STEP 3] 발행 완료! slug={result['slug']}", flush=True)
+            published_topics.append(guide.title)
         except Exception as exc:
             print(f"[STEP 3] 실패: {exc}", flush=True)
             sys.exit(1)

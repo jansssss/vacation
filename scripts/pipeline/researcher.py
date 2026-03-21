@@ -16,12 +16,24 @@ class PerplexityResearcher:
     def __init__(self, api_key: str) -> None:
         self.api_key = api_key
 
-    def research_today(self) -> dict:
+    def research_today(self, published_topics: list[str] | None = None) -> dict:
         """
         오늘의 노무/근로 인기 이슈 1개 선정 + 심층 리서치
+        published_topics: 이미 발행된 제목 목록 (중복 회피용)
         Returns: { topic, category, background, key_data, impact_on_workers, related_keywords }
         """
         today = date.today().strftime("%Y년 %m월 %d일")
+
+        exclude_block = ""
+        if published_topics:
+            titles = "\n".join(f"- {t}" for t in published_topics)
+            exclude_block = (
+                "\n\n【이미 발행된 주제 — 반드시 제외】\n"
+                f"{titles}\n"
+                "위 주제와 동일하거나 매우 유사한 주제는 선택하지 마세요. "
+                "카테고리가 같더라도 다른 각도나 세부 주제를 선택해야 합니다."
+            )
+
         payload = {
             "model": "sonar-pro",
             "messages": [
@@ -55,6 +67,7 @@ class PerplexityResearcher:
                         "- key_data는 최소 5개 이상 (수치 또는 법 조항 필수)\n"
                         "- 고용노동부, 근로기준법, 대법원 판례 등 국내 기준 우선\n"
                         "- 추측이나 불확실한 내용 금지"
+                        f"{exclude_block}"
                     ),
                 },
             ],
