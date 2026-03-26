@@ -1,14 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SITE_CONFIG } from "../config/siteConfig";
+import { supabase } from "../lib/supabase";
 
 const Footer = () => {
+  const [latestGuideDate, setLatestGuideDate] = useState(SITE_CONFIG.updatedAt);
+
+  useEffect(() => {
+    supabase
+      .from("guides")
+      .select("updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        if (data?.updated_at) {
+          setLatestGuideDate(
+            new Date(data.updated_at).toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }).replace(/\. /g, "-").replace(".", "")
+          );
+        }
+      });
+  }, []);
+
   return (
     <footer className="border-t border-slate-100 bg-white/80">
       <div className="mx-auto w-full max-w-6xl px-4 py-8 text-sm text-slate-500">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="font-medium text-slate-700">{SITE_CONFIG.brandLine}</div>
-          <div>기준일: {SITE_CONFIG.rulesEffectiveDate} · 업데이트: {SITE_CONFIG.updatedAt}</div>
+          <div>기준일: {SITE_CONFIG.rulesEffectiveDate} · 업데이트: {latestGuideDate}</div>
         </div>
         <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-500">
           <Link to="/about" className="hover:text-slate-700">소개</Link>
