@@ -23,6 +23,7 @@ import AdminGuides from "./pages/admin/AdminGuides";
 import AdminBoard from "./pages/admin/AdminBoard";
 import AdminGuideEditor from "./pages/admin/AdminGuideEditor";
 import AdminBoardEditor from "./pages/admin/AdminBoardEditor";
+import AdminConsultations from "./pages/admin/AdminConsultations";
 import NetSalaryCalculator from "./pages/NetSalaryCalculator";
 import RetirementPensionCalculator from "./pages/RetirementPensionCalculator";
 import ChildcareSupportCalculator from "./pages/ChildcareSupportCalculator";
@@ -84,6 +85,14 @@ function App() {
             element={
               <PrivateRoute>
                 <AdminBoardEditor />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/consultations"
+            element={
+              <PrivateRoute>
+                <AdminConsultations />
               </PrivateRoute>
             }
           />

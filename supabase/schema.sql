@@ -143,8 +143,44 @@ CREATE TRIGGER update_board_posts_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- ================================
+-- 4. Consultation Requests 테이블 (무료 상담 신청)
+-- ================================
+CREATE TABLE consultation_requests (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  contact TEXT NOT NULL,
+  inquiry_type TEXT,
+  content TEXT,
+  source_slug TEXT,
+  status TEXT NOT NULL DEFAULT 'new', -- 'new' | 'checked'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for performance
+CREATE INDEX idx_consultation_requests_created_at ON consultation_requests(created_at DESC);
+CREATE INDEX idx_consultation_requests_status ON consultation_requests(status);
+
+-- Enable RLS
+ALTER TABLE consultation_requests ENABLE ROW LEVEL SECURITY;
+
+-- 비회원도 INSERT 가능 (상담 신청)
+CREATE POLICY "Anyone can submit consultation request"
+  ON consultation_requests FOR INSERT
+  WITH CHECK (true);
+
+-- 인증된 관리자만 조회/수정 가능
+CREATE POLICY "Authenticated users can view consultation requests"
+  ON consultation_requests FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can update consultation requests"
+  ON consultation_requests FOR UPDATE
+  USING (auth.role() = 'authenticated');
+
+-- ================================
 -- Comments for documentation
 -- ================================
 COMMENT ON TABLE guides IS '가이드 메타데이터 (제목, 요약, 키워드 등)';
 COMMENT ON TABLE guide_sections IS '가이드의 각 섹션 (heading, content, bullets 등)';
 COMMENT ON TABLE board_posts IS '게시판 글 (공지사항 등)';
+COMMENT ON TABLE consultation_requests IS '무료 노무·인사 상담 신청 내역';

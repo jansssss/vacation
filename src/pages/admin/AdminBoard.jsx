@@ -80,6 +80,9 @@ const AdminBoard = () => {
               <Link to="/admin/board" className="text-sm font-medium text-blue-700">
                 게시판
               </Link>
+              <Link to="/admin/consultations" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                상담내역
+              </Link>
             </nav>
           </div>
           <button onClick={handleLogout} className="text-sm text-slate-600 hover:text-slate-900">

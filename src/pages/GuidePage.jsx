@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import Breadcrumbs from "../components/Breadcrumbs";
 import ContinueReading from "../components/ContinueReading";
+import ConsultationCTA from "../components/ConsultationCTA";
 import { fetchGuideBySlug } from "../lib/api/guides";
 import { getGuideBySlug } from "../config/guidesRegistry";
 import { GUIDE_TOPIC_MAP, TOPIC_GUIDES } from "../config/contentLinks";
@@ -190,6 +191,9 @@ const GuidePage = () => {
           </Link>
         </section>
       )}
+
+      {/* 무료 상담 신청 CTA */}
+      <ConsultationCTA sourceSlug={guide.slug} />
 
       {/* 관련 가이드 */}
       {relatedGuides.length > 0 && (
