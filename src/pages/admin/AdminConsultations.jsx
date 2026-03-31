@@ -9,11 +9,79 @@ const STATUS_LABEL = {
   checked: { label: '확인 완료', className: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
 };
 
+const DetailModal = ({ row, onClose }) => {
+  if (!row) return null;
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <h2 className="text-base font-semibold text-slate-900">상담 상세</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 transition text-xl leading-none">
+            ×
+          </button>
+        </div>
+        <div className="px-6 py-5 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs font-medium text-slate-400 mb-1">이름</p>
+              <p className="text-sm text-slate-900">{row.name}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-slate-400 mb-1">연락처</p>
+              <p className="text-sm text-slate-900">{row.contact}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-slate-400 mb-1">문의 유형</p>
+              <p className="text-sm text-slate-900">{row.inquiry_type || '—'}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-slate-400 mb-1">접수일</p>
+              <p className="text-sm text-slate-900">
+                {new Date(row.created_at).toLocaleString('ko-KR', {
+                  year: 'numeric', month: '2-digit', day: '2-digit',
+                  hour: '2-digit', minute: '2-digit',
+                })}
+              </p>
+            </div>
+          </div>
+          {row.source_slug && (
+            <div>
+              <p className="text-xs font-medium text-slate-400 mb-1">출처 가이드</p>
+              <p className="text-sm text-blue-600">{row.source_slug}</p>
+            </div>
+          )}
+          <div>
+            <p className="text-xs font-medium text-slate-400 mb-1">문의 내용</p>
+            <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-wrap bg-slate-50 rounded-xl p-4 min-h-[80px]">
+              {row.content || '(내용 없음)'}
+            </p>
+          </div>
+        </div>
+        <div className="px-6 py-4 border-t border-slate-100 flex justify-end">
+          <button
+            onClick={onClose}
+            className="rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-medium hover:bg-slate-700 transition"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AdminConsultations = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // 'all' | 'new' | 'checked'
+  const [selectedRow, setSelectedRow] = useState(null);
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -76,6 +144,7 @@ const AdminConsultations = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <DetailModal row={selectedRow} onClose={() => setSelectedRow(null)} />
       <Seo title="상담 내역" description="관리자 - 상담 내역" path="/admin/consultations" robots="noindex,nofollow" />
 
       <header className="bg-white border-b border-slate-200">
@@ -191,7 +260,12 @@ const AdminConsultations = () => {
                         </td>
                         <td className="px-5 py-4 text-sm text-slate-600 max-w-xs">
                           {row.content ? (
-                            <p className="line-clamp-2 leading-relaxed">{row.content}</p>
+                            <button
+                              onClick={() => setSelectedRow(row)}
+                              className="line-clamp-2 leading-relaxed text-left hover:text-blue-600 transition cursor-pointer"
+                            >
+                              {row.content}
+                            </button>
                           ) : (
                             <span className="text-slate-300">—</span>
                           )}
