@@ -23,19 +23,21 @@ on:
         type: boolean
 
   schedule:
-    # 매일 KST 08:00 트리거 (UTC 23:00 전날) → 랜덤 딜레이로 실제 발행은 08:00~10:00 사이
+    # KST 08:00 트리거 (UTC 23:00 전날) → 랜덤 딜레이로 실제 발행은 08:00~10:00 사이
     - cron: "0 23 * * *"
+    # KST 16:00 트리거 (UTC 07:00) → 랜덤 딜레이로 실제 발행은 16:00~18:00 사이
+    - cron: "0 7 * * *"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Random delay (KST 08:00~10:00 사이 분단위 랜덤 실행)
+      - name: Random delay (트리거 후 0~10분 사이 1분 단위 랜덤 실행)
         if: github.event_name == 'schedule'
         run: |
-          DELAY=$((RANDOM % 7200))
-          echo "대기 시간: ${DELAY}초 (약 $(( DELAY / 60 ))분)"
+          DELAY=$(( (RANDOM % 11) * 60 ))
+          echo "대기 시간: ${DELAY}초 ($(( DELAY / 60 ))분)"
           sleep $DELAY
 
       - name: Checkout
