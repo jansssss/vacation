@@ -1,6 +1,6 @@
 """
-Perplexity sonar-pro로 오늘의 한국 노무/근로 인기 이슈 조사
-- 1회 호출로 주제 선정 + 핵심 데이터 수집
+Tavily Search + OpenAI로 오늘의 한국 노무/근로 인기 이슈 조사
+- Tavily로 실시간 검색 → OpenAI로 JSON 포맷
 """
 from __future__ import annotations
 
@@ -10,11 +10,36 @@ from urllib.error import HTTPError
 from datetime import date
 
 
-class PerplexityResearcher:
-    API_URL = "https://api.perplexity.ai/chat/completions"
+class TavilyResearcher:
+    TAVILY_URL = "https://api.tavily.com/search"
+    OPENAI_URL = "https://api.openai.com/v1/chat/completions"
 
-    def __init__(self, api_key: str) -> None:
-        self.api_key = api_key
+    def __init__(self, tavily_api_key: str, openai_api_key: str, openai_model: str = "gpt-4o-mini") -> None:
+        self.tavily_api_key = tavily_api_key
+        self.openai_api_key = openai_api_key
+        self.openai_model = openai_model
+
+    def _tavily_search(self, query: str) -> dict:
+        payload = {
+            "api_key": self.tavily_api_key,
+            "query": query,
+            "search_depth": "advanced",
+            "include_answer": True,
+            "max_results": 5,
+        }
+        raw_body = json.dumps(payload).encode("utf-8")
+        req = request.Request(
+            self.TAVILY_URL,
+            data=raw_body,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with request.urlopen(req, timeout=60) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except HTTPError as e:
+            body = e.read().decode("utf-8")
+            raise RuntimeError(f"Tavily HTTP {e.code}: {body}") from e
 
     def research_today(self, published_topics: list[str] | None = None) -> dict:
         """
@@ -34,24 +59,34 @@ class PerplexityResearcher:
                 "카테고리가 같더라도 다른 각도나 세부 주제를 선택해야 합니다."
             )
 
+        # Step 1: Tavily 실시간 검색
+        query = f"대한민국 노무 근로 최신 이슈 뉴스 {today}"
+        search_results = self._tavily_search(query)
+        answer = search_results.get("answer", "")
+        snippets = "\n".join(
+            f"- [{r['title']}]({r['url']}): {r['content'][:300]}"
+            for r in search_results.get("results", [])
+        )
+        context = f"[검색 요약]\n{answer}\n\n[주요 기사]\n{snippets}"
+
+        # Step 2: OpenAI로 JSON 포맷
         payload = {
-            "model": "sonar-pro",
+            "model": self.openai_model,
             "messages": [
                 {
                     "role": "system",
                     "content": (
                         "당신은 대한민국 노무/근로 전문 리서처입니다. "
-                        "오늘 네이버·구글에서 가장 화제가 되는 노무·근로 이슈를 파악하고, "
-                        "해당 주제에 대한 심층 데이터를 수집합니다. "
-                        "연차, 퇴직금, 최저임금, 근로계약, 육아휴직, 해고, 임금체불, 4대보험 등 실무 이슈를 다룹니다. "
-                        "모든 수치는 실제 출처(기관명+연도+법령명)와 함께 제공합니다."
+                        "주어진 검색 결과를 분석하여 정확한 JSON 형식으로 응답합니다. "
+                        "연차, 퇴직금, 최저임금, 근로계약, 육아휴직, 해고, 임금체불, 4대보험 등 실무 이슈를 다룹니다."
                     ),
                 },
                 {
                     "role": "user",
                     "content": (
-                        f"오늘({today}) 대한민국에서 가장 화제가 되는 노무·근로 이슈를 1개 선정하고, "
+                        f"오늘({today}) 아래 검색 결과를 바탕으로 노무·근로 이슈를 1개 선정하고, "
                         "아래 형식의 JSON으로만 응답하세요. JSON 외 다른 텍스트는 출력하지 마세요.\n\n"
+                        f"[검색 결과]\n{context}\n\n"
                         "{\n"
                         '  "topic": "이슈 제목 (한국어, 50자 이내)",\n'
                         '  "category": "연차 | 퇴직금 | 최저임금 | 근로계약 | 육아휴직 | 해고 | 임금 | 4대보험 | 노무일반 중 1개",\n'
@@ -64,7 +99,7 @@ class PerplexityResearcher:
                         '  "related_keywords": ["키워드1", "키워드2", "키워드3"]\n'
                         "}\n\n"
                         "요구사항:\n"
-                        "- key_data는 최소 5개 이상 (수치 또는 법 조항 필수)\n"
+                        "- key_data는 최소 3개 이상 (수치 또는 법 조항 필수)\n"
                         "- 고용노동부, 근로기준법, 대법원 판례 등 국내 기준 우선\n"
                         "- 추측이나 불확실한 내용 금지"
                         f"{exclude_block}"
@@ -77,10 +112,10 @@ class PerplexityResearcher:
 
         raw_body = json.dumps(payload).encode("utf-8")
         req = request.Request(
-            self.API_URL,
+            self.OPENAI_URL,
             data=raw_body,
             headers={
-                "Authorization": f"Bearer {self.api_key}",
+                "Authorization": f"Bearer {self.openai_api_key}",
                 "Content-Type": "application/json",
             },
             method="POST",
@@ -96,4 +131,4 @@ class PerplexityResearcher:
                 return json.loads(content.strip())
         except HTTPError as e:
             body = e.read().decode("utf-8")
-            raise RuntimeError(f"Perplexity HTTP {e.code}: {body}") from e
+            raise RuntimeError(f"OpenAI HTTP {e.code}: {body}") from e

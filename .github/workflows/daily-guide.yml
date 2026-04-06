@@ -52,14 +52,14 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ inputs.model || secrets.OPENAI_MODEL || 'gpt-5.4-mini' }}
-          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GUIDES_PER_RUN: ${{ inputs.count || '1' }}
         run: |
           printf 'OPENAI_API_KEY=%s\n' "$OPENAI_API_KEY" >> .env.local
           printf 'OPENAI_MODEL=%s\n' "$OPENAI_MODEL" >> .env.local
-          printf 'PERPLEXITY_API_KEY=%s\n' "$PERPLEXITY_API_KEY" >> .env.local
+          printf 'TAVILY_API_KEY=%s\n' "$TAVILY_API_KEY" >> .env.local
           printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL" >> .env.local
           printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY" >> .env.local
           printf 'GUIDES_PER_RUN=%s\n' "$GUIDES_PER_RUN" >> .env.local

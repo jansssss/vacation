@@ -15,7 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.pipeline.config import load_config
-from scripts.pipeline.researcher import PerplexityResearcher
+from scripts.pipeline.researcher import TavilyResearcher
 from scripts.pipeline.writer import GuideWriter
 from scripts.pipeline.publisher import SupabasePublisher
 
@@ -42,8 +42,8 @@ def main() -> None:
     missing = []
     if not config.openai_api_key:
         missing.append("OPENAI_API_KEY")
-    if not config.perplexity_api_key:
-        missing.append("PERPLEXITY_API_KEY")
+    if not config.tavily_api_key:
+        missing.append("TAVILY_API_KEY")
     if not args.dry_run:
         if not config.supabase_url:
             missing.append("SUPABASE_URL")
@@ -54,7 +54,7 @@ def main() -> None:
         sys.exit(1)
 
     # ── 파이프라인 초기화 ──────────────────────────
-    researcher = PerplexityResearcher(config.perplexity_api_key)
+    researcher = TavilyResearcher(config.tavily_api_key, config.openai_api_key, model)
     writer = GuideWriter(
         api_key=config.openai_api_key,
         model=model,
@@ -79,8 +79,8 @@ def main() -> None:
         print(f"\n{'='*50}", flush=True)
         print(f"[PIPELINE] {i+1}/{count}번째 가이드 생성 시작", flush=True)
 
-        # STEP 1: Perplexity 리서치
-        print("[STEP 1] Perplexity 리서치 중...", flush=True)
+        # STEP 1: Tavily 리서치
+        print("[STEP 1] Tavily 리서치 중...", flush=True)
         try:
             research = researcher.research_today(published_topics=published_topics)
             print(f"[STEP 1] 완료 - 주제: {research['topic']}", flush=True)
