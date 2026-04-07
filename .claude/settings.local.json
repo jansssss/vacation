@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//f/개인//**)",
+      "Read(//f//**)",
+      "Bash(cat /f/개인/blogger/src/*.py)"
+    ]
+  }
+}
