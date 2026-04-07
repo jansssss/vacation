@@ -1,72 +1,92 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { guidesRegistry, getGuideBySlug } from '../../../src/config/guidesRegistry'
+import { getGuideBySlug } from '../../../lib/guides'
+import { guidesRegistry } from '../../../src/config/guidesRegistry'
+
+export const revalidate = 3600
+export const dynamicParams = true // 빌드 후 추가된 Supabase 가이드도 처리
 
 export async function generateStaticParams() {
-  return guidesRegistry.map((guide) => ({ slug: guide.slug }))
+  return guidesRegistry.map((g) => ({ slug: g.slug }))
 }
 
 export async function generateMetadata({ params }) {
-  const guide = getGuideBySlug(params.slug)
+  const guide = await getGuideBySlug(params.slug)
   if (!guide) return {}
   return {
     title: guide.title,
     description: guide.summary,
-    alternates: { canonical: `https://e-work.kr/guides/${guide.slug}` },
+    alternates: { canonical: `https://e-work.kr/guides/${params.slug}` },
   }
 }
 
-function renderSection(section, index) {
-  const parts = []
+function renderRegistrySections(sections) {
+  return sections.map((section, index) => {
+    const parts = []
 
-  if (section.heading) {
-    parts.push(
-      <h2 key={`h-${index}`} className="text-xl font-semibold text-slate-800 mb-3 mt-2">
-        {section.heading}
-      </h2>
-    )
-  }
-
-  if (section.content) {
-    section.content.split(/\n\n/).forEach((paragraph, pi) => {
+    if (section.heading) {
       parts.push(
-        <p key={`p1-${index}-${pi}`} className="mb-3 text-sm leading-relaxed text-slate-700">
-          {paragraph.split('\n').map((line, li) => (
-            <span key={li}>{line}{li < paragraph.split('\n').length - 1 && <br />}</span>
-          ))}
-        </p>
+        <h2 key={`h-${index}`} className="text-xl font-semibold text-slate-800 mb-3 mt-2">
+          {section.heading}
+        </h2>
       )
-    })
-  }
+    }
 
-  if (section.bullets?.length) {
-    parts.push(
-      <ul key={`ul-${index}`} className="list-disc list-inside space-y-1 mb-3 text-sm text-slate-700">
-        {section.bullets.map((b, bi) => (
-          <li key={bi}>{b}</li>
-        ))}
-      </ul>
-    )
-  }
+    if (section.content) {
+      section.content.split(/\n\n/).forEach((paragraph, pi) => {
+        parts.push(
+          <p key={`p1-${index}-${pi}`} className="mb-3 text-sm leading-relaxed text-slate-700">
+            {paragraph}
+          </p>
+        )
+      })
+    }
 
-  if (section.content2) {
-    section.content2.split(/\n\n/).forEach((paragraph, pi) => {
+    if (section.bullets?.length) {
       parts.push(
-        <p key={`p2-${index}-${pi}`} className="mb-3 text-sm leading-relaxed text-slate-700">
-          {paragraph.split('\n').map((line, li) => (
-            <span key={li}>{line}{li < paragraph.split('\n').length - 1 && <br />}</span>
-          ))}
-        </p>
+        <ul key={`ul-${index}`} className="list-disc list-inside space-y-1 mb-3 text-sm text-slate-700">
+          {section.bullets.map((b, bi) => <li key={bi}>{b}</li>)}
+        </ul>
       )
-    })
-  }
+    }
 
-  return parts
+    if (section.content2) {
+      section.content2.split(/\n\n/).forEach((paragraph, pi) => {
+        parts.push(
+          <p key={`p2-${index}-${pi}`} className="mb-3 text-sm leading-relaxed text-slate-700">
+            {paragraph}
+          </p>
+        )
+      })
+    }
+
+    return (
+      <section key={index} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+        {parts}
+      </section>
+    )
+  })
 }
 
-export default function GuidePage({ params }) {
-  const guide = getGuideBySlug(params.slug)
+function renderSupabaseSections(sections) {
+  return sections.map((section, index) => (
+    <section key={index} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+      <div
+        className="guide-richtext text-sm text-slate-700"
+        dangerouslySetInnerHTML={{ __html: section.html_content ?? '' }}
+      />
+    </section>
+  ))
+}
+
+export default async function GuidePage({ params }) {
+  const guide = await getGuideBySlug(params.slug)
   if (!guide) notFound()
+
+  const sections =
+    guide.source === 'supabase'
+      ? renderSupabaseSections(guide.sections || [])
+      : renderRegistrySections(guide.sections || [])
 
   return (
     <div className="space-y-8">
@@ -82,16 +102,12 @@ export default function GuidePage({ params }) {
         <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">실무 가이드</p>
         <h1 className="mt-2 text-3xl font-semibold text-slate-900">{guide.title}</h1>
         <p className="mt-3 text-slate-600">{guide.summary}</p>
-        <p className="mt-4 text-xs text-slate-400">업데이트 {guide.updatedAt}</p>
+        <p className="mt-4 text-xs text-slate-400">
+          업데이트 {guide.updated_at?.slice(0, 10) ?? ''}
+        </p>
       </section>
 
-      <div className="space-y-6">
-        {guide.sections.map((section, index) => (
-          <section key={index} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-            {renderSection(section, index)}
-          </section>
-        ))}
-      </div>
+      <div className="space-y-6">{sections}</div>
 
       <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
         <p className="text-slate-700 text-sm font-medium">내 조건으로 직접 계산해보세요</p>

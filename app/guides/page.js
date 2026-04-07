@@ -1,5 +1,7 @@
 import Link from 'next/link'
-import { guidesRegistry } from '../../src/config/guidesRegistry'
+import { getAllGuides } from '../../lib/guides'
+
+export const revalidate = 3600 // 1시간마다 재생성
 
 export const metadata = {
   title: '노무 가이드',
@@ -13,9 +15,10 @@ const childcareGuideSlugs = [
   'workload-sharing-support-2026',
 ]
 
-export default function GuidesPage() {
-  const childcareGuides = guidesRegistry.filter((g) => childcareGuideSlugs.includes(g.slug))
-  const otherGuides = guidesRegistry.filter((g) => !childcareGuideSlugs.includes(g.slug))
+export default async function GuidesPage() {
+  const guides = await getAllGuides()
+  const childcareGuides = guides.filter((g) => childcareGuideSlugs.includes(g.slug))
+  const otherGuides = guides.filter((g) => !childcareGuideSlugs.includes(g.slug))
 
   return (
     <div className="space-y-8">
@@ -62,7 +65,7 @@ export default function GuidesPage() {
               href={`/guides/${guide.slug}`}
               className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <p className="text-xs text-slate-500">업데이트 {guide.updatedAt}</p>
+              <p className="text-xs text-slate-500">업데이트 {guide.updated_at?.slice(0, 10) ?? ''}</p>
               <h3 className="mt-2 text-xl font-semibold text-slate-900">{guide.title}</h3>
               <p className="mt-2 text-sm text-slate-600">{guide.summary}</p>
               <p className="mt-4 text-sm font-semibold text-blue-700">읽기 →</p>
