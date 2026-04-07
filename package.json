@@ -1,123 +1,21 @@
 {
-  "name": "project",
+  "name": "ework",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@tiptap/extension-color": "^3.18.0",
-    "@tiptap/extension-image": "^3.18.0",
-    "@tiptap/extension-link": "^3.17.1",
-    "@tiptap/extension-placeholder": "^3.17.1",
-    "@tiptap/extension-text-align": "^3.18.0",
-    "@tiptap/extension-text-style": "^3.18.0",
-    "@tiptap/extension-underline": "^3.17.1",
-    "@tiptap/react": "^3.17.1",
-    "@tiptap/starter-kit": "^3.17.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "next": "14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.5",
-    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.3"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "prebuild": "node scripts/generate-seo.mjs",
-    "build": "react-scripts build",
-    "postbuild": "node scripts/run-react-snap.mjs",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "reactSnap": {
-    "inlineCss": true,
-    "crawl": false,
-    "include": [
-      "/",
-      "/calculators",
-      "/calculators/annual-leave",
-      "/calculators/severance-pay",
-      "/calculators/retirement-pension",
-      "/calculators/childcare-support",
-      "/calculators/net-salary",
-      "/net-salary/200",
-      "/net-salary/250",
-      "/net-salary/300",
-      "/net-salary/350",
-      "/net-salary/400",
-      "/net-salary/450",
-      "/net-salary/500",
-      "/net-salary/550",
-      "/net-salary/600",
-      "/annual-leave/join-month/01",
-      "/annual-leave/join-month/02",
-      "/annual-leave/join-month/03",
-      "/annual-leave/join-month/04",
-      "/annual-leave/join-month/05",
-      "/annual-leave/join-month/06",
-      "/annual-leave/join-month/07",
-      "/annual-leave/join-month/08",
-      "/annual-leave/join-month/09",
-      "/annual-leave/join-month/10",
-      "/annual-leave/join-month/11",
-      "/annual-leave/join-month/12",
-      "/retirement/tenure/1y",
-      "/retirement/tenure/2y",
-      "/retirement/tenure/3y",
-      "/retirement/tenure/3y6m",
-      "/retirement/tenure/5y",
-      "/retirement/tenure/7y",
-      "/retirement/tenure/10y",
-      "/retirement/tenure/15y",
-      "/retirement/tenure/20y",
-      "/retirement-pension/scenario/conservative",
-      "/retirement-pension/scenario/balanced",
-      "/retirement-pension/scenario/growth",
-      "/guides",
-      "/guides/why-second-year-25-days",
-      "/guides/first-year-26-days",
-      "/guides/annual-leave-basics",
-      "/guides/annual-leave-carryover",
-      "/guides/annual-leave-encashment",
-      "/guides/severance-pay-eligibility",
-      "/guides/severance-pay-average-wage",
-      "/guides/severance-pay-docs",
-      "/guides/payroll-slip-reading",
-      "/guides/unpaid-leave-impact",
-      "/guides/childcare-leave-support-2026",
-      "/guides/reduced-hours-support-2026",
-      "/guides/childcare-support-faq-2026",
-      "/guides/workload-sharing-support-2026"
-    ],
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }
