@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
+import AdminNav from '../_components/AdminNav'
+
+const PAGE_SIZE = 10
 
 const STATUS_LABEL = {
   new: { label: '미확인', className: 'bg-amber-50 text-amber-700 border border-amber-200' },
@@ -62,36 +65,12 @@ function DetailModal({ row, onClose }) {
   )
 }
 
-function AdminNav({ newCount, onLogout }) {
-  return (
-    <header className="bg-white border-b border-slate-200">
-      <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white text-sm font-bold">eW</span>
-            관리자
-          </Link>
-          <nav className="flex gap-4">
-            <Link href="/admin/guides" className="text-sm font-medium text-slate-600 hover:text-slate-900">가이드</Link>
-            <Link href="/admin/consultations" className="text-sm font-medium text-blue-700 flex items-center gap-1.5">
-              상담내역
-              {newCount > 0 && (
-                <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{newCount}</span>
-              )}
-            </Link>
-          </nav>
-        </div>
-        <button onClick={onLogout} className="text-sm text-slate-600 hover:text-slate-900">로그아웃</button>
-      </div>
-    </header>
-  )
-}
-
 export default function AdminConsultationsPage() {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [filter, setFilter] = useState('all')
+  const [page, setPage] = useState(1)
   const [selectedRow, setSelectedRow] = useState(null)
   const { user, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
@@ -120,6 +99,11 @@ export default function AdminConsultationsPage() {
     load()
   }, [user])
 
+  const handleFilterChange = (key) => {
+    setFilter(key)
+    setPage(1)
+  }
+
   const handleStatusToggle = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'new' ? 'checked' : 'new'
     try {
@@ -135,7 +119,7 @@ export default function AdminConsultationsPage() {
     try { await signOut(); router.push('/admin') } catch {}
   }
 
-  if (authLoading || loading) {
+  if (authLoading || (loading && rows.length === 0)) {
     return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="text-slate-600">불러오는 중...</div></div>
   }
 
@@ -143,11 +127,13 @@ export default function AdminConsultationsPage() {
 
   const filtered = filter === 'all' ? rows : rows.filter((r) => r.status === filter)
   const newCount = rows.filter((r) => r.status === 'new').length
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   return (
     <div className="min-h-screen bg-slate-50">
       <DetailModal row={selectedRow} onClose={() => setSelectedRow(null)} />
-      <AdminNav newCount={newCount} onLogout={handleLogout} />
+      <AdminNav activeTab="consultations" newCount={newCount} onLogout={handleLogout} />
 
       <div className="mx-auto max-w-6xl px-4 py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -157,7 +143,7 @@ export default function AdminConsultationsPage() {
           </div>
           <div className="flex gap-1 rounded-xl bg-white border border-slate-200 p-1 self-start">
             {[{ key: 'all', label: '전체' }, { key: 'new', label: '미확인' }, { key: 'checked', label: '확인 완료' }].map(({ key, label }) => (
-              <button key={key} onClick={() => setFilter(key)}
+              <button key={key} onClick={() => handleFilterChange(key)}
                 className={`rounded-lg px-4 py-1.5 text-sm font-medium transition ${filter === key ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}>
                 {label}
               </button>
@@ -173,55 +159,82 @@ export default function AdminConsultationsPage() {
               {filter === 'all' ? '아직 접수된 상담이 없습니다.' : '해당 상태의 상담이 없습니다.'}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-100">
-                  <tr>
-                    {['접수일', '이름', '연락처', '문의 유형', '문의 내용', '출처 가이드', '상태'].map((h) => (
-                      <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filtered.map((row) => {
-                    const statusInfo = STATUS_LABEL[row.status] || STATUS_LABEL.new
-                    return (
-                      <tr key={row.id} className="hover:bg-slate-50 transition">
-                        <td className="px-5 py-4 text-sm text-slate-500 whitespace-nowrap">
-                          {new Date(row.created_at).toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' })}
-                          <span className="block text-xs text-slate-400">
-                            {new Date(row.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </td>
-                        <td className="px-5 py-4 text-sm font-medium text-slate-900 whitespace-nowrap">{row.name}</td>
-                        <td className="px-5 py-4 text-sm text-slate-700 whitespace-nowrap">{row.contact}</td>
-                        <td className="px-5 py-4 text-sm text-slate-600 whitespace-nowrap">{row.inquiry_type || <span className="text-slate-300">—</span>}</td>
-                        <td className="px-5 py-4 text-sm text-slate-600 max-w-xs">
-                          {row.content ? (
-                            <button onClick={() => setSelectedRow(row)} className="line-clamp-2 leading-relaxed text-left hover:text-blue-600 transition cursor-pointer">
-                              {row.content}
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                      {['접수일', '이름', '연락처', '문의 유형', '문의 내용', '상태'].map((h) => (
+                        <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {paginated.map((row) => {
+                      const statusInfo = STATUS_LABEL[row.status] || STATUS_LABEL.new
+                      return (
+                        <tr key={row.id} className="hover:bg-slate-50 transition">
+                          <td className="px-5 py-4 text-sm text-slate-500 whitespace-nowrap">
+                            {new Date(row.created_at).toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' })}
+                            <span className="block text-xs text-slate-400">
+                              {new Date(row.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </td>
+                          <td className="px-5 py-4 text-sm font-medium text-slate-900 whitespace-nowrap">{row.name}</td>
+                          <td className="px-5 py-4 text-sm text-slate-700 whitespace-nowrap">{row.contact}</td>
+                          <td className="px-5 py-4 text-sm text-slate-600 whitespace-nowrap">{row.inquiry_type || <span className="text-slate-300">—</span>}</td>
+                          <td className="px-5 py-4 text-sm text-slate-600 max-w-xs">
+                            {row.content ? (
+                              <button onClick={() => setSelectedRow(row)} className="line-clamp-2 leading-relaxed text-left hover:text-blue-600 transition cursor-pointer">
+                                {row.content}
+                              </button>
+                            ) : (
+                              <button onClick={() => setSelectedRow(row)} className="text-slate-300 hover:text-blue-500 transition text-xs">
+                                상세보기
+                              </button>
+                            )}
+                          </td>
+                          <td className="px-5 py-4 whitespace-nowrap">
+                            <button onClick={() => handleStatusToggle(row.id, row.status)}
+                              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition hover:opacity-70 ${statusInfo.className}`}>
+                              {statusInfo.label}
                             </button>
-                          ) : <span className="text-slate-300">—</span>}
-                        </td>
-                        <td className="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">
-                          {row.source_slug ? (
-                            <Link href={`/guides/${row.source_slug}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
-                              {row.source_slug}
-                            </Link>
-                          ) : <span className="text-slate-300">—</span>}
-                        </td>
-                        <td className="px-5 py-4 whitespace-nowrap">
-                          <button onClick={() => handleStatusToggle(row.id, row.status)}
-                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition hover:opacity-70 ${statusInfo.className}`}>
-                            {statusInfo.label}
-                          </button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
+                  <span className="text-xs text-slate-500">
+                    {filtered.length}건 중 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}번째
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      disabled={page === 1}
+                      onClick={() => setPage(p => p - 1)}
+                      className="px-3 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40 hover:bg-slate-50 transition">
+                      이전
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                      <button key={p} onClick={() => setPage(p)}
+                        className={`px-3 py-1.5 text-sm rounded-lg border transition ${p === page ? 'bg-slate-900 text-white border-slate-900' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                        {p}
+                      </button>
+                    ))}
+                    <button
+                      disabled={page >= totalPages}
+                      onClick={() => setPage(p => p + 1)}
+                      className="px-3 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40 hover:bg-slate-50 transition">
+                      다음
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
