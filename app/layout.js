@@ -58,6 +58,7 @@ export default function RootLayout({ children }) {
               <Link href="/terms" className="hover:text-slate-700">이용약관</Link>
               <Link href="/disclaimer" className="hover:text-slate-700">면책</Link>
               <Link href="/editorial-policy" className="hover:text-slate-700">콘텐츠 정책</Link>
+              <Link href="/admin" className="hover:text-slate-700">관리자</Link>
             </div>
             <div className="mt-3 text-xs text-slate-400">
               운영자: 이워크 · 연락처: goooods@naver.com
