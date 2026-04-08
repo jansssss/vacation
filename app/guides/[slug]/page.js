@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getGuideBySlug } from '../../../lib/guides'
 import { guidesRegistry } from '../../../src/config/guidesRegistry'
+import { GUIDE_TOPIC_MAP } from '../../../src/config/contentLinks'
+import ConsultationCTA from '../../../components/ConsultationCTA'
 
 export const revalidate = 3600
 export const dynamicParams = true // 빌드 후 추가된 Supabase 가이드도 처리
@@ -83,6 +85,8 @@ export default async function GuidePage({ params }) {
   const guide = await getGuideBySlug(params.slug)
   if (!guide) notFound()
 
+  const topicInfo = GUIDE_TOPIC_MAP[params.slug]
+
   const sections =
     guide.source === 'supabase'
       ? renderSupabaseSections(guide.sections || [])
@@ -109,15 +113,31 @@ export default async function GuidePage({ params }) {
 
       <div className="space-y-6">{sections}</div>
 
-      <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
-        <p className="text-slate-700 text-sm font-medium">내 조건으로 직접 계산해보세요</p>
-        <Link
-          href="/calculators"
-          className="inline-block rounded-full bg-blue-600 text-white px-8 py-2.5 text-sm font-semibold hover:bg-blue-700 transition-colors"
-        >
-          계산기 바로 사용하기 →
-        </Link>
-      </section>
+      {/* 계산기 CTA - 가이드별 맞는 계산기 */}
+      {topicInfo ? (
+        <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
+          <p className="text-slate-700 text-sm font-medium">내 조건으로 직접 계산해보세요</p>
+          <Link
+            href={topicInfo.calcPath}
+            className="inline-block rounded-full bg-blue-600 text-white px-8 py-2.5 text-sm font-semibold hover:bg-blue-700 transition-colors"
+          >
+            {topicInfo.calcLabel}로 계산하기 →
+          </Link>
+        </section>
+      ) : (
+        <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center space-y-3">
+          <p className="text-slate-700 text-sm font-medium">내 조건으로 직접 계산해보세요</p>
+          <Link
+            href="/calculators"
+            className="inline-block rounded-full bg-blue-600 text-white px-8 py-2.5 text-sm font-semibold hover:bg-blue-700 transition-colors"
+          >
+            계산기 바로 사용하기 →
+          </Link>
+        </section>
+      )}
+
+      {/* 무료 상담 신청 CTA */}
+      <ConsultationCTA sourceSlug={params.slug} />
 
       <div className="text-center">
         <Link href="/guides" className="text-sm text-blue-700 hover:text-blue-900">
