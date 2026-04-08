@@ -1,4 +1,7 @@
 import Link from 'next/link'
+import { getAllGuides } from '../lib/guides'
+
+export const revalidate = 3600
 
 export const metadata = {
   title: '2026 노무 대응 특집 | e-work.kr',
@@ -57,7 +60,8 @@ const topicChips = [
   { label: '퇴직/연금', text: '휴직, 단축근무, 계속근로기간 이슈를 연결해서 봅니다.' },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const latestGuides = (await getAllGuides()).slice(0, 3)
   return (
     <div className="space-y-14">
       {/* Hero */}
@@ -184,6 +188,34 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* 최신 가이드 */}
+      {latestGuides.length > 0 && (
+        <section className="space-y-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-900">최신 가이드</h2>
+            <Link href="/guides" className="text-sm font-medium text-blue-700 hover:text-blue-900">
+              전체 보기 →
+            </Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {latestGuides.map((g) => (
+              <Link
+                key={g.slug}
+                href={`/guides/${g.slug}`}
+                className="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  NEW
+                </span>
+                <h3 className="mt-3 text-base font-bold text-slate-900 line-clamp-2">{g.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-slate-500 line-clamp-2">{g.summary}</p>
+                <p className="mt-4 text-xs font-semibold text-emerald-700">읽기 →</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }
