@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '../../../../../contexts/AuthContext'
 import { supabase } from '../../../../../lib/supabase'
 import AdminNav from '../../../_components/AdminNav'
+import SectionEditor from '../../../_components/SectionEditor'
 
 export default function AdminGuideEditPage() {
   const { id } = useParams()
@@ -195,7 +196,7 @@ export default function AdminGuideEditPage() {
             <p className="text-sm text-slate-400">섹션이 없습니다.</p>
           )}
           {sections.map((section, idx) => (
-            <div key={idx} className="border border-slate-100 rounded-xl p-4 space-y-2">
+            <div key={idx} className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-slate-400">섹션 {idx + 1}</span>
                 <button
@@ -205,12 +206,9 @@ export default function AdminGuideEditPage() {
                   삭제
                 </button>
               </div>
-              <textarea
+              <SectionEditor
                 value={section.html_content}
-                onChange={e => updateSection(idx, e.target.value)}
-                rows={8}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 resize-y"
-                placeholder="HTML 콘텐츠를 입력하세요"
+                onChange={value => updateSection(idx, value)}
               />
             </div>
           ))}
