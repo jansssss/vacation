@@ -60,7 +60,7 @@ export default function AdminGuidesPage() {
       const from = (page - 1) * PAGE_SIZE
       const to = from + PAGE_SIZE - 1
       const [guidesRes, consultRes] = await Promise.all([
-        supabase.from('guides').select('*', { count: 'exact' }).order('updated_at', { ascending: false }).range(from, to),
+        supabase.from('guides').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to),
         supabase.from('consultation_requests').select('id', { count: 'exact' }).eq('status', 'new'),
       ])
       if (guidesRes.error) throw guidesRes.error

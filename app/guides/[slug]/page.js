@@ -4,6 +4,7 @@ import { getGuideBySlug } from '../../../lib/guides'
 import { guidesRegistry } from '../../../src/config/guidesRegistry'
 import { GUIDE_TOPIC_MAP } from '../../../src/config/contentLinks'
 import ConsultationCTA from '../../../components/ConsultationCTA'
+import AdminGuideBar from '../../../components/AdminGuideBar'
 
 export const revalidate = 3600
 export const dynamicParams = true // 빌드 후 추가된 Supabase 가이드도 처리
@@ -144,6 +145,8 @@ export default async function GuidePage({ params }) {
           ← 가이드 목록으로 돌아가기
         </Link>
       </div>
+
+      {guide.source === 'supabase' && <AdminGuideBar guideId={guide.id} />}
     </div>
   )
 }

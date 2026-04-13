@@ -95,8 +95,7 @@ export default function AdminGuideEditPage() {
       }
 
       await revalidateGuide(slug.trim())
-      setSuccess(true)
-      setTimeout(() => setSuccess(false), 3000)
+      router.push(`/guides/${slug.trim()}`)
     } catch (e) {
       setError(`저장 중 오류: ${e.message}`)
     } finally {
