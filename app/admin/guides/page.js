@@ -150,6 +150,7 @@ export default function AdminGuidesPage() {
                             <td className="px-5 py-4 whitespace-nowrap">
                               <div className="flex gap-2">
                                 <Link href={`/guides/${guide.slug}`} target="_blank" className="text-xs text-blue-600 hover:underline">보기</Link>
+                                <Link href={`/admin/guides/edit/${guide.id}`} className="text-xs text-slate-600 hover:underline">수정</Link>
                                 <button onClick={() => setDeleteTarget(guide)} className="text-xs text-red-500 hover:underline">삭제</button>
                               </div>
                             </td>
