@@ -1,3 +1,87 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* guide-richtext: Supabase 가이드 본문 렌더링 스타일 */
+.guide-richtext p {
+  margin: 0.6rem 0;
+  line-height: 1.75;
+}
+
+.guide-richtext h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+  color: #1e293b;
+}
+
+.guide-richtext h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 1rem 0 0.4rem;
+  color: #334155;
+}
+
+.guide-richtext ul,
+.guide-richtext ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.guide-richtext ul {
+  list-style-type: disc;
+}
+
+.guide-richtext ol {
+  list-style-type: decimal;
+}
+
+.guide-richtext ul li,
+.guide-richtext ol li {
+  margin: 0.3rem 0;
+  line-height: 1.7;
+}
+
+.guide-richtext strong {
+  font-weight: 700;
+}
+
+.guide-richtext em {
+  font-style: italic;
+}
+
+.guide-richtext u {
+  text-decoration: underline;
+}
+
+.guide-richtext s {
+  text-decoration: line-through;
+}
+
+.guide-richtext a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.guide-richtext mark {
+  background-color: #fef3c7;
+  padding: 0.1rem 0.2rem;
+  border-radius: 0.2rem;
+}
+
+.guide-richtext blockquote {
+  border-left: 3px solid #cbd5e1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #64748b;
+  font-style: italic;
+}
+
+.guide-richtext code {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.3rem;
+  font-family: monospace;
+  font-size: 0.875em;
+}
