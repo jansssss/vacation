@@ -7,6 +7,7 @@ import { useAuth } from '../../../../../contexts/AuthContext'
 import { supabase } from '../../../../../lib/supabase'
 import AdminNav from '../../../_components/AdminNav'
 import SectionEditor from '../../../_components/SectionEditor'
+import { revalidateGuide } from './actions'
 
 export default function AdminGuideEditPage() {
   const { id } = useParams()
@@ -93,6 +94,7 @@ export default function AdminGuideEditPage() {
         if (insErr) throw insErr
       }
 
+      await revalidateGuide(slug.trim())
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
     } catch (e) {
