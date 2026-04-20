@@ -8,7 +8,7 @@ const navItems = [
   { name: '가이드', href: '/guides' },
 ]
 
-export default function SiteShell({ children }) {
+export default function SiteShell({ children, latestGuideDate }) {
   const pathname = usePathname()
   const isAdmin = pathname.startsWith('/admin')
 
@@ -48,7 +48,7 @@ export default function SiteShell({ children }) {
         <div className="mx-auto w-full max-w-6xl px-4 py-8 text-sm text-slate-500">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="font-medium text-slate-700">노무/근로 유틸 플랫폼</div>
-            <div>기준일: 2026-01-01 · 업데이트: 2026-03-01</div>
+            <div>기준일: 2026-01-01 · 업데이트: {latestGuideDate ?? '2026-03-01'}</div>
           </div>
           <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-500">
             <Link href="/about" className="hover:text-slate-700">소개</Link>

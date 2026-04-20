@@ -1,5 +1,8 @@
 import './globals.css'
 import SiteShell from '../components/SiteShell'
+import { getAllGuides } from '../lib/guides'
+
+export const revalidate = 3600
 
 export const metadata = {
   title: {
@@ -10,11 +13,14 @@ export const metadata = {
   metadataBase: new URL('https://e-work.kr'),
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const guides = await getAllGuides()
+  const latestDate = guides[0]?.created_at?.slice(0, 10) ?? guides[0]?.updated_at?.slice(0, 10) ?? null
+
   return (
     <html lang="ko">
       <body className="bg-slate-50 text-slate-900 antialiased">
-        <SiteShell>{children}</SiteShell>
+        <SiteShell latestGuideDate={latestDate}>{children}</SiteShell>
       </body>
     </html>
   )
