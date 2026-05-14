@@ -1764,7 +1764,7 @@ export const guidesRegistry = [
     slug: "unemployment-benefits",
     title: "실업급여(구직급여) 신청 완벽 가이드: 자격·금액·절차 2026",
     summary: "실업급여 수급 조건부터 신청 절차, 수급액 계산, 수급 중 주의사항까지 2026년 기준으로 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-14",
     sections: [
       {
         heading: "실업급여 수급 조건 4가지",
@@ -1817,7 +1817,7 @@ export const guidesRegistry = [
     slug: "right-to-disconnect",
     title: "퇴근 후 업무 카톡·전화 거부 가능한가? 연결되지 않을 권리 해설",
     summary: "2026년 시행된 근로기준법 개정으로 강화된 '연결되지 않을 권리'의 법적 근거와 실무 대응법을 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-14",
     sections: [
       {
         heading: "연결되지 않을 권리란?",
@@ -1857,7 +1857,7 @@ export const guidesRegistry = [
     slug: "yellow-envelope-act-2026",
     title: "노란봉투법 2026년 시행 — 직장인과 인사 담당자가 알아야 할 것",
     summary: "2026년 3월 시행된 노란봉투법(노동조합법 개정)이 일반 직장인과 인사 담당자의 업무에 어떤 영향을 미치는지 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-13",
     sections: [
       {
         heading: "노란봉투법이란?",
@@ -1893,7 +1893,7 @@ export const guidesRegistry = [
     slug: "health-insurance-after-quit",
     title: "퇴직 후 건강보험 어떻게 되나? 지역가입자 전환 완벽 정리",
     summary: "직장가입자에서 지역가입자로 전환 시 보험료 산정 방식, 절감 방법, 임의계속가입 제도까지 2026년 기준으로 설명합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-13",
     sections: [
       {
         heading: "퇴직 후 건강보험 선택지 3가지",
@@ -1942,7 +1942,7 @@ export const guidesRegistry = [
     slug: "net-salary-calculator-guide",
     title: "연봉 세후 실수령액 계산법: 4대보험·소득세 공제 한눈에 정리 2026",
     summary: "연봉에서 4대보험과 소득세를 공제한 실수령액을 직접 계산하는 방법과 2026년 요율 기준을 안내합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-12",
     sections: [
       {
         heading: "월 실수령액 = 월 급여 - 4대보험 - 소득세 - 주민세",
@@ -1986,7 +1986,7 @@ export const guidesRegistry = [
     slug: "part-time-severance-annual",
     title: "단시간 근로자(파트타임) 퇴직금·연차 계산법: 주 15시간 기준 완벽 정리",
     summary: "주 소정근로시간이 15시간 미만인 초단시간 근로자와 15시간 이상인 단시간 근로자의 퇴직금·연차 발생 기준을 구분하여 설명합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-12",
     sections: [
       {
         heading: "핵심 기준: 주 15시간",
@@ -2026,7 +2026,7 @@ export const guidesRegistry = [
     slug: "workplace-harassment-report",
     title: "직장 내 괴롭힘 신고 절차 A to Z: 신고서 작성부터 처리 결과까지",
     summary: "직장 내 괴롭힘 인정 기준, 신고 방법, 회사 처리 의무, 피해자 보호 제도를 단계별로 안내합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-11",
     sections: [
       {
         heading: "직장 내 괴롭힘 인정 3요소",
@@ -2066,7 +2066,7 @@ export const guidesRegistry = [
     slug: "payslip-mandatory-items",
     title: "임금명세서 필수 기재사항과 교부 의무: 위반 시 과태료 2026",
     summary: "2021년 11월부터 의무화된 임금명세서 교부 제도의 필수 기재항목과 위반 시 제재를 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-10",
     sections: [
       {
         heading: "임금명세서 교부 의무 (근로기준법 제48조)",
@@ -2107,7 +2107,7 @@ export const guidesRegistry = [
     slug: "annual-leave-promotion-rules",
     title: "연차 사용촉진 적법 요건 5가지: 이걸 지켜야 수당 지급 의무 없다",
     summary: "연차 사용촉진 절차가 적법하면 미사용 연차에 대해 수당을 지급하지 않아도 됩니다. 적법 요건 5가지를 실무 관점에서 설명합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-10",
     sections: [
       {
         heading: "연차 사용촉진이란?",
@@ -2142,7 +2142,7 @@ export const guidesRegistry = [
     slug: "severance-irp-comparison",
     title: "퇴직금 IRP 이전 vs 일시금 수령: 세금 차이와 유불리 완벽 비교",
     summary: "퇴직금을 IRP로 이전할 때와 일시금으로 받을 때 세금 차이, 수령 시기별 유불리를 비교합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-09",
     sections: [
       {
         heading: "퇴직금 수령 방법 두 가지",
@@ -2181,7 +2181,7 @@ export const guidesRegistry = [
     slug: "parental-leave-dismissal",
     title: "육아휴직 중 해고 가능한가? 판례로 보는 부당해고 경계선",
     summary: "육아휴직 중 또는 복직 후 해고가 정당한 경우와 부당한 경우를 판례 기준으로 구분합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-08",
     sections: [
       {
         heading: "원칙: 육아휴직 중 해고는 원칙적으로 금지",
@@ -2219,7 +2219,7 @@ export const guidesRegistry = [
     slug: "year-end-leave-expiry",
     title: "연말 연차 소멸 전 처리법: 미사용 연차수당 청구 방법",
     summary: "연차 사용 기간이 끝나기 전 꼭 알아야 할 연차 소멸 기준, 수당 청구 방법, 소멸 시효를 안내합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-08",
     sections: [
       {
         heading: "연차 소멸 기준",
@@ -2257,7 +2257,7 @@ export const guidesRegistry = [
     slug: "workers-day-holiday-pay",
     title: "근로자의 날 5월 1일 출근하면? 휴일근무수당 완벽 계산법",
     summary: "근로자의 날이 법정 유급휴일임을 확인하고, 출근 시 지급해야 하는 휴일근무수당 계산 방법을 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-07",
     sections: [
       {
         heading: "근로자의 날은 법정 유급휴일",
@@ -2296,7 +2296,7 @@ export const guidesRegistry = [
     slug: "unfair-dismissal-remedy-steps",
     title: "부당해고 당했을 때 즉시 해야 할 것: 구제신청 3개월 시효 놓치지 않는 법",
     summary: "부당해고 구제신청 절차, 3개월 시효, 신청 내용 작성 방법, 심문·판정까지 단계별로 안내합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-06",
     sections: [
       {
         heading: "구제신청 시효: 해고 통보일로부터 3개월",
@@ -2336,7 +2336,7 @@ export const guidesRegistry = [
     slug: "parental-late-start",
     title: "육아기 10시 출근제 신청 방법: 조건·급여·거부당했을 때 대응",
     summary: "2026년부터 확대된 육아기 근로시간 단축(10시 출근제)의 신청 조건, 급여 계산, 회사 거부 시 대응법을 안내합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-06",
     sections: [
       {
         heading: "육아기 근로시간 단축 제도란?",
@@ -2376,7 +2376,7 @@ export const guidesRegistry = [
     slug: "freelancer-employment-status",
     title: "프리랜서·특수고용직의 근로자성 판단 기준: 퇴직금·연차 받을 수 있나?",
     summary: "3.3% 사업소득세를 공제받는 프리랜서·특수고용직이 실질적 근로자로 인정받는 판단 기준과 노동법 적용 범위를 설명합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-05",
     sections: [
       {
         heading: "근로자성 판단 기준 (대법원 기준)",
@@ -2419,7 +2419,7 @@ export const guidesRegistry = [
     slug: "comprehensive-wage-2026-changes",
     title: "2026년 포괄임금제 규제 강화 — 내 계약이 위법인지 확인하는 방법",
     summary: "2026년 강화된 포괄임금제 규제의 핵심 내용과, 본인이 현재 포괄임금 계약 하에 있는지 자가 진단하는 방법을 설명합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-04",
     sections: [
       {
         heading: "2026년 변화: 무엇이 달라졌나?",
@@ -2459,7 +2459,7 @@ export const guidesRegistry = [
     slug: "unemployment-while-working",
     title: "실업급여 수급 중 아르바이트 가능한가? 신고 기준과 제재",
     summary: "실업급여 수급 중 부업·아르바이트를 할 수 있는 기준과, 신고 방법, 미신고 적발 시 제재를 설명합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-04",
     sections: [
       {
         heading: "수급 중 취업·부업의 기준",
@@ -2499,7 +2499,7 @@ export const guidesRegistry = [
     slug: "severance-tax-treatment",
     title: "퇴직금 퇴직소득세 계산법: 실제 세금은 얼마나 내나?",
     summary: "퇴직금에 부과되는 퇴직소득세의 계산 구조와 근속연수별 실효세율, 절세 방법을 안내합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-03",
     sections: [
       {
         heading: "퇴직소득세 = 분리과세 (일반 소득세보다 유리)",
@@ -2538,7 +2538,7 @@ export const guidesRegistry = [
     slug: "flexible-work-hours",
     title: "탄력적 근로시간제와 선택적 근로시간제: 유연근무 적용 시 연장수당 기준",
     summary: "탄력적 근로시간제와 선택적 근로시간제의 개념, 도입 요건, 적용 시 연장근로수당 계산 기준을 정리합니다.",
-    updatedAt: RULES_2026.updatedAt,
+    updatedAt: "2026-05-02",
     sections: [
       {
         heading: "탄력적 근로시간제 vs 선택적 근로시간제",
