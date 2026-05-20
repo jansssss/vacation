@@ -18,6 +18,7 @@ from scripts.pipeline.config import load_config
 from scripts.pipeline.researcher import TavilyResearcher
 from scripts.pipeline.writer import GuideWriter
 from scripts.pipeline.publisher import SupabasePublisher
+from scripts.analytics.gsc_query_selector import GSCQuerySelector
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -74,15 +75,25 @@ def main() -> None:
         published_topics = publisher.fetch_published_topics()
         print(f"[PIPELINE] 기발행 주제 {len(published_topics)}개 로드 완료", flush=True)
 
+    # ── GSC 쿼리 선택기 초기화 ────────────────────────
+    gsc_selector: GSCQuerySelector | None = None
+    if config.supabase_url and config.supabase_service_role_key:
+        gsc_selector = GSCQuerySelector(config.supabase_url, config.supabase_service_role_key)
+
     # ── 실행 ────────────────────────────────────────
     for i in range(count):
         print(f"\n{'='*50}", flush=True)
         print(f"[PIPELINE] {i+1}/{count}번째 가이드 생성 시작", flush=True)
 
+        # STEP 0: GSC 시드 쿼리 선택 (있으면)
+        seed_query: str | None = None
+        if gsc_selector:
+            seed_query = gsc_selector.pick_best_query(published_topics)
+
         # STEP 1: Tavily 리서치
         print("[STEP 1] Tavily 리서치 중...", flush=True)
         try:
-            research = researcher.research_today(published_topics=published_topics)
+            research = researcher.research_today(published_topics=published_topics, seed_query=seed_query)
             print(f"[STEP 1] 완료 - 주제: {research['topic']}", flush=True)
         except Exception as exc:
             print(f"[STEP 1] 실패: {exc}", flush=True)
