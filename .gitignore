@@ -4,3 +4,7 @@ build
 .env
 .env.local
 *.log
+
+# GSC OAuth credentials
+scripts/credentials/client_secret*.json
+scripts/credentials/token.json

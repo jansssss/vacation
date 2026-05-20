@@ -15,6 +15,9 @@ class AppConfig:
     supabase_url: str | None
     supabase_service_role_key: str | None
     guides_per_run: int
+    gsc_client_secret_path: str | None
+    gsc_token_path: str | None
+    gsc_site_url: str | None
 
 
 def _load_dotenv(dotenv_path: Path) -> None:
@@ -43,4 +46,7 @@ def load_config() -> AppConfig:
         supabase_url=os.getenv("SUPABASE_URL") or None,
         supabase_service_role_key=os.getenv("SUPABASE_SERVICE_ROLE_KEY") or None,
         guides_per_run=int(os.getenv("GUIDES_PER_RUN", "1")),
+        gsc_client_secret_path=os.getenv("GSC_CLIENT_SECRET_PATH") or str(scripts_root / "credentials" / "client_secret.json"),
+        gsc_token_path=os.getenv("GSC_TOKEN_PATH") or str(scripts_root / "credentials" / "token.json"),
+        gsc_site_url=os.getenv("GSC_SITE_URL") or None,
     )
