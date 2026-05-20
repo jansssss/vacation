@@ -8,3 +8,7 @@ build
 # GSC OAuth credentials
 scripts/credentials/client_secret*.json
 scripts/credentials/token.json
+
+# Python cache
+__pycache__/
+*.pyc
