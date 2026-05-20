@@ -19,6 +19,7 @@ from scripts.pipeline.researcher import TavilyResearcher
 from scripts.pipeline.writer import GuideWriter
 from scripts.pipeline.publisher import SupabasePublisher
 from scripts.analytics.gsc_query_selector import GSCQuerySelector
+from scripts.analytics.performance_analyzer import PerformanceAnalyzer
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -75,10 +76,12 @@ def main() -> None:
         published_topics = publisher.fetch_published_topics()
         print(f"[PIPELINE] 기발행 주제 {len(published_topics)}개 로드 완료", flush=True)
 
-    # ── GSC 쿼리 선택기 초기화 ────────────────────────
+    # ── 분석기 초기화 (Supabase 연결 있을 때만) ─────────
     gsc_selector: GSCQuerySelector | None = None
+    perf_analyzer: PerformanceAnalyzer | None = None
     if config.supabase_url and config.supabase_service_role_key:
         gsc_selector = GSCQuerySelector(config.supabase_url, config.supabase_service_role_key)
+        perf_analyzer = PerformanceAnalyzer(config.supabase_url, config.supabase_service_role_key)
 
     # ── 실행 ────────────────────────────────────────
     for i in range(count):
@@ -101,8 +104,9 @@ def main() -> None:
 
         # STEP 2: OpenAI 가이드 작성
         print(f"[STEP 2] OpenAI 가이드 작성 중...", flush=True)
+        performance_hints = perf_analyzer.get_writing_hints() if perf_analyzer else None
         try:
-            guide = writer.write(research)
+            guide = writer.write(research, performance_hints=performance_hints)
             print(f"[STEP 2] 완료 - 제목: {guide.title}", flush=True)
         except Exception as exc:
             print(f"[STEP 2] 실패: {exc}", flush=True)

@@ -52,7 +52,7 @@ class GuideWriter:
         self.model = model
         self.prompt_text = prompt_path.read_text(encoding="utf-8")
 
-    def write(self, research: dict) -> Guide:
+    def write(self, research: dict, performance_hints: str | None = None) -> Guide:
         """Perplexity 리서치 결과를 받아 Guide 반환"""
         topic = research["topic"]
         category = research.get("category", "노무일반")
@@ -87,9 +87,12 @@ class GuideWriter:
             '}'
         )
 
+        hints_block = f"\n{performance_hints}\n" if performance_hints else ""
+
         user_message = (
             f"{self.prompt_text}\n\n"
-            f"{research_block}\n\n"
+            f"{research_block}\n"
+            f"{hints_block}\n"
             f"위 리서치 자료를 바탕으로 e-work.kr 노무 가이드를 작성하세요. "
             f"리서치의 수치와 법령을 글에 직접 인용하세요.\n\n"
             f"아래 JSON 형식으로만 응답하세요. JSON 외 다른 텍스트는 출력하지 마세요:\n"
