@@ -55,18 +55,21 @@ export async function submitLaborCheck(_prevState, formData) {
   const requestId = randomUUID()
   const filePaths = []
 
-  for (const file of files) {
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
     const displayName = decodeFileName(file.name)
-    const safeName = displayName.replace(/[^\w.\-가-힣 ]/g, '_')
-    const path = `labor-check/${requestId}/${safeName}`
+    // Storage 객체 키는 한글/공백 등으로 인한 업로드 실패를 피하기 위해 ASCII로 고정하고,
+    // 원래 파일명은 DB의 original_filename에만 저장해 어드민 화면에 표시한다.
+    const path = `labor-check/${requestId}/file-${i + 1}.pdf`
 
     const { error: uploadError } = await supabase.storage
       .from('bank')
       .upload(path, buffer, { contentType: 'application/pdf', upsert: false })
 
     if (uploadError) {
+      console.error('Storage 업로드 실패', uploadError)
       return { status: 'error', message: '파일 업로드 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' }
     }
 
