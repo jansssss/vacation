@@ -102,6 +102,7 @@ async function handleDiagnose(request) {
   }
 
   let content = ''
+  let finishReason = null
   try {
     const openai = new OpenAI()
     const stream = await openai.chat.completions.create({
@@ -128,6 +129,7 @@ async function handleDiagnose(request) {
 
     for await (const chunk of stream) {
       content += chunk.choices?.[0]?.delta?.content || ''
+      if (chunk.choices?.[0]?.finish_reason) finishReason = chunk.choices[0].finish_reason
     }
   } catch (err) {
     console.error('OpenAI API 호출 실패', err)
@@ -138,15 +140,23 @@ async function handleDiagnose(request) {
     return NextResponse.json({ error: 'AI 분석 호출 중 오류가 발생했습니다.' }, { status: 502 })
   }
 
+  console.log(`[diagnose] requestId=${requestId} finishReason=${finishReason} contentLength=${content.length}`)
+
   if (!content) {
     return NextResponse.json({ error: 'AI 응답을 해석할 수 없습니다.' }, { status: 502 })
+  }
+
+  if (finishReason === 'length') {
+    console.error(`[diagnose] 응답이 max_completion_tokens(${DIAGNOSIS_MAX_TOKENS}) 제한으로 잘림. requestId=${requestId}`)
+    return NextResponse.json({ error: `AI 응답이 최대 길이(${DIAGNOSIS_MAX_TOKENS} 토큰) 제한으로 잘렸습니다. 관리자에게 알려 max_tokens를 늘려야 합니다.` }, { status: 502 })
   }
 
   let parsed
   try {
     parsed = JSON.parse(content)
-  } catch {
-    return NextResponse.json({ error: 'AI 응답 JSON 파싱에 실패했습니다.' }, { status: 502 })
+  } catch (err) {
+    console.error('AI 응답 JSON 파싱 실패. content 미리보기:', content.slice(0, 500))
+    return NextResponse.json({ error: 'AI 응답 JSON 파싱에 실패했습니다. (서버 로그에 원본 응답 일부가 기록됨)' }, { status: 502 })
   }
 
   const diagnosisResult = parsed.diagnosis_result
