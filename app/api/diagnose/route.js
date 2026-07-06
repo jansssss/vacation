@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 import { createSupabaseAdminClient, requireAdminUser } from '../../../lib/supabaseAdmin'
 import { extractPdfText } from '../../../lib/pdfExtract'
-import { SYSTEM_PROMPT, DIAGNOSIS_OUTPUT_SCHEMA, DIAGNOSIS_MODEL, DIAGNOSIS_MAX_TOKENS, buildUserMessage } from '../../../lib/diagnosis/prompt'
+import { SYSTEM_PROMPT, DIAGNOSIS_RESPONSE_FORMAT, DIAGNOSIS_MODEL, DIAGNOSIS_MAX_TOKENS, buildUserMessage } from '../../../lib/diagnosis/prompt'
 
 const FAILED_EXTRACTION_TEXT = '본 문서는 텍스트 추출에 실패했습니다 (스캔본으로 추정). 관리자가 수동으로 텍스트를 입력하기 전까지 이 문서에 대한 판단 근거가 부족합니다.'
 
@@ -91,20 +91,17 @@ export async function POST(request) {
     return NextResponse.json({ status: 'extract_failed', extractedText: extractedTextResult })
   }
 
-  const anthropic = new Anthropic()
+  const openai = new OpenAI()
 
-  let finalMessage
+  let content = ''
   try {
-    const stream = anthropic.messages.stream({
+    const stream = await openai.chat.completions.create({
       model: DIAGNOSIS_MODEL,
-      max_tokens: DIAGNOSIS_MAX_TOKENS,
-      thinking: { type: 'adaptive' },
-      output_config: {
-        effort: 'high',
-        format: { type: 'json_schema', schema: DIAGNOSIS_OUTPUT_SCHEMA },
-      },
-      system: SYSTEM_PROMPT,
+      max_completion_tokens: DIAGNOSIS_MAX_TOKENS,
+      stream: true,
+      response_format: DIAGNOSIS_RESPONSE_FORMAT,
       messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
         {
           role: 'user',
           content: buildUserMessage(
@@ -120,9 +117,11 @@ export async function POST(request) {
       ],
     })
 
-    finalMessage = await stream.finalMessage()
+    for await (const chunk of stream) {
+      content += chunk.choices?.[0]?.delta?.content || ''
+    }
   } catch (err) {
-    console.error('Claude API 호출 실패', err)
+    console.error('OpenAI API 호출 실패', err)
     await admin
       .from('labor_diagnosis_requests')
       .update({ extracted_text: extractedTextResult })
@@ -130,14 +129,13 @@ export async function POST(request) {
     return NextResponse.json({ error: 'AI 분석 호출 중 오류가 발생했습니다.' }, { status: 502 })
   }
 
-  const textBlock = finalMessage.content.find((block) => block.type === 'text')
-  if (!textBlock) {
+  if (!content) {
     return NextResponse.json({ error: 'AI 응답을 해석할 수 없습니다.' }, { status: 502 })
   }
 
   let parsed
   try {
-    parsed = JSON.parse(textBlock.text)
+    parsed = JSON.parse(content)
   } catch {
     return NextResponse.json({ error: 'AI 응답 JSON 파싱에 실패했습니다.' }, { status: 502 })
   }

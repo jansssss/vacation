@@ -24,7 +24,7 @@
 | `/labor-check` | 취업규칙 PDF 접수 폼 (Server Action으로 Supabase Storage 업로드 + DB insert) |
 | `/admin/labor-check` | 관리자 목록/상세, 텍스트 추출 실패 시 수동 붙여넣기, 분석 실행, 리포트 편집, 발송 |
 
-흐름: 접수(`received`) → 관리자가 "분석 실행"(`app/api/diagnose`, PDF 텍스트 추출 + Claude 분석) →
+흐름: 접수(`received`) → 관리자가 "분석 실행"(`app/api/diagnose`, PDF 텍스트 추출 + OpenAI(`gpt-5.4`) 분석) →
 `analyzed` (텍스트 추출 완전 실패 시 `extract_failed`) → 관리자가 리포트 편집 후 "발송"(`app/api/send-report`,
 Resend) → `sent`. 발송 후 30일이 지난 첨부파일은 `scripts/cleanup_diagnosis_files.py`
 (`.github/workflows/cleanup-diagnosis-files.yml`에서 매일 실행)가 Storage에서 자동 삭제한다.
@@ -37,7 +37,7 @@ Resend) → `sent`. 발송 후 30일이 지난 첨부파일은 `scripts/cleanup_
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 브라우저 및 Server Action에서 사용하는 익명 Supabase 클라이언트 (`lib/supabase.js`) |
 | `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | 서버 전용 관리자 클라이언트 (`lib/supabaseAdmin.js`), Route Handler와 파기 스크립트에서 RLS를 우회해 사용 |
-| `ANTHROPIC_API_KEY` | `app/api/diagnose`의 Claude API 호출 (`claude-opus-4-8`) |
+| `OPENAI_API_KEY` | `app/api/diagnose`의 OpenAI API 호출 (`gpt-5.4`). 기존 콘텐츠 파이프라인(`scripts/`)에서 쓰는 키를 그대로 재사용 |
 | `RESEND_API_KEY` | `app/api/send-report`의 이메일 발송. 미설정 시 실제 발송 없이 상태만 `sent`로 변경하는 mock 모드로 동작 |
 | `RESEND_FROM_EMAIL` | 발신자 주소 (기본값 `e-work.kr <noreply@e-work.kr>`) |
 

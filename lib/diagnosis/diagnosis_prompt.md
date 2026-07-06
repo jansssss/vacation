@@ -1,4 +1,4 @@
-# 노무진단 Claude 프롬프트 설계 (v1)
+# 노무진단 AI 프롬프트 설계 (v1)
 
 `app/api/diagnose/route.js`가 이 문서의 스키마와 시스템 프롬프트를 그대로 구현한다. 실제 런타임 상수는
 `lib/diagnosis/prompt.js`에 있으며, 이 문서와 항상 동기화되어야 한다. `lib/diagnosis/rulepack_v1.json`이
@@ -6,11 +6,11 @@
 
 ## API 호출 파라미터
 
-- 모델: `claude-opus-4-8`
-- `thinking: { type: "adaptive" }`
-- `output_config: { effort: "high", format: { type: "json_schema", schema: DIAGNOSIS_OUTPUT_SCHEMA } }`
-- `max_tokens: 16000`
-- 스트리밍 사용 (`client.messages.stream(...)` → `stream.get_final_message()` 상당의 TS 헬퍼: `stream.finalMessage()`), Vercel 함수 타임아웃 회피 목적
+- 제공자: OpenAI (기존 콘텐츠 파이프라인에서 쓰는 `OPENAI_API_KEY` 재사용)
+- 모델: `gpt-5.4`
+- `response_format: { type: "json_schema", json_schema: { name: "labor_diagnosis_response", strict: true, schema: DIAGNOSIS_OUTPUT_SCHEMA } }` (`DIAGNOSIS_RESPONSE_FORMAT`으로 export)
+- `max_completion_tokens: 16000`
+- 스트리밍 사용 (`openai.chat.completions.create({ stream: true, ... })`로 청크를 모아 최종 JSON 문자열 조립), Vercel 함수 타임아웃 회피 목적
 
 ## 시스템 프롬프트
 
@@ -47,7 +47,7 @@
 
 `extract_failed` 상태의 문서(스캔본 등으로 텍스트 추출 실패)는 관리자가 어드민 화면에서 수동으로 붙여넣은
 텍스트가 있으면 그 텍스트를 사용하고, 없으면 "본 문서는 텍스트 추출에 실패했습니다"라는 안내를 포함해
-Claude가 해당 문서 분량만큼 판단 근거 부족으로 처리하게 한다.
+모델이 해당 문서 분량만큼 판단 근거 부족으로 처리하게 한다.
 
 ## 출력 JSON 스키마 (`DIAGNOSIS_OUTPUT_SCHEMA`)
 
@@ -103,6 +103,6 @@ Claude가 해당 문서 분량만큼 판단 근거 부족으로 처리하게 한
 
 `app/api/diagnose/route.js`는 PDF 텍스트 추출 단계에서 문서별로 (추출 글자 수 ÷ PDF 페이지 수)가
 페이지당 50자 미만이면 해당 문서를 스캔본으로 간주하고 `extract_failed` 처리한다. 요청에 포함된 모든
-문서가 `extract_failed`면 Claude를 호출하지 않고 상태만 `extract_failed`로 남긴다. 일부 문서만
+문서가 `extract_failed`면 AI 호출을 하지 않고 상태만 `extract_failed`로 남긴다. 일부 문서만
 실패한 경우, 성공한 문서만으로 진단을 진행하고 실패한 문서는 위 안내 문구로 대체한다. 관리자가 수동
 텍스트를 붙여넣은 뒤 재실행하면 그 텍스트가 우선 사용된다.
