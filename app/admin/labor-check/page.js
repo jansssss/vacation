@@ -20,41 +20,63 @@ async function getAccessToken() {
   return data?.session?.access_token
 }
 
+const ZONE_BADGE = {
+  RED: 'bg-red-50 text-red-700 border-red-200',
+  YELLOW: 'bg-amber-50 text-amber-700 border-amber-200',
+  BLUE: 'bg-blue-50 text-blue-700 border-blue-200',
+}
+
+const ZONE_SECTION_LABEL = {
+  RED: '⚠ 즉시 조치가 필요한 항목',
+  YELLOW: '주의가 필요한 항목',
+  BLUE: '참고 확인 항목',
+}
+
+const STATUS_KO = {
+  VIOLATION: '위반',
+  RISK: '위반 의심',
+  CHECK_NEEDED: '확인 필요',
+  OK: '이상 없음',
+  NOT_APPLICABLE: '해당 없음',
+  MANUAL_REVIEW: '전문가 검토 필요',
+}
+
 function FindingsTable({ findings }) {
   if (!findings || findings.length === 0) return null
-  const severityClass = {
-    high: 'bg-red-50 text-red-700 border-red-200',
-    medium: 'bg-amber-50 text-amber-700 border-amber-200',
-    low: 'bg-slate-50 text-slate-600 border-slate-200',
-    none: 'bg-slate-50 text-slate-400 border-slate-200',
+
+  const byZone = { RED: [], YELLOW: [], BLUE: [] }
+  for (const f of findings) {
+    if (byZone[f.zone]) byZone[f.zone].push(f)
   }
+
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-100">
-      <table className="w-full text-sm">
-        <thead className="bg-slate-50 border-b border-slate-100">
-          <tr>
-            {['카테고리', '항목', '상태', '심각도', '근거', '권고'].map((h) => (
-              <th key={h} className="px-3 py-2 text-left text-xs font-medium text-slate-500 whitespace-nowrap">{h}</th>
+    <div className="space-y-5">
+      {['RED', 'YELLOW', 'BLUE'].filter((zone) => byZone[zone].length > 0).map((zone) => (
+        <div key={zone}>
+          <p className="text-sm font-semibold text-slate-800 mb-2">{ZONE_SECTION_LABEL[zone]} ({byZone[zone].length}건)</p>
+          <div className="space-y-2">
+            {byZone[zone].map((f) => (
+              <div key={f.rule_id} className="rounded-xl border border-slate-100 p-3 space-y-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold border ${ZONE_BADGE[f.zone] || ZONE_BADGE.BLUE}`}>
+                    {f.zone}
+                  </span>
+                  <span className="text-xs text-slate-500">{STATUS_KO[f.status] || f.status}</span>
+                  <span className="text-sm font-medium text-slate-900">{f.title}</span>
+                </div>
+                <p className="text-xs text-slate-600"><span className="font-medium">회사 문서 근거: </span>{f.evidence}</p>
+                <p className="text-xs text-slate-600">{f.explanation}</p>
+                <p className="text-xs text-slate-600"><span className="font-medium">법적 근거: </span>{f.basis_citation}</p>
+                {f.risk_detail && <p className="text-xs text-slate-600"><span className="font-medium">방치 시 리스크: </span>{f.risk_detail}</p>}
+                {f.recommendation && <p className="text-xs text-slate-600"><span className="font-medium">권고 조치: </span>{f.recommendation}</p>}
+                {f.status === 'CHECK_NEEDED' && f.self_check_question && (
+                  <p className="text-xs text-orange-700"><span className="font-medium">확인 필요: </span>{f.self_check_question}</p>
+                )}
+              </div>
             ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100">
-          {findings.map((f) => (
-            <tr key={f.rule_id}>
-              <td className="px-3 py-2 text-xs text-slate-500 whitespace-nowrap">{f.category}</td>
-              <td className="px-3 py-2 text-slate-800 max-w-[180px]">{f.title}</td>
-              <td className="px-3 py-2 whitespace-nowrap">
-                <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] border ${severityClass[f.severity] || severityClass.none}`}>
-                  {f.status}
-                </span>
-              </td>
-              <td className="px-3 py-2 text-xs whitespace-nowrap">{f.severity}</td>
-              <td className="px-3 py-2 text-xs text-slate-500 max-w-[220px]">{f.evidence}</td>
-              <td className="px-3 py-2 text-xs text-slate-500 max-w-[220px]">{f.recommendation}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -67,10 +89,17 @@ function DetailPanel({ row, onClose, onUpdated }) {
   const [savingText, setSavingText] = useState(false)
   const [savingReport, setSavingReport] = useState(false)
   const [notice, setNotice] = useState('')
+  const [gateBasisChecked, setGateBasisChecked] = useState(false)
+  const [gateSeverityChecked, setGateSeverityChecked] = useState(false)
 
   useEffect(() => {
     setReportDraft(row.report_html || '')
   }, [row.id, row.report_html])
+
+  useEffect(() => {
+    setGateBasisChecked(false)
+    setGateSeverityChecked(false)
+  }, [row.id, row.diagnosis_result])
 
   const extractedText = row.extracted_text || {}
 
@@ -278,7 +307,8 @@ function DetailPanel({ row, onClose, onUpdated }) {
             </button>
             <button
               onClick={handleSend}
-              disabled={sending || !row.report_html}
+              disabled={sending || !row.report_html || !gateBasisChecked || !gateSeverityChecked}
+              title={!gateBasisChecked || !gateSeverityChecked ? '리포트 편집 영역의 확인 체크박스 2개를 모두 체크해야 발송할 수 있습니다.' : undefined}
               className="rounded-full bg-emerald-600 text-white px-5 py-2 text-sm font-medium hover:bg-emerald-500 disabled:opacity-50"
             >
               {sending ? '발송 중...' : '발송'}
@@ -296,17 +326,25 @@ function DetailPanel({ row, onClose, onUpdated }) {
             <div className="space-y-3">
               <p className="text-xs font-medium text-slate-400">진단 결과</p>
               <div className="text-sm">
-                <span className="font-medium text-slate-900">전체 위험도: </span>
-                <span>{diagnosisResult.overall_risk_level}</span>
+                <span className="font-medium text-slate-900">종합 등급: </span>
+                <span>{diagnosisResult.company_summary?.overall_grade}</span>
               </div>
-              <p className="text-sm text-slate-700 leading-relaxed">{diagnosisResult.summary}</p>
+              <p className="text-sm text-slate-700 leading-relaxed">{diagnosisResult.company_summary?.headline}</p>
+              {diagnosisResult.stats && (
+                <div className="flex gap-3 flex-wrap text-xs text-slate-500">
+                  <span>RED 위반 {diagnosisResult.stats.red_violations}</span>
+                  <span>RED 위반의심 {diagnosisResult.stats.red_risks}</span>
+                  <span>YELLOW {diagnosisResult.stats.yellow}</span>
+                  <span>BLUE {diagnosisResult.stats.blue}</span>
+                  <span>이상없음 {diagnosisResult.stats.ok}</span>
+                </div>
+              )}
               <FindingsTable findings={diagnosisResult.findings} />
-              {diagnosisResult.recommended_next_steps?.length > 0 && (
-                <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
-                  {diagnosisResult.recommended_next_steps.map((step, i) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ul>
+              {diagnosisResult.operator_notes && (
+                <div className="rounded-xl border border-dashed border-slate-200 p-3 text-xs text-slate-500">
+                  <span className="font-medium text-slate-600">관리자 전용 메모 (고객에게 발송되지 않음): </span>
+                  {diagnosisResult.operator_notes}
+                </div>
               )}
             </div>
           )}
@@ -328,6 +366,28 @@ function DetailPanel({ row, onClose, onUpdated }) {
                 리포트 저장
               </button>
               <div className="mt-2 rounded-xl border border-slate-100 p-4 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: reportDraft }} />
+
+              <div className="mt-3 space-y-2 rounded-xl border border-amber-200 bg-amber-50 p-3">
+                <p className="text-xs font-medium text-amber-800">발송 전 최종 확인 (매번 다시 체크해야 합니다)</p>
+                <label className="flex items-center gap-2 text-xs text-amber-900">
+                  <input
+                    type="checkbox"
+                    checked={gateBasisChecked}
+                    onChange={(e) => setGateBasisChecked(e.target.checked)}
+                    className="h-4 w-4 accent-amber-700"
+                  />
+                  법령 근거가 각 항목에 정확히 표시되었음을 확인함
+                </label>
+                <label className="flex items-center gap-2 text-xs text-amber-900">
+                  <input
+                    type="checkbox"
+                    checked={gateSeverityChecked}
+                    onChange={(e) => setGateSeverityChecked(e.target.checked)}
+                    className="h-4 w-4 accent-amber-700"
+                  />
+                  심각도(RED/YELLOW/BLUE) 분류가 타당함을 확인함
+                </label>
+              </div>
             </div>
           )}
         </div>

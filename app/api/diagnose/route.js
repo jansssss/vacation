@@ -3,6 +3,7 @@ import OpenAI from 'openai'
 import { createSupabaseAdminClient, requireAdminUser } from '../../../lib/supabaseAdmin'
 import { extractPdfText } from '../../../lib/pdfExtract'
 import { SYSTEM_PROMPT, DIAGNOSIS_RESPONSE_FORMAT, DIAGNOSIS_MODEL, DIAGNOSIS_MAX_TOKENS, buildUserMessage } from '../../../lib/diagnosis/prompt'
+import { buildReportHtml } from '../../../lib/diagnosis/renderReport'
 
 const FAILED_EXTRACTION_TEXT = '본 문서는 텍스트 추출에 실패했습니다 (스캔본으로 추정). 관리자가 수동으로 텍스트를 입력하기 전까지 이 문서에 대한 판단 근거가 부족합니다.'
 
@@ -148,13 +149,22 @@ async function handleDiagnose(request) {
     return NextResponse.json({ error: 'AI 응답 JSON 파싱에 실패했습니다.' }, { status: 502 })
   }
 
+  const diagnosisResult = parsed.diagnosis_result
+  let reportHtml
+  try {
+    reportHtml = buildReportHtml(diagnosisResult)
+  } catch (err) {
+    console.error('리포트 HTML 생성 실패', err)
+    return NextResponse.json({ error: '리포트 생성 중 오류가 발생했습니다.' }, { status: 500 })
+  }
+
   const { error: updateError } = await admin
     .from('labor_diagnosis_requests')
     .update({
       status: 'analyzed',
       extracted_text: extractedTextResult,
-      diagnosis_result: parsed.diagnosis_result,
-      report_html: parsed.report_html,
+      diagnosis_result: diagnosisResult,
+      report_html: reportHtml,
     })
     .eq('id', requestId)
 
@@ -162,5 +172,5 @@ async function handleDiagnose(request) {
     return NextResponse.json({ error: '분석 결과 저장 중 오류가 발생했습니다.' }, { status: 500 })
   }
 
-  return NextResponse.json({ status: 'analyzed', diagnosisResult: parsed.diagnosis_result, reportHtml: parsed.report_html })
+  return NextResponse.json({ status: 'analyzed', diagnosisResult, reportHtml })
 }
