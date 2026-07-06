@@ -6,7 +6,7 @@ import Link from 'next/link'
 const navItems = [
   { name: '계산기', href: '/calculators' },
   { name: '가이드', href: '/guides' },
-  { name: '기업 노무진단', href: '/labor-check' },
+  { name: '기업 노무진단', href: '/labor-check', highlight: true },
 ]
 
 export default function SiteShell({ children, latestGuideDate }) {
@@ -32,7 +32,11 @@ export default function SiteShell({ children, latestGuideDate }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-3 py-1.5 text-sm font-medium rounded-full text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition"
+                className={
+                  item.highlight
+                    ? 'px-4 py-1.5 text-sm font-semibold rounded-full bg-blue-600 text-white shadow-sm hover:bg-blue-500 transition'
+                    : 'px-3 py-1.5 text-sm font-medium rounded-full text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition'
+                }
               >
                 {item.name}
               </Link>
