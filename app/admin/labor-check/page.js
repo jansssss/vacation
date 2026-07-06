@@ -298,6 +298,8 @@ export default function AdminLaborCheckPage() {
   const [filter, setFilter] = useState('all')
   const [page, setPage] = useState(1)
   const [selectedRow, setSelectedRow] = useState(null)
+  const [selectedIds, setSelectedIds] = useState(new Set())
+  const [deleting, setDeleting] = useState(false)
   const { user, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
 
@@ -335,6 +337,48 @@ export default function AdminLaborCheckPage() {
     try { await signOut(); router.push('/admin') } catch {}
   }
 
+  const toggleSelected = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleSelectAllOnPage = (ids, checked) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      ids.forEach((id) => (checked ? next.add(id) : next.delete(id)))
+      return next
+    })
+  }
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.size === 0) return
+    if (!confirm(`선택한 ${selectedIds.size}건을 삭제하시겠습니까? 첨부 파일도 함께 삭제되며 되돌릴 수 없습니다.`)) return
+
+    setDeleting(true)
+    try {
+      const token = await getAccessToken()
+      const res = await fetch('/api/labor-check/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ requestIds: Array.from(selectedIds) }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || '삭제 실패')
+
+      setRows((prev) => prev.filter((r) => !selectedIds.has(r.id)))
+      if (selectedRow && selectedIds.has(selectedRow.id)) setSelectedRow(null)
+      setSelectedIds(new Set())
+    } catch (err) {
+      alert(err.message || '삭제 중 오류가 발생했습니다.')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   if (authLoading || (loading && rows.length === 0)) {
     return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="text-slate-600">불러오는 중...</div></div>
   }
@@ -359,19 +403,30 @@ export default function AdminLaborCheckPage() {
             <h1 className="text-2xl font-semibold text-slate-900">노무진단 접수 내역</h1>
             <p className="text-sm text-slate-500 mt-1">총 {rows.length}건 · 미분석 {newCount}건</p>
           </div>
-          <div className="flex gap-1 rounded-xl bg-white border border-slate-200 p-1 self-start flex-wrap">
-            {[
-              { key: 'all', label: '전체' },
-              { key: 'received', label: '접수' },
-              { key: 'extract_failed', label: '추출실패' },
-              { key: 'analyzed', label: '분석완료' },
-              { key: 'sent', label: '발송완료' },
-            ].map(({ key, label }) => (
-              <button key={key} onClick={() => { setFilter(key); setPage(1) }}
-                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition ${filter === key ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}>
-                {label}
+          <div className="flex items-center gap-3 flex-wrap">
+            {selectedIds.size > 0 && (
+              <button
+                onClick={handleDeleteSelected}
+                disabled={deleting}
+                className="rounded-lg bg-red-600 text-white px-4 py-1.5 text-sm font-medium hover:bg-red-500 disabled:opacity-50"
+              >
+                {deleting ? '삭제 중...' : `선택 삭제 (${selectedIds.size})`}
               </button>
-            ))}
+            )}
+            <div className="flex gap-1 rounded-xl bg-white border border-slate-200 p-1 self-start flex-wrap">
+              {[
+                { key: 'all', label: '전체' },
+                { key: 'received', label: '접수' },
+                { key: 'extract_failed', label: '추출실패' },
+                { key: 'analyzed', label: '분석완료' },
+                { key: 'sent', label: '발송완료' },
+              ].map(({ key, label }) => (
+                <button key={key} onClick={() => { setFilter(key); setPage(1) }}
+                  className={`rounded-lg px-4 py-1.5 text-sm font-medium transition ${filter === key ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -388,6 +443,14 @@ export default function AdminLaborCheckPage() {
                 <table className="w-full">
                   <thead className="bg-slate-50 border-b border-slate-100">
                     <tr>
+                      <th className="px-5 py-3 text-left w-10">
+                        <input
+                          type="checkbox"
+                          checked={paginated.length > 0 && paginated.every((r) => selectedIds.has(r.id))}
+                          onChange={(e) => toggleSelectAllOnPage(paginated.map((r) => r.id), e.target.checked)}
+                          className="h-4 w-4 accent-slate-900"
+                        />
+                      </th>
                       {['접수일', '회사명', '이메일', '규모', '상태', ''].map((h) => (
                         <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
@@ -398,6 +461,14 @@ export default function AdminLaborCheckPage() {
                       const statusInfo = STATUS_LABEL[row.status] || STATUS_LABEL.received
                       return (
                         <tr key={row.id} className="hover:bg-slate-50 transition">
+                          <td className="px-5 py-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.has(row.id)}
+                              onChange={() => toggleSelected(row.id)}
+                              className="h-4 w-4 accent-slate-900"
+                            />
+                          </td>
                           <td className="px-5 py-4 text-sm text-slate-500 whitespace-nowrap">
                             {new Date(row.created_at).toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' })}
                           </td>
