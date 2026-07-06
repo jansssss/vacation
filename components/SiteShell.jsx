@@ -6,6 +6,7 @@ import Link from 'next/link'
 const navItems = [
   { name: '계산기', href: '/calculators' },
   { name: '가이드', href: '/guides' },
+  { name: '기업 노무진단', href: '/labor-check' },
 ]
 
 export default function SiteShell({ children, latestGuideDate }) {

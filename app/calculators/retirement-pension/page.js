@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { calculateRetirementPension } from '../../../src/lib/calculators/retirementPension'
+import LaborCheckBanner from '../../../components/LaborCheckBanner'
 
 const fmt = (n) => Math.round(n).toLocaleString('ko-KR')
 const fmtM = (n) => (n >= 100000000 ? `${(n / 100000000).toFixed(1)}억` : `${(n / 10000).toFixed(0)}만`)
@@ -162,6 +163,8 @@ export default function RetirementPensionPage() {
         <Link href="/calculators/severance-pay" className="text-blue-600 hover:underline">퇴직금 계산기 →</Link>
         <Link href="/calculators/net-salary" className="text-blue-600 hover:underline">실수령액 계산기 →</Link>
       </div>
+
+      <LaborCheckBanner />
     </div>
   )
 }

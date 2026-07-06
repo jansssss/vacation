@@ -1,0 +1,35 @@
+name: Cleanup Labor Diagnosis Files (e-work.kr)
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 매일 KST 04:00 (UTC 19:00 전날)
+    - cron: "0 19 * * *"
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Write .env.local
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL" >> .env.local
+          printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY" >> .env.local
+
+      - name: Run cleanup script
+        run: python scripts/cleanup_diagnosis_files.py
+
+      - name: Clean up secrets
+        if: always()
+        run: rm -f .env.local

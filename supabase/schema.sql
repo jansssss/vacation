@@ -178,9 +178,66 @@ CREATE POLICY "Authenticated users can update consultation requests"
   USING (auth.role() = 'authenticated');
 
 -- ================================
+-- 5. Labor Diagnosis Requests 테이블 (기업 노무진단 접수)
+-- ================================
+CREATE TABLE labor_diagnosis_requests (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  email TEXT NOT NULL,
+  company_name TEXT NOT NULL,
+  employee_band TEXT NOT NULL, -- '5인 미만' | '5~29인' | '30~49인' | '50~299인' | '300인 이상'
+  industry TEXT,
+  last_revision_year INTEGER,
+  file_paths JSONB NOT NULL DEFAULT '[]', -- [{ "path": "bank/...", "original_filename": "취업규칙.pdf" }]
+  status TEXT NOT NULL DEFAULT 'received', -- 'received' | 'extract_failed' | 'analyzed' | 'sent'
+  extracted_text JSONB, -- { "<path>": "<extracted text>", ... } 문서별 추출 텍스트
+  diagnosis_result JSONB, -- diagnosis_prompt.md 스키마를 따르는 구조화된 진단 결과
+  report_html TEXT, -- 관리자가 편집 가능한 리포트 초안 HTML
+  sent_at TIMESTAMP WITH TIME ZONE,
+  files_deleted_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE INDEX idx_labor_diagnosis_requests_created_at ON labor_diagnosis_requests(created_at DESC);
+CREATE INDEX idx_labor_diagnosis_requests_status ON labor_diagnosis_requests(status);
+
+ALTER TABLE labor_diagnosis_requests ENABLE ROW LEVEL SECURITY;
+
+-- 비회원도 INSERT 가능 (진단 접수)
+CREATE POLICY "Anyone can submit labor diagnosis request"
+  ON labor_diagnosis_requests FOR INSERT
+  WITH CHECK (true);
+
+-- 인증된 관리자만 조회/수정 가능
+CREATE POLICY "Authenticated users can view labor diagnosis requests"
+  ON labor_diagnosis_requests FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can update labor diagnosis requests"
+  ON labor_diagnosis_requests FOR UPDATE
+  USING (auth.role() = 'authenticated');
+
+-- ================================
+-- 6. Storage RLS — 'bank' 버킷 (노무진단 첨부 PDF)
+-- ================================
+-- 버킷 자체(Public 여부, 20MB 제한, application/pdf 전용 MIME 제한)는
+-- Supabase 대시보드에서 이미 생성/설정되어 있다고 가정한다.
+-- 아래 정책 없이는 어떤 역할도 이 버킷에 접근할 수 없다 (기본값: 전체 차단).
+
+-- 익명 사용자는 'bank' 버킷에 INSERT(업로드)만 가능 — 조회/수정/삭제 불가
+CREATE POLICY "Anyone can upload to bank bucket"
+  ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'bank');
+
+-- 인증된 관리자만 'bank' 버킷 파일을 조회(서명된 URL 발급 포함) 가능
+CREATE POLICY "Authenticated users can view bank bucket files"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'bank' AND auth.role() = 'authenticated');
+
+-- ================================
 -- Comments for documentation
 -- ================================
 COMMENT ON TABLE guides IS '가이드 메타데이터 (제목, 요약, 키워드 등)';
 COMMENT ON TABLE guide_sections IS '가이드의 각 섹션 (heading, content, bullets 등)';
 COMMENT ON TABLE board_posts IS '게시판 글 (공지사항 등)';
 COMMENT ON TABLE consultation_requests IS '무료 노무·인사 상담 신청 내역';
+COMMENT ON TABLE labor_diagnosis_requests IS '기업 노무진단 접수 및 분석/발송 상태';

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-export default function AdminNav({ newCount = 0, onLogout, activeTab }) {
+export default function AdminNav({ newCount = 0, laborCheckNewCount = 0, onLogout, activeTab }) {
   return (
     <header className="bg-white border-b border-slate-200">
       <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
@@ -22,6 +22,15 @@ export default function AdminNav({ newCount = 0, onLogout, activeTab }) {
               {newCount > 0 && (
                 <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
                   {newCount}
+                </span>
+              )}
+            </Link>
+            <Link href="/admin/labor-check"
+              className={`text-sm font-medium flex items-center gap-1.5 transition ${activeTab === 'labor-check' ? 'text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}>
+              노무진단
+              {laborCheckNewCount > 0 && (
+                <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  {laborCheckNewCount}
                 </span>
               )}
             </Link>

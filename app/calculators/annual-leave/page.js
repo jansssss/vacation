@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { calculateAnnualLeave } from '../../../src/lib/calculators/annualLeave'
+import LaborCheckBanner from '../../../components/LaborCheckBanner'
 
 export default function AnnualLeavePage() {
   const today = new Date().toISOString().slice(0, 10)
@@ -130,6 +131,8 @@ export default function AnnualLeavePage() {
         <Link href="/calculators/severance-pay" className="text-blue-600 hover:underline">퇴직금 계산기 →</Link>
         <Link href="/calculators/net-salary" className="text-blue-600 hover:underline">실수령액 계산기 →</Link>
       </div>
+
+      <LaborCheckBanner />
     </div>
   )
 }

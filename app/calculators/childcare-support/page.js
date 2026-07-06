@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { calculateChildcareSupport } from '../../../src/lib/calculators/childcareSupport'
+import LaborCheckBanner from '../../../components/LaborCheckBanner'
 
 const fmt = (n) => Math.round(n).toLocaleString('ko-KR')
 
@@ -232,6 +233,8 @@ export default function ChildcareSupportPage() {
         <Link href="/calculators/annual-leave" className="text-blue-600 hover:underline">연차 계산기 →</Link>
         <Link href="/calculators/net-salary" className="text-blue-600 hover:underline">실수령액 계산기 →</Link>
       </div>
+
+      <LaborCheckBanner />
     </div>
   )
 }

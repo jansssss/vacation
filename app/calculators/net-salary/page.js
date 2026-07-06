@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { calculateNetSalary } from '../../../src/lib/calculators/netSalary'
+import LaborCheckBanner from '../../../components/LaborCheckBanner'
 
 const fmt = (n) => Math.round(n).toLocaleString('ko-KR')
 
@@ -141,6 +142,8 @@ export default function NetSalaryPage() {
         <Link href="/calculators/severance-pay" className="text-blue-600 hover:underline">퇴직금 계산기 →</Link>
         <Link href="/calculators/annual-leave" className="text-blue-600 hover:underline">연차 계산기 →</Link>
       </div>
+
+      <LaborCheckBanner />
     </div>
   )
 }
