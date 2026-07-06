@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getGuideBySlug } from '../../../lib/guides'
 import { guidesRegistry } from '../../../src/config/guidesRegistry'
 import { GUIDE_TOPIC_MAP } from '../../../src/config/contentLinks'
-import ConsultationCTA from '../../../components/ConsultationCTA'
+import LaborCheckBanner from '../../../components/LaborCheckBanner'
 import AdminGuideBar from '../../../components/AdminGuideBar'
 
 export const revalidate = 3600
@@ -137,8 +137,8 @@ export default async function GuidePage({ params }) {
         </section>
       )}
 
-      {/* 무료 상담 신청 CTA */}
-      <ConsultationCTA sourceSlug={params.slug} />
+      {/* 기업 노무진단 CTA */}
+      <LaborCheckBanner />
 
       <div className="text-center">
         <Link href="/guides" className="text-sm text-blue-700 hover:text-blue-900">
