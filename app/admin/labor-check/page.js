@@ -169,6 +169,32 @@ function DetailPanel({ row, onClose, onUpdated }) {
     }
   }
 
+  const handlePrintReport = () => {
+    const html = reportDraft || row.report_html
+    if (!html) return
+    const printWindow = window.open('', '_blank', 'noopener,noreferrer')
+    if (!printWindow) {
+      alert('팝업이 차단되었습니다. 브라우저의 팝업 차단을 해제해주세요.')
+      return
+    }
+    printWindow.document.write(`<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>${row.company_name} 노무진단 리포트</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: #1e293b; padding: 24px; max-width: 800px; margin: 0 auto; }
+  h1, h2, h3 { color: #0f172a; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #e2e8f0; padding: 6px 10px; font-size: 13px; }
+</style>
+</head>
+<body>${html}</body>
+</html>`)
+    printWindow.document.close()
+    printWindow.onload = () => printWindow.print()
+  }
+
   const statusInfo = STATUS_LABEL[row.status] || STATUS_LABEL.received
   const diagnosisResult = row.diagnosis_result
 
@@ -244,6 +270,13 @@ function DetailPanel({ row, onClose, onUpdated }) {
               className="rounded-full bg-emerald-600 text-white px-5 py-2 text-sm font-medium hover:bg-emerald-500 disabled:opacity-50"
             >
               {sending ? '발송 중...' : '발송'}
+            </button>
+            <button
+              onClick={handlePrintReport}
+              disabled={!row.report_html}
+              className="rounded-full bg-white border border-slate-300 text-slate-700 px-5 py-2 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
+            >
+              보고서 PDF로 저장
             </button>
           </div>
 
