@@ -172,12 +172,19 @@ function DetailPanel({ row, onClose, onUpdated }) {
   const handlePrintReport = () => {
     const html = reportDraft || row.report_html
     if (!html) return
-    const printWindow = window.open('', '_blank', 'noopener,noreferrer')
-    if (!printWindow) {
-      alert('팝업이 차단되었습니다. 브라우저의 팝업 차단을 해제해주세요.')
-      return
-    }
-    printWindow.document.write(`<!DOCTYPE html>
+
+    const iframe = document.createElement('iframe')
+    iframe.style.position = 'fixed'
+    iframe.style.right = '0'
+    iframe.style.bottom = '0'
+    iframe.style.width = '0'
+    iframe.style.height = '0'
+    iframe.style.border = '0'
+    document.body.appendChild(iframe)
+
+    const doc = iframe.contentWindow.document
+    doc.open()
+    doc.write(`<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
@@ -191,8 +198,13 @@ function DetailPanel({ row, onClose, onUpdated }) {
 </head>
 <body>${html}</body>
 </html>`)
-    printWindow.document.close()
-    printWindow.onload = () => printWindow.print()
+    doc.close()
+
+    iframe.onload = () => {
+      iframe.contentWindow.focus()
+      iframe.contentWindow.print()
+      setTimeout(() => document.body.removeChild(iframe), 1000)
+    }
   }
 
   const statusInfo = STATUS_LABEL[row.status] || STATUS_LABEL.received
