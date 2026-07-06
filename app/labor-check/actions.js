@@ -10,6 +10,11 @@ function isPdfFile(file) {
   return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
 }
 
+// Node의 multipart 파서가 파일명을 latin1로 잘못 디코딩하는 문제 보정 (ASCII 파일명은 영향 없음)
+function decodeFileName(name) {
+  return Buffer.from(name, 'latin1').toString('utf8')
+}
+
 export async function submitLaborCheck(_prevState, formData) {
   const email = (formData.get('email') || '').toString().trim()
   const companyName = (formData.get('companyName') || '').toString().trim()
@@ -31,14 +36,15 @@ export async function submitLaborCheck(_prevState, formData) {
   }
 
   for (const file of files) {
+    const displayName = decodeFileName(file.name)
     if (!isPdfFile(file)) {
       return {
         status: 'error',
-        message: `"${file.name}"은(는) PDF 파일이 아닙니다. 취업규칙 파일을 PDF로 변환해 업로드해 주세요 (한글: 파일 → 다른 이름으로 저장 → 파일형식 PDF / 워드: 다른 이름으로 저장 → PDF).`,
+        message: `"${displayName}"은(는) PDF 파일이 아닙니다. 취업규칙 파일을 PDF로 변환해 업로드해 주세요 (한글: 파일 → 다른 이름으로 저장 → 파일형식 PDF / 워드: 다른 이름으로 저장 → PDF).`,
       }
     }
     if (file.size > MAX_FILE_SIZE) {
-      return { status: 'error', message: `"${file.name}" 파일이 20MB를 초과합니다.` }
+      return { status: 'error', message: `"${displayName}" 파일이 20MB를 초과합니다.` }
     }
   }
 
@@ -52,7 +58,8 @@ export async function submitLaborCheck(_prevState, formData) {
   for (const file of files) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-    const safeName = file.name.replace(/[^\w.\-가-힣 ]/g, '_')
+    const displayName = decodeFileName(file.name)
+    const safeName = displayName.replace(/[^\w.\-가-힣 ]/g, '_')
     const path = `labor-check/${requestId}/${safeName}`
 
     const { error: uploadError } = await supabase.storage
@@ -63,7 +70,7 @@ export async function submitLaborCheck(_prevState, formData) {
       return { status: 'error', message: '파일 업로드 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' }
     }
 
-    filePaths.push({ path, original_filename: file.name })
+    filePaths.push({ path, original_filename: displayName })
   }
 
   const { error: insertError } = await supabase.from('labor_diagnosis_requests').insert([{

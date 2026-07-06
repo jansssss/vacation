@@ -91,10 +91,9 @@ export async function POST(request) {
     return NextResponse.json({ status: 'extract_failed', extractedText: extractedTextResult })
   }
 
-  const openai = new OpenAI()
-
   let content = ''
   try {
+    const openai = new OpenAI()
     const stream = await openai.chat.completions.create({
       model: DIAGNOSIS_MODEL,
       max_completion_tokens: DIAGNOSIS_MAX_TOKENS,
