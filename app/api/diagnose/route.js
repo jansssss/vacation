@@ -1,7 +1,7 @@
 import OpenAI from 'openai'
 import { createSupabaseAdminClient, requireAdminUser } from '../../../lib/supabaseAdmin'
 import { extractPdfText } from '../../../lib/pdfExtract'
-import { SYSTEM_PROMPT, DIAGNOSIS_RESPONSE_FORMAT, DIAGNOSIS_MODEL, DIAGNOSIS_MAX_TOKENS, buildUserMessage } from '../../../lib/diagnosis/prompt'
+import { SYSTEM_PROMPT, DIAGNOSIS_RESPONSE_FORMAT, DIAGNOSIS_MODEL, DIAGNOSIS_MAX_TOKENS, buildUserMessage, FALLBACK_RULEPACK } from '../../../lib/diagnosis/prompt'
 import { buildReportHtml } from '../../../lib/diagnosis/renderReport'
 
 const FAILED_EXTRACTION_TEXT = '본 문서는 텍스트 추출에 실패했습니다 (스캔본으로 추정). 관리자가 수동으로 텍스트를 입력하기 전까지 이 문서에 대한 판단 근거가 부족합니다.'
@@ -11,6 +11,22 @@ const ESTIMATED_TOTAL_CHARS = DIAGNOSIS_MAX_TOKENS * 2
 const PROGRESS_THROTTLE_MS = 400
 
 export const maxDuration = 300
+
+// 활성 룰팩 버전을 DB에서 조회한다. 못 찾으면(시딩 전, 장애 등) 코드에 내장된 fallback을 쓴다.
+async function getActiveRulepack(admin) {
+  const { data, error } = await admin
+    .from('rulepack_versions')
+    .select('id, version_label, content')
+    .eq('is_active', true)
+    .maybeSingle()
+
+  if (error || !data) {
+    if (error) console.error('[diagnose] 활성 룰팩 버전 조회 실패, fallback 사용', error)
+    return { id: null, version_label: FALLBACK_RULEPACK?.meta?.version ?? 'fallback', content: FALLBACK_RULEPACK }
+  }
+
+  return data
+}
 
 export async function POST(request) {
   const encoder = new TextEncoder()
@@ -70,6 +86,8 @@ async function handleDiagnose(request, send) {
     send({ type: 'error', status: 404, error: '접수 건을 찾을 수 없습니다.' })
     return
   }
+
+  const rulepack = await getActiveRulepack(admin)
 
   send({ type: 'progress', phase: 'extracting', progressPct: 5 })
 
@@ -152,7 +170,8 @@ async function handleDiagnose(request, send) {
               employeeBand: diagnosisRequest.employee_band,
               lastRevisionYear: diagnosisRequest.last_revision_year,
             },
-            documents
+            documents,
+            rulepack.content
           ),
         },
       ],
@@ -220,6 +239,7 @@ async function handleDiagnose(request, send) {
       extracted_text: extractedTextResult,
       diagnosis_result: diagnosisResult,
       report_html: reportHtml,
+      rulepack_version_id: rulepack.id,
     })
     .eq('id', requestId)
 

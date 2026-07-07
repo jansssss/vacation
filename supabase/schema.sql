@@ -234,6 +234,45 @@ CREATE POLICY "Authenticated users can view bank bucket files"
   USING (bucket_id = 'bank' AND auth.role() = 'authenticated');
 
 -- ================================
+-- 7. Rulepack Versions 테이블 (노무진단 룰팩 버전 관리)
+-- ================================
+-- 상세 마이그레이션(시드 데이터 포함)은 supabase/migration-rulepack-versions.sql 참고.
+CREATE TABLE rulepack_versions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  version_label TEXT NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'draft', -- 'draft' | 'pending_approval' | 'approved' | 'rejected' | 'archived'
+  is_active BOOLEAN NOT NULL DEFAULT false, -- 고객 진단에 실제 사용되는 단 하나의 버전
+  content JSONB NOT NULL, -- rulepack_v1.json과 동일 구조 (meta + rules)
+  change_summary TEXT,
+  based_on_version_id UUID REFERENCES rulepack_versions(id),
+  created_by UUID,
+  approved_by UUID,
+  approved_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE UNIQUE INDEX idx_one_active_rulepack ON rulepack_versions (is_active) WHERE is_active;
+CREATE INDEX idx_rulepack_versions_status ON rulepack_versions(status);
+
+ALTER TABLE rulepack_versions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can view rulepack versions"
+  ON rulepack_versions FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can insert rulepack versions"
+  ON rulepack_versions FOR INSERT
+  WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can update rulepack versions"
+  ON rulepack_versions FOR UPDATE
+  USING (auth.role() = 'authenticated');
+
+-- labor_diagnosis_requests: 진단 시점에 적용된 룰팩 버전 기록 (과거 진단 재현용)
+ALTER TABLE labor_diagnosis_requests
+  ADD COLUMN rulepack_version_id UUID REFERENCES rulepack_versions(id);
+
+-- ================================
 -- Comments for documentation
 -- ================================
 COMMENT ON TABLE guides IS '가이드 메타데이터 (제목, 요약, 키워드 등)';
@@ -241,3 +280,4 @@ COMMENT ON TABLE guide_sections IS '가이드의 각 섹션 (heading, content, b
 COMMENT ON TABLE board_posts IS '게시판 글 (공지사항 등)';
 COMMENT ON TABLE consultation_requests IS '무료 노무·인사 상담 신청 내역';
 COMMENT ON TABLE labor_diagnosis_requests IS '기업 노무진단 접수 및 분석/발송 상태';
+COMMENT ON TABLE rulepack_versions IS '노무진단 룰팩의 버전별 스냅샷. is_active=true인 단 하나의 row가 고객 진단에 사용됨.';
