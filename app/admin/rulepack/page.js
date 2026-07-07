@@ -462,7 +462,12 @@ export default function AdminRulepackPage() {
                         )}
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusInfo.className}`}>{statusInfo.label}</span>
+                        {/* 활성 버전은 '활성' 배지로 충분하므로 상태 배지(승인됨) 중복 표시를 생략한다 */}
+                        {v.is_active ? (
+                          <span className="text-xs text-slate-400">—</span>
+                        ) : (
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusInfo.className}`}>{statusInfo.label}</span>
+                        )}
                       </td>
                       <td className="px-5 py-4 text-xs text-slate-600 max-w-md">{v.change_summary || '—'}</td>
                       <td className="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">{formatDate(v.created_at)}</td>
@@ -473,9 +478,10 @@ export default function AdminRulepackPage() {
                           <button
                             onClick={() => handleActivate(v)}
                             disabled={activating === v.id}
+                            title="이 버전을 활성 버전으로 전환합니다(과거 버전이면 롤백)."
                             className="rounded-full bg-slate-900 text-white px-4 py-1.5 text-xs font-medium hover:bg-slate-700 disabled:opacity-50"
                           >
-                            {activating === v.id ? '활성화 중...' : '활성화'}
+                            {activating === v.id ? '전환 중...' : '이 버전으로 전환'}
                           </button>
                         )}
                       </td>
