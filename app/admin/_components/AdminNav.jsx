@@ -34,6 +34,10 @@ export default function AdminNav({ newCount = 0, laborCheckNewCount = 0, onLogou
                 </span>
               )}
             </Link>
+            <Link href="/admin/rulepack"
+              className={`text-sm font-medium transition ${activeTab === 'rulepack' ? 'text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}>
+              룰팩 관리
+            </Link>
           </nav>
         </div>
         <button onClick={onLogout} className="text-sm text-slate-600 hover:text-slate-900">로그아웃</button>
