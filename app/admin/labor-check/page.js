@@ -20,67 +20,6 @@ async function getAccessToken() {
   return data?.session?.access_token
 }
 
-const ZONE_BADGE = {
-  RED: 'bg-red-50 text-red-700 border-red-200',
-  YELLOW: 'bg-amber-50 text-amber-700 border-amber-200',
-  BLUE: 'bg-blue-50 text-blue-700 border-blue-200',
-}
-
-const ZONE_SECTION_LABEL = {
-  RED: '⚠ 즉시 조치가 필요한 항목',
-  YELLOW: '주의가 필요한 항목',
-  BLUE: '참고 확인 항목',
-}
-
-const STATUS_KO = {
-  VIOLATION: '위반',
-  RISK: '위반 의심',
-  CHECK_NEEDED: '확인 필요',
-  OK: '이상 없음',
-  NOT_APPLICABLE: '해당 없음',
-  MANUAL_REVIEW: '전문가 검토 필요',
-}
-
-function FindingsTable({ findings }) {
-  if (!findings || findings.length === 0) return null
-
-  const byZone = { RED: [], YELLOW: [], BLUE: [] }
-  for (const f of findings) {
-    if (byZone[f.zone]) byZone[f.zone].push(f)
-  }
-
-  return (
-    <div className="space-y-5">
-      {['RED', 'YELLOW', 'BLUE'].filter((zone) => byZone[zone].length > 0).map((zone) => (
-        <div key={zone}>
-          <p className="text-sm font-semibold text-slate-800 mb-2">{ZONE_SECTION_LABEL[zone]} ({byZone[zone].length}건)</p>
-          <div className="space-y-2">
-            {byZone[zone].map((f) => (
-              <div key={f.rule_id} className="rounded-xl border border-slate-100 p-3 space-y-1.5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold border ${ZONE_BADGE[f.zone] || ZONE_BADGE.BLUE}`}>
-                    {f.zone}
-                  </span>
-                  <span className="text-xs text-slate-500">{STATUS_KO[f.status] || f.status}</span>
-                  <span className="text-sm font-medium text-slate-900">{f.title}</span>
-                </div>
-                <p className="text-xs text-slate-600"><span className="font-medium">회사 문서 근거: </span>{f.evidence}</p>
-                <p className="text-xs text-slate-600">{f.explanation}</p>
-                <p className="text-xs text-slate-600"><span className="font-medium">법적 근거: </span>{f.basis_citation}</p>
-                {f.risk_detail && <p className="text-xs text-slate-600"><span className="font-medium">방치 시 리스크: </span>{f.risk_detail}</p>}
-                {f.recommendation && <p className="text-xs text-slate-600"><span className="font-medium">권고 조치: </span>{f.recommendation}</p>}
-                {f.status === 'CHECK_NEEDED' && f.self_check_question && (
-                  <p className="text-xs text-orange-700"><span className="font-medium">확인 필요: </span>{f.self_check_question}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 function DetailPanel({ row, onClose, onUpdated, analysisJob, onAnalyze }) {
   const [manualTexts, setManualTexts] = useState({})
   const [reportDraft, setReportDraft] = useState(row.report_html || '')
@@ -337,7 +276,9 @@ function DetailPanel({ row, onClose, onUpdated, analysisJob, onAnalyze }) {
                   <span>이상없음 {diagnosisResult.stats.ok}</span>
                 </div>
               )}
-              <FindingsTable findings={diagnosisResult.findings} />
+              <p className="text-xs text-slate-400">
+                항목별 상세 내용은 아래 &quot;리포트 편집&quot; 미리보기에서 확인·수정할 수 있습니다.
+              </p>
               {diagnosisResult.operator_notes && (
                 <div className="rounded-xl border border-dashed border-slate-200 p-3 text-xs text-slate-500">
                   <span className="font-medium text-slate-600">관리자 전용 메모 (고객에게 발송되지 않음): </span>
