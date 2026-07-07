@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
@@ -81,10 +81,9 @@ function FindingsTable({ findings }) {
   )
 }
 
-function DetailPanel({ row, onClose, onUpdated }) {
+function DetailPanel({ row, onClose, onUpdated, analysisJob, onAnalyze }) {
   const [manualTexts, setManualTexts] = useState({})
   const [reportDraft, setReportDraft] = useState(row.report_html || '')
-  const [analyzing, setAnalyzing] = useState(false)
   const [sending, setSending] = useState(false)
   const [savingText, setSavingText] = useState(false)
   const [savingReport, setSavingReport] = useState(false)
@@ -129,34 +128,6 @@ function DetailPanel({ row, onClose, onUpdated }) {
       alert('텍스트 저장 중 오류가 발생했습니다.')
     } finally {
       setSavingText(false)
-    }
-  }
-
-  const handleAnalyze = async () => {
-    setAnalyzing(true)
-    setNotice('')
-    try {
-      const token = await getAccessToken()
-      const res = await fetch('/api/diagnose', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ requestId: row.id }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data?.error || '분석 실패')
-
-      if (data.status === 'extract_failed') {
-        onUpdated({ ...row, status: 'extract_failed', extracted_text: data.extractedText })
-        setNotice('모든 문서에서 텍스트를 추출하지 못했습니다. 수동으로 텍스트를 입력한 뒤 다시 실행해주세요.')
-      } else {
-        onUpdated({ ...row, status: 'analyzed', diagnosis_result: data.diagnosisResult, report_html: data.reportHtml })
-        setReportDraft(data.reportHtml || '')
-        setNotice('분석이 완료되었습니다.')
-      }
-    } catch (err) {
-      alert(err.message || '분석 중 오류가 발생했습니다.')
-    } finally {
-      setAnalyzing(false)
     }
   }
 
@@ -297,13 +268,40 @@ function DetailPanel({ row, onClose, onUpdated }) {
             </div>
           </div>
 
+          {analysisJob?.analyzing && (
+            <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 space-y-2">
+              <div className="flex items-center justify-between text-xs text-blue-700">
+                <span>
+                  AI 분석 진행 중… ({Math.round((analysisJob.elapsedMs || 0) / 1000)}초 경과)
+                </span>
+                <span className="font-semibold">{analysisJob.progressPct}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-blue-100 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-blue-500 transition-all duration-300 ease-out"
+                  style={{ width: `${analysisJob.progressPct}%` }}
+                />
+              </div>
+              <p className="text-[11px] text-blue-500">
+                창을 닫아도 분석은 백그라운드에서 계속 진행됩니다.
+                {analysisJob.chars > 0 && ` (${analysisJob.chars.toLocaleString()}자 생성됨)`}
+              </p>
+            </div>
+          )}
+
+          {!analysisJob?.analyzing && analysisJob?.error && (
+            <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-700">
+              분석 실패: {analysisJob.error}
+            </div>
+          )}
+
           <div className="flex gap-3">
             <button
-              onClick={handleAnalyze}
-              disabled={analyzing}
+              onClick={onAnalyze}
+              disabled={analysisJob?.analyzing}
               className="rounded-full bg-blue-600 text-white px-5 py-2 text-sm font-medium hover:bg-blue-500 disabled:opacity-50"
             >
-              {analyzing ? '분석 중...' : '분석 실행'}
+              {analysisJob?.analyzing ? `분석 중... ${analysisJob.progressPct}%` : '분석 실행'}
             </button>
             <button
               onClick={handleSend}
@@ -405,12 +403,133 @@ export default function AdminLaborCheckPage() {
   const [selectedRow, setSelectedRow] = useState(null)
   const [selectedIds, setSelectedIds] = useState(new Set())
   const [deleting, setDeleting] = useState(false)
+  const [analysisJobs, setAnalysisJobs] = useState({})
+  const progressTimersRef = useRef({})
+  const analyzingRowsRef = useRef(new Set())
   const { user, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
     if (!authLoading && !user) router.replace('/admin')
   }, [user, authLoading, router])
+
+  // 분석 중 시뮬레이션 타이머는 페이지 언마운트 시에만 정리한다 (모달을 닫아도 분석은 계속 진행됨)
+  useEffect(() => {
+    return () => {
+      Object.values(progressTimersRef.current).forEach(clearInterval)
+    }
+  }, [])
+
+  const applyRowPatch = (rowId, patch) => {
+    setRows((prev) => prev.map((r) => (r.id === rowId ? { ...r, ...patch } : r)))
+    setSelectedRow((prev) => (prev && prev.id === rowId ? { ...prev, ...patch } : prev))
+  }
+
+  const startAnalysis = async (rowId) => {
+    if (analyzingRowsRef.current.has(rowId)) return
+    analyzingRowsRef.current.add(rowId)
+
+    const startedAt = Date.now()
+    setAnalysisJobs((prev) => ({
+      ...prev,
+      [rowId]: { analyzing: true, progressPct: 3, chars: 0, elapsedMs: 0, error: null },
+    }))
+
+    progressTimersRef.current[rowId] = setInterval(() => {
+      setAnalysisJobs((prev) => {
+        const job = prev[rowId]
+        if (!job || !job.analyzing) return prev
+        const elapsedMs = Date.now() - startedAt
+        // 실제 완성률은 알 수 없어 경과 시간 기반으로 90%까지 점근하는 진행률을 보여준다.
+        const simulatedPct = Math.min(90, Math.round(100 * (1 - Math.exp(-elapsedMs / 25000))))
+        return { ...prev, [rowId]: { ...job, elapsedMs, progressPct: Math.max(job.progressPct, simulatedPct) } }
+      })
+    }, 500)
+
+    const stopTimer = () => {
+      clearInterval(progressTimersRef.current[rowId])
+      delete progressTimersRef.current[rowId]
+    }
+
+    try {
+      const token = await getAccessToken()
+      const res = await fetch('/api/diagnose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ requestId: rowId }),
+      })
+
+      if (!res.body) throw new Error('서버 응답을 읽을 수 없습니다.')
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+      let finalMsg = null
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        let newlineIdx
+        while ((newlineIdx = buffer.indexOf('\n')) >= 0) {
+          const line = buffer.slice(0, newlineIdx).trim()
+          buffer = buffer.slice(newlineIdx + 1)
+          if (!line) continue
+          let msg
+          try {
+            msg = JSON.parse(line)
+          } catch {
+            continue
+          }
+          if (msg.type === 'progress') {
+            setAnalysisJobs((prev) => {
+              const job = prev[rowId]
+              if (!job) return prev
+              return {
+                ...prev,
+                [rowId]: {
+                  ...job,
+                  chars: msg.chars ?? job.chars,
+                  elapsedMs: msg.elapsedMs ?? job.elapsedMs,
+                  progressPct: Math.max(job.progressPct, msg.progressPct ?? job.progressPct),
+                },
+              }
+            })
+          } else if (msg.type === 'done' || msg.type === 'error') {
+            finalMsg = msg
+          }
+        }
+      }
+
+      stopTimer()
+
+      if (!finalMsg || finalMsg.type === 'error') {
+        const message = finalMsg?.error || '분석 중 오류가 발생했습니다.'
+        setAnalysisJobs((prev) => ({ ...prev, [rowId]: { ...prev[rowId], analyzing: false, error: message } }))
+        return
+      }
+
+      if (finalMsg.status === 'extract_failed') {
+        applyRowPatch(rowId, { status: 'extract_failed', extracted_text: finalMsg.extractedText })
+      } else {
+        applyRowPatch(rowId, {
+          status: 'analyzed',
+          diagnosis_result: finalMsg.diagnosisResult,
+          report_html: finalMsg.reportHtml,
+        })
+      }
+
+      setAnalysisJobs((prev) => ({ ...prev, [rowId]: { ...prev[rowId], analyzing: false, progressPct: 100, error: null } }))
+    } catch (err) {
+      stopTimer()
+      setAnalysisJobs((prev) => ({
+        ...prev,
+        [rowId]: { ...prev[rowId], analyzing: false, error: err.message || '분석 중 오류가 발생했습니다.' },
+      }))
+    } finally {
+      analyzingRowsRef.current.delete(rowId)
+    }
+  }
 
   const load = async () => {
     try {
@@ -498,7 +617,13 @@ export default function AdminLaborCheckPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {selectedRow && (
-        <DetailPanel row={selectedRow} onClose={() => setSelectedRow(null)} onUpdated={handleUpdated} />
+        <DetailPanel
+          row={selectedRow}
+          onClose={() => setSelectedRow(null)}
+          onUpdated={handleUpdated}
+          analysisJob={analysisJobs[selectedRow.id]}
+          onAnalyze={() => startAnalysis(selectedRow.id)}
+        />
       )}
       <AdminNav activeTab="labor-check" laborCheckNewCount={newCount} onLogout={handleLogout} />
 
@@ -581,9 +706,20 @@ export default function AdminLaborCheckPage() {
                           <td className="px-5 py-4 text-sm text-slate-700 whitespace-nowrap">{row.email}</td>
                           <td className="px-5 py-4 text-sm text-slate-600 whitespace-nowrap">{row.employee_band}</td>
                           <td className="px-5 py-4 whitespace-nowrap">
-                            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusInfo.className}`}>
-                              {statusInfo.label}
-                            </span>
+                            {analysisJobs[row.id]?.analyzing ? (
+                              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+                                분석 중 {analysisJobs[row.id].progressPct}%
+                              </span>
+                            ) : analysisJobs[row.id]?.error ? (
+                              <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-red-50 text-red-700 border border-red-200">
+                                분석 실패
+                              </span>
+                            ) : (
+                              <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusInfo.className}`}>
+                                {statusInfo.label}
+                              </span>
+                            )}
                           </td>
                           <td className="px-5 py-4 whitespace-nowrap">
                             <button onClick={() => setSelectedRow(row)} className="text-xs text-blue-600 hover:underline">상세보기</button>

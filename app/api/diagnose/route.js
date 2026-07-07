@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { createSupabaseAdminClient, requireAdminUser } from '../../../lib/supabaseAdmin'
 import { extractPdfText } from '../../../lib/pdfExtract'
@@ -7,33 +6,56 @@ import { buildReportHtml } from '../../../lib/diagnosis/renderReport'
 
 const FAILED_EXTRACTION_TEXT = '본 문서는 텍스트 추출에 실패했습니다 (스캔본으로 추정). 관리자가 수동으로 텍스트를 입력하기 전까지 이 문서에 대한 판단 근거가 부족합니다.'
 
+// 실제 완성 길이를 미리 알 수 없어 대략적인 자릿수 기준으로 진행률을 근사한다 (한글 위주 JSON 응답 기준 경험치).
+const ESTIMATED_TOTAL_CHARS = DIAGNOSIS_MAX_TOKENS * 2
+const PROGRESS_THROTTLE_MS = 400
+
 export const maxDuration = 300
 
 export async function POST(request) {
-  try {
-    return await handleDiagnose(request)
-  } catch (err) {
-    console.error('분석 처리 중 예외 발생', err)
-    return NextResponse.json({ error: `분석 처리 중 예외가 발생했습니다: ${err?.message || err}` }, { status: 500 })
-  }
+  const encoder = new TextEncoder()
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      const send = (payload) => controller.enqueue(encoder.encode(JSON.stringify(payload) + '\n'))
+      try {
+        await handleDiagnose(request, send)
+      } catch (err) {
+        console.error('분석 처리 중 예외 발생', err)
+        send({ type: 'error', status: 500, error: `분석 처리 중 예외가 발생했습니다: ${err?.message || err}` })
+      } finally {
+        controller.close()
+      }
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'application/x-ndjson; charset=utf-8',
+      'Cache-Control': 'no-cache',
+    },
+  })
 }
 
-async function handleDiagnose(request) {
+async function handleDiagnose(request, send) {
   const adminUser = await requireAdminUser(request)
   if (!adminUser) {
-    return NextResponse.json({ error: '인증이 필요합니다.' }, { status: 401 })
+    send({ type: 'error', status: 401, error: '인증이 필요합니다.' })
+    return
   }
 
   let body
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: '잘못된 요청입니다.' }, { status: 400 })
+    send({ type: 'error', status: 400, error: '잘못된 요청입니다.' })
+    return
   }
 
   const requestId = body?.requestId
   if (!requestId) {
-    return NextResponse.json({ error: 'requestId가 필요합니다.' }, { status: 400 })
+    send({ type: 'error', status: 400, error: 'requestId가 필요합니다.' })
+    return
   }
 
   const admin = createSupabaseAdminClient()
@@ -45,8 +67,11 @@ async function handleDiagnose(request) {
     .single()
 
   if (fetchError || !diagnosisRequest) {
-    return NextResponse.json({ error: '접수 건을 찾을 수 없습니다.' }, { status: 404 })
+    send({ type: 'error', status: 404, error: '접수 건을 찾을 수 없습니다.' })
+    return
   }
+
+  send({ type: 'progress', phase: 'extracting', progressPct: 5 })
 
   const existingExtractedText = diagnosisRequest.extracted_text || {}
   const filePaths = diagnosisRequest.file_paths || []
@@ -98,14 +123,20 @@ async function handleDiagnose(request) {
       .update({ status: 'extract_failed', extracted_text: extractedTextResult })
       .eq('id', requestId)
 
-    return NextResponse.json({ status: 'extract_failed', extractedText: extractedTextResult })
+    send({ type: 'done', status: 'extract_failed', extractedText: extractedTextResult })
+    return
   }
+
+  send({ type: 'progress', phase: 'requesting', progressPct: 12 })
 
   let content = ''
   let finishReason = null
+  const startedAt = Date.now()
+  let lastSentAt = 0
+
   try {
     const openai = new OpenAI()
-    const stream = await openai.chat.completions.create({
+    const completionStream = await openai.chat.completions.create({
       model: DIAGNOSIS_MODEL,
       max_completion_tokens: DIAGNOSIS_MAX_TOKENS,
       stream: true,
@@ -127,9 +158,16 @@ async function handleDiagnose(request) {
       ],
     })
 
-    for await (const chunk of stream) {
+    for await (const chunk of completionStream) {
       content += chunk.choices?.[0]?.delta?.content || ''
       if (chunk.choices?.[0]?.finish_reason) finishReason = chunk.choices[0].finish_reason
+
+      const now = Date.now()
+      if (now - lastSentAt >= PROGRESS_THROTTLE_MS) {
+        lastSentAt = now
+        const progressPct = Math.min(90, 12 + Math.round((content.length / ESTIMATED_TOTAL_CHARS) * 78))
+        send({ type: 'progress', phase: 'generating', chars: content.length, elapsedMs: now - startedAt, progressPct })
+      }
     }
   } catch (err) {
     console.error('OpenAI API 호출 실패', err)
@@ -137,26 +175,32 @@ async function handleDiagnose(request) {
       .from('labor_diagnosis_requests')
       .update({ extracted_text: extractedTextResult })
       .eq('id', requestId)
-    return NextResponse.json({ error: 'AI 분석 호출 중 오류가 발생했습니다.' }, { status: 502 })
+    send({ type: 'error', status: 502, error: 'AI 분석 호출 중 오류가 발생했습니다.' })
+    return
   }
 
   console.log(`[diagnose] requestId=${requestId} finishReason=${finishReason} contentLength=${content.length}`)
 
   if (!content) {
-    return NextResponse.json({ error: 'AI 응답을 해석할 수 없습니다.' }, { status: 502 })
+    send({ type: 'error', status: 502, error: 'AI 응답을 해석할 수 없습니다.' })
+    return
   }
 
   if (finishReason === 'length') {
     console.error(`[diagnose] 응답이 max_completion_tokens(${DIAGNOSIS_MAX_TOKENS}) 제한으로 잘림. requestId=${requestId}`)
-    return NextResponse.json({ error: `AI 응답이 최대 길이(${DIAGNOSIS_MAX_TOKENS} 토큰) 제한으로 잘렸습니다. 관리자에게 알려 max_tokens를 늘려야 합니다.` }, { status: 502 })
+    send({ type: 'error', status: 502, error: `AI 응답이 최대 길이(${DIAGNOSIS_MAX_TOKENS} 토큰) 제한으로 잘렸습니다. 관리자에게 알려 max_tokens를 늘려야 합니다.` })
+    return
   }
+
+  send({ type: 'progress', phase: 'saving', progressPct: 95 })
 
   let parsed
   try {
     parsed = JSON.parse(content)
   } catch (err) {
     console.error('AI 응답 JSON 파싱 실패. content 미리보기:', content.slice(0, 500))
-    return NextResponse.json({ error: 'AI 응답 JSON 파싱에 실패했습니다. (서버 로그에 원본 응답 일부가 기록됨)' }, { status: 502 })
+    send({ type: 'error', status: 502, error: 'AI 응답 JSON 파싱에 실패했습니다. (서버 로그에 원본 응답 일부가 기록됨)' })
+    return
   }
 
   const diagnosisResult = parsed.diagnosis_result
@@ -165,7 +209,8 @@ async function handleDiagnose(request) {
     reportHtml = buildReportHtml(diagnosisResult)
   } catch (err) {
     console.error('리포트 HTML 생성 실패', err)
-    return NextResponse.json({ error: '리포트 생성 중 오류가 발생했습니다.' }, { status: 500 })
+    send({ type: 'error', status: 500, error: '리포트 생성 중 오류가 발생했습니다.' })
+    return
   }
 
   const { error: updateError } = await admin
@@ -179,8 +224,9 @@ async function handleDiagnose(request) {
     .eq('id', requestId)
 
   if (updateError) {
-    return NextResponse.json({ error: '분석 결과 저장 중 오류가 발생했습니다.' }, { status: 500 })
+    send({ type: 'error', status: 500, error: '분석 결과 저장 중 오류가 발생했습니다.' })
+    return
   }
 
-  return NextResponse.json({ status: 'analyzed', diagnosisResult, reportHtml })
+  send({ type: 'done', status: 'analyzed', diagnosisResult, reportHtml })
 }
