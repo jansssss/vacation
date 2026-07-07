@@ -54,12 +54,18 @@ export async function POST(request) {
     return NextResponse.json({ error: '잘못된 요청입니다.' }, { status: 400 })
   }
 
-  const { action, versionId } = body || {}
-  if (action !== 'activate' || !versionId) {
-    return NextResponse.json({ error: "지원하지 않는 요청입니다. (action='activate', versionId 필요)" }, { status: 400 })
+  const { action } = body || {}
+  const admin = createSupabaseAdminClient()
+
+  // 승인된 수정안을 반영한 새 draft 버전 생성 (관리자가 UI에서 편집한 최종 content를 그대로 저장)
+  if (action === 'create_draft') {
+    return createDraft(body, admin, adminUser)
   }
 
-  const admin = createSupabaseAdminClient()
+  const { versionId } = body || {}
+  if (action !== 'activate' || !versionId) {
+    return NextResponse.json({ error: "지원하지 않는 요청입니다. (action='activate'|'create_draft')" }, { status: 400 })
+  }
 
   const { data: target, error: fetchError } = await admin
     .from('rulepack_versions')
@@ -94,4 +100,54 @@ export async function POST(request) {
   }
 
   return NextResponse.json({ ok: true, versionLabel: target.version_label })
+}
+
+async function createDraft(body, admin, adminUser) {
+  const { version_label, content, based_on_version_id, change_summary, proposal_id } = body || {}
+
+  if (!version_label || !content || !Array.isArray(content?.rules)) {
+    return NextResponse.json({ error: 'version_label과 content(rules 배열 포함)가 필요합니다.' }, { status: 400 })
+  }
+
+  const { data: dup } = await admin
+    .from('rulepack_versions')
+    .select('id')
+    .eq('version_label', version_label)
+    .maybeSingle()
+  if (dup) {
+    return NextResponse.json({ error: `버전 라벨 ${version_label}이(가) 이미 존재합니다. 다른 라벨을 지정하세요.` }, { status: 409 })
+  }
+
+  const { data: inserted, error: insertError } = await admin
+    .from('rulepack_versions')
+    .insert({
+      version_label,
+      status: 'draft',
+      is_active: false,
+      content,
+      based_on_version_id: based_on_version_id ?? null,
+      change_summary: change_summary ?? null,
+      created_by: adminUser.id,
+    })
+    .select('id, version_label')
+    .single()
+
+  if (insertError) {
+    return NextResponse.json({ error: `새 draft 생성 실패: ${insertError.message}` }, { status: 500 })
+  }
+
+  // 제안과 연결(감사 추적)
+  if (proposal_id) {
+    await admin
+      .from('rulepack_update_proposals')
+      .update({
+        status: 'approved',
+        resulting_version_id: inserted.id,
+        reviewed_by: adminUser.id,
+        reviewed_at: new Date().toISOString(),
+      })
+      .eq('id', proposal_id)
+  }
+
+  return NextResponse.json({ ok: true, versionId: inserted.id, versionLabel: inserted.version_label })
 }

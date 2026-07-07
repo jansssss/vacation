@@ -273,6 +273,42 @@ ALTER TABLE labor_diagnosis_requests
   ADD COLUMN rulepack_version_id UUID REFERENCES rulepack_versions(id);
 
 -- ================================
+-- 8. Rulepack Update Proposals 테이블 (AI 수정안 감사 추적)
+-- ================================
+-- 상세는 supabase/migration-rulepack-proposals.sql 참고.
+CREATE TABLE rulepack_update_proposals (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  base_version_id UUID NOT NULL REFERENCES rulepack_versions(id),
+  status TEXT NOT NULL DEFAULT 'pending', -- 'pending' | 'approved' | 'rejected' | 'superseded'
+  overall_grade TEXT, -- auto_candidate | admin_review | expert_review (최고 등급)
+  ai_response JSONB NOT NULL, -- AI 응답 원본(rule_updates[])
+  detected_changes JSONB,
+  resulting_version_id UUID REFERENCES rulepack_versions(id),
+  reviewed_by UUID,
+  reviewed_at TIMESTAMP WITH TIME ZONE,
+  review_notes TEXT,
+  created_by UUID,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_rulepack_proposals_status ON rulepack_update_proposals(status);
+CREATE INDEX idx_rulepack_proposals_base ON rulepack_update_proposals(base_version_id);
+
+ALTER TABLE rulepack_update_proposals ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can view rulepack proposals"
+  ON rulepack_update_proposals FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can insert rulepack proposals"
+  ON rulepack_update_proposals FOR INSERT
+  WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can update rulepack proposals"
+  ON rulepack_update_proposals FOR UPDATE
+  USING (auth.role() = 'authenticated');
+
+-- ================================
 -- Comments for documentation
 -- ================================
 COMMENT ON TABLE guides IS '가이드 메타데이터 (제목, 요약, 키워드 등)';

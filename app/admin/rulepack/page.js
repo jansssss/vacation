@@ -36,6 +36,20 @@ function formatDate(iso) {
   }
 }
 
+// '1.2' -> '1.3' 처럼 마지막 숫자를 올린 라벨 제안(실패 시 뒤에 -new 붙임)
+function suggestNextLabel(label) {
+  if (!label) return ''
+  const m = String(label).match(/^(.*?)(\d+)$/)
+  if (!m) return `${label}-new`
+  return `${m[1]}${Number(m[2]) + 1}`
+}
+
+const GRADE_BADGE = {
+  auto_candidate: { label: '자동 후보', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  admin_review: { label: '관리자 검토', className: 'bg-amber-50 text-amber-700 border-amber-200' },
+  expert_review: { label: '전문가 검토', className: 'bg-red-50 text-red-700 border-red-200' },
+}
+
 export default function AdminRulepackPage() {
   const [versions, setVersions] = useState([])
   const [loading, setLoading] = useState(true)
@@ -47,6 +61,13 @@ export default function AdminRulepackPage() {
   const [checkProgress, setCheckProgress] = useState(null) // { current, total, label, progressPct }
   const [checkReport, setCheckReport] = useState(null)
   const [checkError, setCheckError] = useState('')
+
+  const [proposing, setProposing] = useState(false)
+  const [proposeProgress, setProposeProgress] = useState(null) // { label, progressPct }
+  const [proposeError, setProposeError] = useState('')
+  const [proposalSet, setProposalSet] = useState(null) // { proposalId, versionId, versionLabel, items:[{...proposal, include, editedRuleJson}] }
+  const [newVersionLabel, setNewVersionLabel] = useState('')
+  const [creatingDraft, setCreatingDraft] = useState(false)
 
   const { user, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
@@ -129,6 +150,143 @@ export default function AdminRulepackPage() {
     } finally {
       setChecking(false)
       setCheckProgress(null)
+    }
+  }
+
+  const handleGenerateProposals = async () => {
+    if (!confirm('현재 활성 버전을 다시 점검하고, 변경이 감지된 규칙에 대해 AI 수정 초안을 생성합니다.\n(OpenAI 호출 비용이 발생합니다.) 계속할까요?')) return
+    setProposing(true)
+    setProposeError('')
+    setProposalSet(null)
+    setProposeProgress({ label: '시작…', progressPct: 0 })
+    setNotice('')
+    try {
+      const token = await getAccessToken()
+      const res = await fetch('/api/rulepack/propose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({}),
+      })
+      if (!res.body) throw new Error('서버 응답을 읽을 수 없습니다.')
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+      let finalMsg = null
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        let nl
+        while ((nl = buffer.indexOf('\n')) >= 0) {
+          const line = buffer.slice(0, nl).trim()
+          buffer = buffer.slice(nl + 1)
+          if (!line) continue
+          let msg
+          try { msg = JSON.parse(line) } catch { continue }
+          if (msg.type === 'progress') setProposeProgress({ label: msg.label, progressPct: msg.progressPct })
+          else if (msg.type === 'done' || msg.type === 'error') finalMsg = msg
+        }
+      }
+      if (!finalMsg || finalMsg.type === 'error') throw new Error(finalMsg?.error || '수정안 생성 중 오류가 발생했습니다.')
+
+      if (!finalMsg.proposals || finalMsg.proposals.length === 0) {
+        setNotice(finalMsg.message || '변경이 감지된 조문이 없어 생성할 수정안이 없습니다.')
+        setProposalSet(null)
+      } else {
+        setProposalSet({
+          proposalId: finalMsg.proposalId,
+          versionId: finalMsg.versionId,
+          versionLabel: finalMsg.versionLabel,
+          items: finalMsg.proposals.map((p) => ({
+            ...p,
+            include: !p.error,
+            editedRuleJson: p.proposed_rule ? JSON.stringify(p.proposed_rule, null, 2) : '',
+          })),
+        })
+        setNewVersionLabel(suggestNextLabel(finalMsg.versionLabel))
+      }
+    } catch (err) {
+      setProposeError(err.message || '수정안 생성 중 오류가 발생했습니다.')
+    } finally {
+      setProposing(false)
+      setProposeProgress(null)
+    }
+  }
+
+  const toggleProposalInclude = (idx) => {
+    setProposalSet((prev) => {
+      const items = prev.items.map((it, i) => (i === idx ? { ...it, include: !it.include } : it))
+      return { ...prev, items }
+    })
+  }
+
+  const editProposalJson = (idx, value) => {
+    setProposalSet((prev) => {
+      const items = prev.items.map((it, i) => (i === idx ? { ...it, editedRuleJson: value } : it))
+      return { ...prev, items }
+    })
+  }
+
+  const handleCreateDraft = async () => {
+    if (!proposalSet) return
+    const included = proposalSet.items.filter((it) => it.include && !it.error)
+    if (included.length === 0) { alert('반영할 수정안을 하나 이상 선택하세요.'); return }
+    if (!newVersionLabel.trim()) { alert('새 버전 라벨을 입력하세요.'); return }
+
+    // 편집한 JSON 파싱 검증
+    const parsedRules = []
+    for (const it of included) {
+      try {
+        const rule = JSON.parse(it.editedRuleJson)
+        if (!rule.id) throw new Error('id 없음')
+        parsedRules.push({ rule, refreshed: it.refreshed_legal_sources || null })
+      } catch (e) {
+        alert(`${it.rule_id} 수정안 JSON을 해석할 수 없습니다: ${e.message}`)
+        return
+      }
+    }
+
+    if (!confirm(`선택한 ${included.length}건의 수정안을 반영해 새 draft 버전 ${newVersionLabel}을(를) 생성합니다.\n(활성화는 별도로 해야 합니다.) 계속할까요?`)) return
+
+    setCreatingDraft(true)
+    setNotice('')
+    try {
+      const token = await getAccessToken()
+      // 기반 버전의 전체 콘텐츠를 가져와 선택된 규칙만 교체
+      const baseRes = await fetch(`/api/rulepack/versions?versionId=${proposalSet.versionId}`, { headers: { Authorization: `Bearer ${token}` } })
+      const baseData = await baseRes.json()
+      if (!baseRes.ok) throw new Error(baseData?.error || '기반 버전 조회 실패')
+      const content = JSON.parse(JSON.stringify(baseData.version.content))
+
+      const ruleIndex = new Map(content.rules.map((r, i) => [r.id, i]))
+      for (const { rule, refreshed } of parsedRules) {
+        const newRule = { ...rule, legal_sources: refreshed ?? content.rules[ruleIndex.get(rule.id)]?.legal_sources }
+        if (ruleIndex.has(rule.id)) content.rules[ruleIndex.get(rule.id)] = newRule
+        else content.rules.push(newRule)
+      }
+      content.meta = { ...content.meta, version: newVersionLabel.trim(), basis_date: new Date().toISOString().slice(0, 10) }
+
+      const res = await fetch('/api/rulepack/versions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          action: 'create_draft',
+          version_label: newVersionLabel.trim(),
+          content,
+          based_on_version_id: proposalSet.versionId,
+          change_summary: `AI 수정안 ${included.length}건 반영(${included.map((i) => i.rule_id).join(', ')})`,
+          proposal_id: proposalSet.proposalId,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || 'draft 생성 실패')
+      setNotice(`새 draft 버전 ${data.versionLabel}이(가) 생성되었습니다. 아래 버전 이력에서 검토 후 활성화하세요.`)
+      setProposalSet(null)
+      await loadVersions()
+    } catch (err) {
+      alert(err.message || 'draft 생성 중 오류가 발생했습니다.')
+    } finally {
+      setCreatingDraft(false)
     }
   }
 
@@ -215,6 +373,67 @@ export default function AdminRulepackPage() {
           )}
 
           {checkReport && <CheckReportView report={checkReport} />}
+        </section>
+
+        {/* AI 수정안 생성·검토 */}
+        <section className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <p className="text-sm font-semibold text-slate-800">AI 수정안</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                변경이 감지된 규칙에 대해 기존 룰과 최신 조문을 비교한 수정 초안을 생성합니다. 자동 반영되지 않으며, 검토·승인 후 새 draft로 만듭니다.
+              </p>
+            </div>
+            <button
+              onClick={handleGenerateProposals}
+              disabled={proposing}
+              className="rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-medium hover:bg-slate-700 disabled:opacity-50"
+            >
+              {proposing ? '생성 중...' : 'AI 수정안 생성'}
+            </button>
+          </div>
+
+          {proposing && proposeProgress && (
+            <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-600">
+                <span>{proposeProgress.label}</span>
+                <span className="font-semibold">{proposeProgress.progressPct}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+                <div className="h-full rounded-full bg-slate-700 transition-all duration-300 ease-out" style={{ width: `${proposeProgress.progressPct}%` }} />
+              </div>
+            </div>
+          )}
+
+          {proposeError && (
+            <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-700">수정안 생성 실패: {proposeError}</div>
+          )}
+
+          {proposalSet && (
+            <div className="space-y-3">
+              {proposalSet.items.map((it, idx) => (
+                <ProposalCard key={idx} item={it} onToggle={() => toggleProposalInclude(idx)} onEditJson={(v) => editProposalJson(idx, v)} />
+              ))}
+
+              <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-slate-100">
+                <label className="text-xs text-slate-600">새 버전 라벨</label>
+                <input
+                  value={newVersionLabel}
+                  onChange={(e) => setNewVersionLabel(e.target.value)}
+                  placeholder="예: 1.3"
+                  className="w-28 rounded-lg border border-slate-200 px-3 py-1.5 text-sm outline-none focus:border-blue-400"
+                />
+                <button
+                  onClick={handleCreateDraft}
+                  disabled={creatingDraft}
+                  className="rounded-full bg-blue-600 text-white px-5 py-2 text-sm font-medium hover:bg-blue-500 disabled:opacity-50"
+                >
+                  {creatingDraft ? '생성 중...' : '선택 수정안으로 새 draft 생성'}
+                </button>
+                <span className="text-xs text-slate-400">draft 생성 후 “버전 이력”에서 검토·활성화하세요.</span>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* 버전 이력 */}
@@ -321,6 +540,57 @@ function CheckReportView({ report }) {
           법령 근거(legal_sources) 미보유 규칙: {report.rules_without_sources.join(', ')} (판례·행정발표·고시형 — 수동 관리 대상)
         </p>
       )}
+    </div>
+  )
+}
+
+function ProposalCard({ item, onToggle, onEditJson }) {
+  if (item.error) {
+    return (
+      <div className="rounded-xl border border-orange-200 bg-orange-50 p-4 text-xs text-orange-700">
+        <span className="font-semibold">{item.rule_id}</span> 수정안 생성 실패: {item.error}
+      </div>
+    )
+  }
+
+  const grade = GRADE_BADGE[item.change_grade] || { label: item.change_grade, className: 'bg-slate-50 text-slate-600 border-slate-200' }
+
+  return (
+    <div className={`rounded-xl border p-4 space-y-2 ${item.include ? 'border-slate-200' : 'border-slate-100 opacity-60'}`}>
+      <div className="flex items-start gap-2 flex-wrap">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" checked={item.include} onChange={onToggle} className="h-4 w-4 accent-blue-600" />
+          <span className="text-sm font-semibold text-slate-900">{item.rule_id}</span>
+        </label>
+        <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold border ${grade.className}`}>{grade.label}</span>
+        {item.auto_apply_recommended && (
+          <span className="inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">자동 반영 권장</span>
+        )}
+      </div>
+
+      {item.detected_changes?.length > 0 && (
+        <p className="text-[11px] text-slate-500">
+          감지: {item.detected_changes.map((c) => `${c.law_name ?? ''} ${c.article ?? ''}`).join(' · ')}
+        </p>
+      )}
+
+      <div className="text-xs text-slate-700"><span className="font-medium">영향: </span>{item.impact_summary}</div>
+      <div className="text-xs text-slate-700"><span className="font-medium">변경 설명: </span>{item.diff_explanation}</div>
+      {item.change_grade === 'expert_review' && item.requires_expert_review_reason && (
+        <div className="text-xs text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+          <span className="font-medium">전문가 검토 필요: </span>{item.requires_expert_review_reason}
+        </div>
+      )}
+
+      <details className="text-xs">
+        <summary className="cursor-pointer text-slate-500 hover:text-slate-700">수정안 룰 JSON 보기·편집</summary>
+        <textarea
+          rows={12}
+          value={item.editedRuleJson}
+          onChange={(e) => onEditJson(e.target.value)}
+          className="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-xs font-mono outline-none focus:border-blue-400"
+        />
+      </details>
     </div>
   )
 }

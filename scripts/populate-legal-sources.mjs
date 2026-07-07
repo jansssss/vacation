@@ -20,7 +20,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { createClient } from '@supabase/supabase-js'
 import { searchLaw, getArticleText } from '../lib/legalSources/lawGoKrClient.js'
-import { hashLegalText } from '../lib/legalSources/hashText.js'
+import { hashLegalText, normalizeLegalText } from '../lib/legalSources/hashText.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -164,6 +164,9 @@ async function main() {
         law_snapshot_effective_date: article.lawSnapshotEffectiveDate,
         last_checked_at: today,
         last_verified_text_hash: hashLegalText(article.text),
+        // 변경 감지 시 AI에 "신구 비교"를 넘기려면 바뀌기 전 원문이 필요하다. 정규화한 조 전체
+        // 텍스트를 저장한다(진단 프롬프트에서는 legal_sources 전체가 제외되므로 토큰 영향 없음).
+        last_verified_text: normalizeLegalText(article.text),
         source_url: `https://www.law.go.kr/DRF/lawService.do?target=law&MST=${lawInfo.mst}&type=HTML`,
       })
     }
