@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAllGuides } from '../lib/guides'
+import { questionsRegistry } from '../src/config/questionsRegistry'
 
 export const revalidate = 3600
 
@@ -51,6 +52,16 @@ const popularGuides = [
     desc: '1년 미만·단시간 근로·휴직 구간까지 함께 정리합니다.',
     badge: '퇴직금',
   },
+]
+
+// 클러스터별로 진입 빈도가 높은 질문을 하나씩 노출한다
+const featuredQuestionSlugs = [
+  'annual-leave-payout-on-quit',
+  'weekly-holiday-15-hours',
+  'severance-how-to-calculate',
+  'unemployment-voluntary-resign',
+  'dismissal-notice-pay',
+  'under-five-employees',
 ]
 
 const topicChips = [
@@ -150,6 +161,47 @@ export default async function HomePage() {
               <p className="mt-5 text-xs font-semibold text-blue-700">바로 보기 →</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* 노무 질문 30 — 검색 진입점 */}
+      <section className="rounded-[2rem] border border-slate-200 bg-slate-900 p-8 shadow-sm">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-300">노무 질문 30</p>
+            <h2 className="mt-2 text-2xl font-bold leading-snug text-white">
+              &ldquo;이 경우엔 어떻게 되나요?&rdquo;에 답하는 30개 질문
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">
+              즉답으로 시작해 실제 사례, 판단 기준, 예외, 자주 하는 오해까지 이어지고,
+              다 읽으면 다음 궁금증으로 자연스럽게 연결됩니다.
+            </p>
+          </div>
+          <Link
+            href="/questions"
+            className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
+          >
+            전체 보기 →
+          </Link>
+        </div>
+        <div className="mt-6 grid gap-2 md:grid-cols-2">
+          {featuredQuestionSlugs.map((slug) => {
+            const q = questionsRegistry.find((item) => item.slug === slug)
+            return (
+              <Link
+                key={slug}
+                href={`/questions/${slug}`}
+                className="group flex items-start gap-3 rounded-xl bg-white/5 px-4 py-3 transition hover:bg-white/10"
+              >
+                <span className="mt-0.5 font-mono text-xs text-slate-500">
+                  {String(q.id).padStart(2, '0')}
+                </span>
+                <span className="text-sm leading-snug text-slate-200 group-hover:text-white">
+                  {q.question}
+                </span>
+              </Link>
+            )
+          })}
         </div>
       </section>
 

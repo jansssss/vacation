@@ -1,65 +1,472 @@
 [
-  { "path": "/", "changefreq": "weekly", "priority": 1.0 },
-  { "path": "/calculators", "changefreq": "weekly", "priority": 0.9 },
-  { "path": "/calculators/annual-leave", "changefreq": "monthly", "priority": 0.8 },
-  { "path": "/calculators/severance-pay", "changefreq": "monthly", "priority": 0.8 },
-  { "path": "/calculators/retirement-pension", "changefreq": "monthly", "priority": 0.8 },
-  { "path": "/calculators/childcare-support", "changefreq": "weekly", "priority": 0.9 },
-  { "path": "/calculators/net-salary", "changefreq": "monthly", "priority": 0.8 },
-  { "path": "/net-salary/200", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/250", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/300", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/350", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/400", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/450", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/500", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/550", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/net-salary/600", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/01", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/02", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/03", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/04", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/05", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/06", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/07", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/08", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/09", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/10", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/11", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/annual-leave/join-month/12", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/1y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/2y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/3y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/3y6m", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/5y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/7y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/10y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/15y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement/tenure/20y", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement-pension/scenario/conservative", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement-pension/scenario/balanced", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/retirement-pension/scenario/growth", "changefreq": "monthly", "priority": 0.7 },
-  { "path": "/guides", "changefreq": "weekly", "priority": 0.7 },
-  { "path": "/guides/why-second-year-25-days", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/first-year-26-days", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/annual-leave-basics", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/annual-leave-carryover", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/annual-leave-encashment", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/severance-pay-eligibility", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/severance-pay-average-wage", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/severance-pay-docs", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/payroll-slip-reading", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/unpaid-leave-impact", "changefreq": "monthly", "priority": 0.6 },
-  { "path": "/guides/childcare-leave-support-2026", "changefreq": "weekly", "priority": 0.8 },
-  { "path": "/guides/reduced-hours-support-2026", "changefreq": "weekly", "priority": 0.8 },
-  { "path": "/guides/childcare-support-faq-2026", "changefreq": "weekly", "priority": 0.8 },
-  { "path": "/guides/workload-sharing-support-2026", "changefreq": "weekly", "priority": 0.8 },
-  { "path": "/board", "changefreq": "daily", "priority": 0.5 },
-  { "path": "/board/welcome", "changefreq": "monthly", "priority": 0.4 },
-  { "path": "/board/policy-update-2026", "changefreq": "monthly", "priority": 0.4 },
-  { "path": "/about", "changefreq": "yearly", "priority": 0.4 },
-  { "path": "/contact", "changefreq": "yearly", "priority": 0.4 },
-  { "path": "/privacy", "changefreq": "yearly", "priority": 0.4 },
-  { "path": "/terms", "changefreq": "yearly", "priority": 0.4 },
-  { "path": "/disclaimer", "changefreq": "yearly", "priority": 0.4 }
+  {
+    "path": "/",
+    "changefreq": "weekly",
+    "priority": 1
+  },
+  {
+    "path": "/calculators",
+    "changefreq": "weekly",
+    "priority": 0.9
+  },
+  {
+    "path": "/calculators/annual-leave",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/calculators/severance-pay",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/calculators/retirement-pension",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/calculators/childcare-support",
+    "changefreq": "weekly",
+    "priority": 0.9
+  },
+  {
+    "path": "/calculators/net-salary",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/net-salary/200",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/250",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/300",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/350",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/400",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/450",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/500",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/550",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/net-salary/600",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/01",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/02",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/03",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/04",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/05",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/06",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/07",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/08",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/09",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/10",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/11",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/annual-leave/join-month/12",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/1y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/2y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/3y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/3y6m",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/5y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/7y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/10y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/15y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement/tenure/20y",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement-pension/scenario/conservative",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement-pension/scenario/balanced",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/retirement-pension/scenario/growth",
+    "changefreq": "monthly",
+    "priority": 0.7
+  },
+  {
+    "path": "/questions",
+    "changefreq": "weekly",
+    "priority": 0.9
+  },
+  {
+    "path": "/questions/annual-leave-first-year",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/annual-leave-11-plus-15",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/annual-leave-fiscal-year",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/annual-leave-payout-on-quit",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/annual-leave-promotion-effect",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/weekly-holiday-15-hours",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/weekly-holiday-under-15-hours",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/weekly-holiday-absence",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/weekly-holiday-part-time",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/minimum-wage-2026-monthly",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/overtime-pay-over-40-hours",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/holiday-work-pay",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/severance-one-year",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/severance-how-to-calculate",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/severance-bonus-included",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/severance-part-time",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/severance-unpaid",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/unemployment-requirements",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/unemployment-voluntary-resign",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/unemployment-recommended-resignation",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/unemployment-contract-expiry",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/resignation-vs-dismissal",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/resignation-compensation",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/dismissal-notice-pay",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/unfair-dismissal-criteria",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/no-employment-contract",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/probation-rules",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/fixed-ot-overtime",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/under-five-employees",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/questions/parental-leave-refusal",
+    "changefreq": "monthly",
+    "priority": 0.8
+  },
+  {
+    "path": "/guides",
+    "changefreq": "weekly",
+    "priority": 0.7
+  },
+  {
+    "path": "/guides/why-second-year-25-days",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/first-year-26-days",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/annual-leave-basics",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/annual-leave-carryover",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/annual-leave-encashment",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/severance-pay-eligibility",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/severance-pay-average-wage",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/severance-pay-docs",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/payroll-slip-reading",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/unpaid-leave-impact",
+    "changefreq": "monthly",
+    "priority": 0.6
+  },
+  {
+    "path": "/guides/childcare-leave-support-2026",
+    "changefreq": "weekly",
+    "priority": 0.8
+  },
+  {
+    "path": "/guides/reduced-hours-support-2026",
+    "changefreq": "weekly",
+    "priority": 0.8
+  },
+  {
+    "path": "/guides/childcare-support-faq-2026",
+    "changefreq": "weekly",
+    "priority": 0.8
+  },
+  {
+    "path": "/guides/workload-sharing-support-2026",
+    "changefreq": "weekly",
+    "priority": 0.8
+  },
+  {
+    "path": "/board",
+    "changefreq": "daily",
+    "priority": 0.5
+  },
+  {
+    "path": "/board/welcome",
+    "changefreq": "monthly",
+    "priority": 0.4
+  },
+  {
+    "path": "/board/policy-update-2026",
+    "changefreq": "monthly",
+    "priority": 0.4
+  },
+  {
+    "path": "/about",
+    "changefreq": "yearly",
+    "priority": 0.4
+  },
+  {
+    "path": "/contact",
+    "changefreq": "yearly",
+    "priority": 0.4
+  },
+  {
+    "path": "/privacy",
+    "changefreq": "yearly",
+    "priority": 0.4
+  },
+  {
+    "path": "/terms",
+    "changefreq": "yearly",
+    "priority": 0.4
+  },
+  {
+    "path": "/disclaimer",
+    "changefreq": "yearly",
+    "priority": 0.4
+  }
 ]
