@@ -173,8 +173,8 @@ export default async function HomePage() {
               &ldquo;이 경우엔 어떻게 되나요?&rdquo;에 답하는 30개 질문
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">
-              즉답으로 시작해 실제 사례, 판단 기준, 예외, 자주 하는 오해까지 이어지고,
-              다 읽으면 다음 궁금증으로 자연스럽게 연결됩니다.
+              연차, 주휴수당, 퇴직금, 실업급여, 해고까지 근로자가 가장 많이 묻는 질문에
+              결론부터 답하고 계산 기준과 예외까지 확인할 수 있습니다.
             </p>
           </div>
           <Link
