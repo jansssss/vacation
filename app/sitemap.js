@@ -1,5 +1,6 @@
 import { guidesRegistry } from '../src/config/guidesRegistry'
 import { questionsRegistry } from '../src/config/questionsRegistry'
+import { calculatorsRegistry } from '../src/config/calculatorsRegistry'
 
 export default function sitemap() {
   const baseUrl = 'https://e-work.kr'
@@ -9,6 +10,7 @@ export default function sitemap() {
     { url: `${baseUrl}/questions`, lastModified: new Date(), priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date(), priority: 0.9 },
     { url: `${baseUrl}/calculators`, lastModified: new Date(), priority: 0.9 },
+    { url: `${baseUrl}/labor-check`, lastModified: new Date(), priority: 0.7 },
     { url: `${baseUrl}/about`, lastModified: new Date(), priority: 0.6 },
     { url: `${baseUrl}/contact`, lastModified: new Date(), priority: 0.5 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), priority: 0.4 },
@@ -30,15 +32,10 @@ export default function sitemap() {
     priority: 0.85,
   }))
 
-  const calculatorPages = [
-    'childcare-support',
-    'annual-leave',
-    'severance-pay',
-    'retirement-pension',
-    'net-salary',
-  ].map((slug) => ({
-    url: `${baseUrl}/calculators/${slug}`,
-    lastModified: new Date(),
+  // 계산기 목록은 레지스트리에서 가져온다 — 계산기를 추가해도 사이트맵이 따라온다
+  const calculatorPages = calculatorsRegistry.map((calculator) => ({
+    url: `${baseUrl}${calculator.path}`,
+    lastModified: new Date(calculator.updatedAt),
     priority: 0.8,
   }))
 
