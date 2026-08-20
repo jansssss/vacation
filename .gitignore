@@ -12,3 +12,7 @@ scripts/credentials/token.json
 # Python cache
 __pycache__/
 *.pyc
+
+# GSC 루틴 — 로그·패치는 커밋하지 않는다 (자격증명은 위에서 이미 제외)
+reports/gsc/logs/
+reports/gsc/patches/

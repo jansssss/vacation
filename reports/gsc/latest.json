@@ -1,0 +1,1044 @@
+{
+  "generated_for": "2026-08-17",
+  "generated_at": "2026-08-20",
+  "site_url": "sc-domain:e-work.kr",
+  "window": {
+    "start": "2026-02-19",
+    "end": "2026-08-17",
+    "days": 180
+  },
+  "previous_window": {
+    "start": "2025-08-23",
+    "end": "2026-02-18"
+  },
+  "summary": {
+    "current": {
+      "clicks": 1,
+      "impressions": 76,
+      "ctr": 0.013157894736842105,
+      "position": 35.68421052631579,
+      "query_count": 31
+    },
+    "previous": {
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "position": 69.45454545454545,
+      "query_count": 8
+    },
+    "delta_pct": {
+      "clicks": 100.0,
+      "impressions": 590.9,
+      "query_count": 287.5
+    },
+    "ctr_change_pt": 1.32,
+    "position_change": -33.77
+  },
+  "top_queries": [
+    {
+      "query": "연차 계산기",
+      "intent": "연차",
+      "clicks": 1,
+      "impressions": 7,
+      "ctr": 0.1429,
+      "position": 48.4,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "세전 550",
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "position": 7.2,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "퇴직금 계산기",
+      "intent": "퇴직금",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "position": 54.2,
+      "clicks_prev": 0,
+      "impressions_prev": 4
+    },
+    {
+      "query": "세전 550 실수령",
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "position": 11.3,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차 일수 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "position": 38.2,
+      "clicks_prev": 0,
+      "impressions_prev": 1
+    },
+    {
+      "query": "연차계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "position": 45.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "실수령액 550만원 연봉",
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 9.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차 계산",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "position": 45.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "월급 500만원 실수령액",
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "position": 11.3,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차 발생 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "position": 43.5,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차 휴가 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "position": 41.5,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "월급 550 연봉",
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "position": 9.5,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "퇴직금 계산",
+      "intent": "퇴직금",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "position": 83.5,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "고용노동부 연차 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 45.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "공무원 퇴직금 계산기",
+      "intent": "퇴직금",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 50.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "근무 연차 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 57.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "년차 계산",
+      "intent": "계산",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 12.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "노동ok 연차계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 37.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "사람인 연차계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 80.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "소정근로일수 계산기",
+      "intent": "주휴수당",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 85.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "실수령 550 연봉",
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 14.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차개수 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 37.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차일수 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 32.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "연차휴가 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 43.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    },
+    {
+      "query": "월차 계산기",
+      "intent": "연차",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 47.0,
+      "clicks_prev": 0,
+      "impressions_prev": 0
+    }
+  ],
+  "rising_queries": [],
+  "falling_queries": [],
+  "intent_breakdown": [
+    {
+      "intent": "연차",
+      "clicks": 1,
+      "impressions": 36,
+      "queries": 18,
+      "ctr": 0.0278,
+      "sample_queries": [
+        "연차 계산기",
+        "연차계산기",
+        "연차 일수 계산기",
+        "연차 계산",
+        "연차 휴가 계산기"
+      ]
+    },
+    {
+      "intent": "기타",
+      "clicks": 0,
+      "impressions": 25,
+      "queries": 6,
+      "ctr": 0.0,
+      "sample_queries": [
+        "세전 550",
+        "세전 550 실수령",
+        "실수령액 550만원 연봉",
+        "월급 500만원 실수령액",
+        "월급 550 연봉"
+      ]
+    },
+    {
+      "intent": "퇴직금",
+      "clicks": 0,
+      "impressions": 12,
+      "queries": 4,
+      "ctr": 0.0,
+      "sample_queries": [
+        "퇴직금 계산기",
+        "퇴직금 계산",
+        "퇴직급여 계산기",
+        "공무원 퇴직금 계산기"
+      ]
+    },
+    {
+      "intent": "계산",
+      "clicks": 0,
+      "impressions": 2,
+      "queries": 2,
+      "ctr": 0.0,
+      "sample_queries": [
+        "입사 년차 계산",
+        "년차 계산"
+      ]
+    },
+    {
+      "intent": "주휴수당",
+      "clicks": 0,
+      "impressions": 1,
+      "queries": 1,
+      "ctr": 0.0,
+      "sample_queries": [
+        "소정근로일수 계산기"
+      ]
+    }
+  ],
+  "top_pages": [
+    {
+      "path": "/net-salary/550",
+      "page_type": "other",
+      "clicks": 1,
+      "impressions": 202,
+      "ctr": 0.005,
+      "position": 8.0,
+      "clicks_prev": 0,
+      "click_delta": 1
+    },
+    {
+      "path": "/calculators/annual-leave",
+      "page_type": "calculator",
+      "clicks": 1,
+      "impressions": 162,
+      "ctr": 0.0062,
+      "position": 20.7,
+      "clicks_prev": 0,
+      "click_delta": 1
+    },
+    {
+      "path": "/annual-leave/join-month/11",
+      "page_type": "other",
+      "clicks": 0,
+      "impressions": 133,
+      "ctr": 0.0,
+      "position": 7.9,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/calculators/severance-pay",
+      "page_type": "calculator",
+      "clicks": 0,
+      "impressions": 35,
+      "ctr": 0.0,
+      "position": 27.5,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/",
+      "page_type": "home",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "position": 15.0,
+      "clicks_prev": 1,
+      "click_delta": -1
+    },
+    {
+      "path": "/disclaimer",
+      "page_type": "other",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "position": 3.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/calculators",
+      "page_type": "calculator-hub",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 5.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/calculators/childcare-support",
+      "page_type": "calculator",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 8.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/contact",
+      "page_type": "other",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 6.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/guides/severance-pay-docs",
+      "page_type": "guide",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 9.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/privacy",
+      "page_type": "other",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 2.2,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/terms",
+      "page_type": "other",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "position": 3.5,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/guides/reduced-hours-support-2026",
+      "page_type": "guide",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "position": 10.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/guides/workload-sharing-support-2026",
+      "page_type": "guide",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "position": 11.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    },
+    {
+      "path": "/guides/fixed-term-2-years-what-next",
+      "page_type": "guide",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0.0,
+      "position": 39.0,
+      "clicks_prev": 0,
+      "click_delta": 0
+    }
+  ],
+  "page_type_breakdown": [
+    {
+      "page_type": "other",
+      "clicks": 1,
+      "impressions": 352,
+      "pages": 6,
+      "ctr": 0.0028
+    },
+    {
+      "page_type": "calculator",
+      "clicks": 1,
+      "impressions": 201,
+      "pages": 3,
+      "ctr": 0.005
+    },
+    {
+      "page_type": "guide",
+      "clicks": 0,
+      "impressions": 9,
+      "pages": 4,
+      "ctr": 0.0
+    },
+    {
+      "page_type": "home",
+      "clicks": 0,
+      "impressions": 6,
+      "pages": 1,
+      "ctr": 0.0
+    },
+    {
+      "page_type": "calculator-hub",
+      "clicks": 0,
+      "impressions": 4,
+      "pages": 1,
+      "ctr": 0.0
+    }
+  ],
+  "device_breakdown": [
+    {
+      "key": "DESKTOP",
+      "clicks": 1,
+      "impressions": 409,
+      "ctr": 0.0024,
+      "position": 13.7
+    },
+    {
+      "key": "MOBILE",
+      "clicks": 1,
+      "impressions": 124,
+      "ctr": 0.0081,
+      "position": 11.9
+    },
+    {
+      "key": "TABLET",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "position": 3.7
+    }
+  ],
+  "country_breakdown": [
+    {
+      "key": "kor",
+      "clicks": 2,
+      "impressions": 387,
+      "ctr": 0.0052,
+      "position": 15.9
+    },
+    {
+      "key": "usa",
+      "clicks": 0,
+      "impressions": 91,
+      "ctr": 0.0,
+      "position": 6.0
+    },
+    {
+      "key": "can",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "position": 7.2
+    },
+    {
+      "key": "gbr",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "position": 6.8
+    },
+    {
+      "key": "jpn",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "position": 7.2
+    }
+  ],
+  "thresholds": {
+    "min_impressions": 2
+  },
+  "opportunities": {
+    "ctr_gap": [
+      {
+        "query": "세전 550",
+        "intent": "기타",
+        "impressions": 9,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 7.2,
+        "landing_page": "/net-salary/550",
+        "expected_ctr": 0.04,
+        "action_hint": "제목/메타디스크립션 재작성 — 검색어를 제목 앞부분에 노출"
+      },
+      {
+        "query": "세전 550 실수령",
+        "intent": "기타",
+        "impressions": 6,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.3,
+        "landing_page": "/net-salary/550",
+        "expected_ctr": 0.02,
+        "action_hint": "제목/메타디스크립션 재작성 — 검색어를 제목 앞부분에 노출"
+      },
+      {
+        "query": "실수령액 550만원 연봉",
+        "intent": "기타",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.0,
+        "landing_page": "/net-salary/550",
+        "expected_ctr": 0.03,
+        "action_hint": "제목/메타디스크립션 재작성 — 검색어를 제목 앞부분에 노출"
+      },
+      {
+        "query": "월급 500만원 실수령액",
+        "intent": "기타",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.3,
+        "landing_page": "/net-salary/550",
+        "expected_ctr": 0.02,
+        "action_hint": "제목/메타디스크립션 재작성 — 검색어를 제목 앞부분에 노출"
+      },
+      {
+        "query": "월급 550 연봉",
+        "intent": "기타",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.5,
+        "landing_page": "/net-salary/550",
+        "expected_ctr": 0.025,
+        "action_hint": "제목/메타디스크립션 재작성 — 검색어를 제목 앞부분에 노출"
+      }
+    ],
+    "striking_distance": [
+      {
+        "query": "세전 550",
+        "intent": "기타",
+        "impressions": 9,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 7.2,
+        "landing_page": "/net-salary/550",
+        "action_hint": "랜딩 페이지에 이 검색어 전용 섹션·FAQ 추가로 관련성 강화"
+      },
+      {
+        "query": "세전 550 실수령",
+        "intent": "기타",
+        "impressions": 6,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.3,
+        "landing_page": "/net-salary/550",
+        "action_hint": "랜딩 페이지에 이 검색어 전용 섹션·FAQ 추가로 관련성 강화"
+      },
+      {
+        "query": "실수령액 550만원 연봉",
+        "intent": "기타",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.0,
+        "landing_page": "/net-salary/550",
+        "action_hint": "랜딩 페이지에 이 검색어 전용 섹션·FAQ 추가로 관련성 강화"
+      },
+      {
+        "query": "월급 500만원 실수령액",
+        "intent": "기타",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.3,
+        "landing_page": "/net-salary/550",
+        "action_hint": "랜딩 페이지에 이 검색어 전용 섹션·FAQ 추가로 관련성 강화"
+      },
+      {
+        "query": "월급 550 연봉",
+        "intent": "기타",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.5,
+        "landing_page": "/net-salary/550",
+        "action_hint": "랜딩 페이지에 이 검색어 전용 섹션·FAQ 추가로 관련성 강화"
+      }
+    ],
+    "zero_click": [
+      {
+        "query": "세전 550",
+        "intent": "기타",
+        "impressions": 9,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 7.2,
+        "landing_page": "/net-salary/550",
+        "action_hint": "노출 순위는 확보됐으나 클릭 없음 — 제목/스니펫이 의도와 불일치"
+      },
+      {
+        "query": "퇴직금 계산기",
+        "intent": "퇴직금",
+        "impressions": 8,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 54.2,
+        "landing_page": "/calculators/severance-pay",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      },
+      {
+        "query": "세전 550 실수령",
+        "intent": "기타",
+        "impressions": 6,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.3,
+        "landing_page": "/net-salary/550",
+        "action_hint": "노출 순위는 확보됐으나 클릭 없음 — 제목/스니펫이 의도와 불일치"
+      },
+      {
+        "query": "연차 일수 계산기",
+        "intent": "연차",
+        "impressions": 5,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 38.2,
+        "landing_page": "/calculators/annual-leave",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      },
+      {
+        "query": "연차계산기",
+        "intent": "연차",
+        "impressions": 5,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 45.0,
+        "landing_page": "/calculators/annual-leave",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      },
+      {
+        "query": "실수령액 550만원 연봉",
+        "intent": "기타",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.0,
+        "landing_page": "/net-salary/550",
+        "action_hint": "노출 순위는 확보됐으나 클릭 없음 — 제목/스니펫이 의도와 불일치"
+      },
+      {
+        "query": "연차 계산",
+        "intent": "연차",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 45.0,
+        "landing_page": "/calculators/annual-leave",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      },
+      {
+        "query": "월급 500만원 실수령액",
+        "intent": "기타",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.3,
+        "landing_page": "/net-salary/550",
+        "action_hint": "노출 순위는 확보됐으나 클릭 없음 — 제목/스니펫이 의도와 불일치"
+      },
+      {
+        "query": "연차 발생 계산기",
+        "intent": "연차",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 43.5,
+        "landing_page": "/calculators/annual-leave",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      },
+      {
+        "query": "연차 휴가 계산기",
+        "intent": "연차",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 41.5,
+        "landing_page": "/calculators/annual-leave",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      },
+      {
+        "query": "월급 550 연봉",
+        "intent": "기타",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.5,
+        "landing_page": "/net-salary/550",
+        "action_hint": "노출 순위는 확보됐으나 클릭 없음 — 제목/스니펫이 의도와 불일치"
+      },
+      {
+        "query": "퇴직금 계산",
+        "intent": "퇴직금",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 83.5,
+        "landing_page": "/calculators/severance-pay",
+        "action_hint": "순위가 낮아 클릭 기회 자체가 없음 — 콘텐츠 깊이·내부링크 보강"
+      }
+    ],
+    "content_gap": []
+  },
+  "page_opportunities": {
+    "buried": [
+      {
+        "path": "/calculators/annual-leave",
+        "page_type": "calculator",
+        "impressions": 162,
+        "clicks": 1,
+        "ctr": 0.0062,
+        "position": 20.7,
+        "action_hint": "수요 대비 순위 미달 — 검색어 타겟 섹션 추가·내부링크 유입 강화"
+      },
+      {
+        "path": "/calculators/severance-pay",
+        "page_type": "calculator",
+        "impressions": 35,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 27.5,
+        "action_hint": "수요 대비 순위 미달 — 검색어 타겟 섹션 추가·내부링크 유입 강화"
+      }
+    ],
+    "ctr_gap": [
+      {
+        "path": "/net-salary/550",
+        "page_type": "other",
+        "impressions": 202,
+        "clicks": 1,
+        "ctr": 0.005,
+        "position": 8.0,
+        "expected_ctr": 0.035,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/annual-leave/join-month/11",
+        "page_type": "other",
+        "impressions": 133,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 7.9,
+        "expected_ctr": 0.035,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/",
+        "page_type": "home",
+        "impressions": 6,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 15.0,
+        "expected_ctr": 0.02,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/disclaimer",
+        "page_type": "other",
+        "impressions": 5,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 3.0,
+        "expected_ctr": 0.1,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/calculators",
+        "page_type": "calculator-hub",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 5.0,
+        "expected_ctr": 0.065,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/calculators/childcare-support",
+        "page_type": "calculator",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 8.0,
+        "expected_ctr": 0.035,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/contact",
+        "page_type": "other",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 6.0,
+        "expected_ctr": 0.05,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/guides/severance-pay-docs",
+        "page_type": "guide",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9.0,
+        "expected_ctr": 0.03,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/privacy",
+        "page_type": "other",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 2.2,
+        "expected_ctr": 0.15,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/terms",
+        "page_type": "other",
+        "impressions": 4,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 3.5,
+        "expected_ctr": 0.08,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/guides/reduced-hours-support-2026",
+        "page_type": "guide",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 10.0,
+        "expected_ctr": 0.025,
+        "action_hint": "metadata title/description 재작성"
+      },
+      {
+        "path": "/guides/workload-sharing-support-2026",
+        "page_type": "guide",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 11.0,
+        "expected_ctr": 0.02,
+        "action_hint": "metadata title/description 재작성"
+      }
+    ],
+    "decaying": []
+  },
+  "site_routes": [
+    "/",
+    "/about",
+    "/admin",
+    "/admin/consultations",
+    "/admin/guides",
+    "/admin/guides/edit/[id]",
+    "/admin/labor-check",
+    "/admin/rulepack",
+    "/calculators",
+    "/calculators/annual-leave",
+    "/calculators/childcare-support",
+    "/calculators/net-salary",
+    "/calculators/retirement-pension",
+    "/calculators/severance-pay",
+    "/contact",
+    "/disclaimer",
+    "/editorial-policy",
+    "/guides",
+    "/guides/[slug]",
+    "/labor-check",
+    "/privacy",
+    "/questions",
+    "/questions/annual-leave-11-plus-15",
+    "/questions/annual-leave-first-year",
+    "/questions/annual-leave-fiscal-year",
+    "/questions/annual-leave-payout-on-quit",
+    "/questions/annual-leave-promotion-effect",
+    "/questions/dismissal-notice-pay",
+    "/questions/fixed-ot-overtime",
+    "/questions/holiday-work-pay",
+    "/questions/minimum-wage-2026-monthly",
+    "/questions/no-employment-contract",
+    "/questions/overtime-pay-over-40-hours",
+    "/questions/parental-leave-refusal",
+    "/questions/probation-rules",
+    "/questions/resignation-compensation",
+    "/questions/resignation-vs-dismissal",
+    "/questions/severance-bonus-included",
+    "/questions/severance-how-to-calculate",
+    "/questions/severance-one-year",
+    "/questions/severance-part-time",
+    "/questions/severance-unpaid",
+    "/questions/under-five-employees",
+    "/questions/unemployment-contract-expiry",
+    "/questions/unemployment-recommended-resignation",
+    "/questions/unemployment-requirements",
+    "/questions/unemployment-voluntary-resign",
+    "/questions/unfair-dismissal-criteria",
+    "/questions/weekly-holiday-15-hours",
+    "/questions/weekly-holiday-absence",
+    "/questions/weekly-holiday-part-time",
+    "/questions/weekly-holiday-under-15-hours",
+    "/terms"
+  ],
+  "fallback_used": true,
+  "fallback_reason": "최근 14일 노출 0 — 180일 구간으로 확대해 분석",
+  "primary_window_days": 14
+}
