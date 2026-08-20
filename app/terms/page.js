@@ -1,6 +1,7 @@
 export const metadata = {
   title: '이용약관',
   description: 'e-work.kr 이용약관입니다.',
+  alternates: { canonical: 'https://e-work.kr/terms' },
 }
 
 export default function TermsPage() {

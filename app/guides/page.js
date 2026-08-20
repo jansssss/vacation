@@ -6,6 +6,7 @@ export const revalidate = 3600 // 1시간마다 재생성
 export const metadata = {
   title: '노무 가이드',
   description: '계산기로 끝나지 않는 예외 조건과 실무 포인트를 정리한 가이드 모음입니다. 연차, 퇴직금, 육아지원금 관련 실무 가이드를 확인하세요.',
+  alternates: { canonical: 'https://e-work.kr/guides' },
 }
 
 const childcareGuideSlugs = [

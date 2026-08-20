@@ -1,6 +1,7 @@
 export const metadata = {
   title: '문의',
   description: 'e-work.kr 문의 안내입니다.',
+  alternates: { canonical: 'https://e-work.kr/contact' },
 }
 
 export default function ContactPage() {

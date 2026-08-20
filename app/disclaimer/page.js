@@ -1,6 +1,7 @@
 export const metadata = {
   title: '면책조항',
   description: 'e-work.kr 면책조항입니다.',
+  alternates: { canonical: 'https://e-work.kr/disclaimer' },
 }
 
 export default function DisclaimerPage() {

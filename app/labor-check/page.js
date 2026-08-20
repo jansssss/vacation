@@ -4,6 +4,7 @@ export const metadata = {
   title: '기업 노무진단 | e-work.kr',
   description:
     '취업규칙 PDF를 업로드하면 근로기준법 등 필수 기재사항을 기준으로 1차 노무 리스크를 점검해드립니다.',
+  alternates: { canonical: 'https://e-work.kr/labor-check' },
 }
 
 export default function LaborCheckPage() {

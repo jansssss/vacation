@@ -7,6 +7,7 @@ export const revalidate = 3600
 export const metadata = {
   title: '2026 노무 대응 특집 | e-work.kr',
   description: '육아지원금, 실수령액, 최저임금까지 2026년 바뀐 노무 이슈를 계산기와 가이드로 먼저 점검하세요.',
+  alternates: { canonical: 'https://e-work.kr' },
 }
 
 const featuredCalculators = [

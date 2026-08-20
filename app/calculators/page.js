@@ -3,6 +3,7 @@ import Link from 'next/link'
 export const metadata = {
   title: '노무/근로 계산기',
   description: '연차, 퇴직금, 실수령액, 육아지원금 등 노무/근로 계산기를 한 곳에서 이용하세요.',
+  alternates: { canonical: 'https://e-work.kr/calculators' },
 }
 
 const calculators = [

@@ -1,6 +1,7 @@
 export const metadata = {
   title: '콘텐츠 정책',
   description: 'e-work.kr의 콘텐츠 작성 기준, 정보 출처, 업데이트 방침을 안내합니다.',
+  alternates: { canonical: 'https://e-work.kr/editorial-policy' },
 }
 
 export default function EditorialPolicyPage() {

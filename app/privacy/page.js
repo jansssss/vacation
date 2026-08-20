@@ -1,6 +1,7 @@
 export const metadata = {
   title: '개인정보처리방침',
   description: 'e-work.kr 개인정보처리방침입니다.',
+  alternates: { canonical: 'https://e-work.kr/privacy' },
 }
 
 export default function PrivacyPage() {
